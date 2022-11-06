@@ -1,0 +1,41 @@
+
+.menubar .p-menubar {
+  padding-top: 0;
+  padding-bottom: 0;
+  border-radius: 0;
+}
+.menubar .p-menubar .menubar-root {
+  font-weight: bold;
+  padding: 0 1rem;
+}
+.menubar .p-menubar .p-menuitem-link {
+  padding: 0.5rem 0.75rem;
+}
+.menubar .p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link {
+  padding: 0.5rem 0.75rem;
+}
+.menubar .p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link > .p-submenu-icon {
+  display: none;
+}
+.menubar .p-menubar .p-menubar-end span, .menubar .p-menubar .p-menubar-end i {
+  padding: 0 0.75rem;
+}
+
+.outputnumber {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+.outputnumber label {
+  padding-right: 10px;
+}
+
+.dropdown .p-dropdown {
+  min-width: 10rem;
+}
+
+.dropdown .country-item-value img.flag {
+  width: 17px;
+}
