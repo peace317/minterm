@@ -56,6 +56,13 @@ const SequenceInput: React.FC<ISequenceInputProps> = ({
   >(appendCommand?.label);
 
   useEffect(() => {
+    if (sequence !== undefined) {
+      setBlockChangeEncoding(sequence.length > 0);
+      setUserInput(sequence);
+    }
+  }, [sequence]);
+
+  useEffect(() => {
     setBlockChangeEncoding(userInput.length > 0);
     onSequenceChange(userInput);
   }, [userInput]);
