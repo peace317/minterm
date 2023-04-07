@@ -1,1 +1,9 @@
-@import "primereact/resources/themes/bootstrap4-dark-blue/theme.css";
+@import "~primereact/resources/themes/bootstrap4-light-purple/theme.css";
+
+.toolbar {
+  height: 75px;
+}
+
+.main-body {
+  padding-bottom: calc(75px + 35px);
+}

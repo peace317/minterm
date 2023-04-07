@@ -1,15 +1,36 @@
+.pi {
+  font-size: 1rem !important;
+}
+
+.p-blockui-container {
+  width: 100%;
+  height: 100%;
+}
+
+[draggable=true] {
+  cursor: move;
+}
 
 .menubar .p-menubar {
+  -webkit-app-region: drag;
   padding-top: 0;
+  padding-right: 0;
   padding-bottom: 0;
   border-radius: 0;
+  border-top: none;
+  border-left: none;
+  border-right: none;
 }
 .menubar .p-menubar .menubar-root {
   font-weight: bold;
   padding: 0 1rem;
 }
 .menubar .p-menubar .p-menuitem-link {
+  -webkit-app-region: no-drag;
   padding: 0.5rem 0.75rem;
+}
+.menubar .p-menubar .p-menubar-button {
+  -webkit-app-region: no-drag;
 }
 .menubar .p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link {
   padding: 0.5rem 0.75rem;
@@ -21,21 +42,320 @@
   padding: 0 0.75rem;
 }
 
+.menu-item-no-icon span {
+  margin-left: 1.8rem;
+}
+
 .outputnumber {
   display: flex;
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
+  margin-Top: -3px;
 }
 
 .outputnumber label {
   padding-right: 10px;
 }
 
-.dropdown .p-dropdown {
-  min-width: 10rem;
+.outputnumber-small {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  margin-Top: -3px;
 }
 
-.dropdown .country-item-value img.flag {
-  width: 17px;
+.outputnumber-small label {
+  padding-right: 10px;
+}
+
+.outputnumber-small input {
+  height: 30px;
+}
+
+.outputnumber-small span {
+  margin: 0 !important;
+}
+
+.button-icon-only .p-button.p-button-icon-only {
+  padding: 0.2355rem;
+  width: 2rem;
+}
+
+.button-icon-only .p-button-icon-only .p-button-label {
+  margin: 0;
+}
+
+.action-button .p-button {
+  padding: 0.2355rem;
+  font-size: 0.875rem;
+}
+
+.action-button .p-button span {
+  margin-top: 1px;
+}
+
+.inputnumber-small {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+.inputnumber-small input {
+  width: 6rem !important;
+}
+
+.button-small {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  margin-Top: -3px;
+}
+
+.button-small button {
+  padding: 0.25rem 1rem;
+}
+
+.dropdown .p-dropdown {
+  width: 13.5rem;
+  max-width: 100%;
+
+}
+
+.dropdown-small .p-dropdown {
+  width: 8rem;
+  max-width: 100%;
+}
+
+.multiselect .p-multiselect {
+  width: 13.5rem;
+  max-width: 100%;
+}
+
+.inputtext .p-inputtext {
+  width: 13.5rem;
+  max-width: 100%;
+}
+
+.inputtext-send {
+  margin-right: 6rem;
+}
+
+.toolbar {
+  height: 90px;
+}
+
+.menu {
+  height: 35px;
+}
+
+.main-body {
+  padding-bottom: calc(90px + 35px);
+}
+
+.label-h4 {
+  margin-block-start: 0.33em;
+  margin-block-end: 1em;
+}
+
+.tabview .tabview-header-icon i, .tabview .tabview-header-icon span {
+  vertical-align: middle;
+}
+
+.tabview .tabview-header-icon span {
+  margin: 0 .5rem;
+}
+
+.tabview .p-tabview p {
+  line-height: 1.5;
+  margin: 0;
+}
+
+.tabview .p-tabview .p-tabview-panels {
+  height: 100%;
+  padding-bottom: 50px;
+}
+
+.tabview .p-tabview .p-tabview-nav {
+  height: 2.5rem;
+}
+
+.tabview .p-tabview .p-tabview-nav li .p-tabview-nav-link {
+  padding: 0.5rem;
+  height: 2.5rem;
+}
+
+.p-divider-solid.p-divider-horizontal:before {
+  border-top-style: solid !important;
+}
+.p-divider-dashed.p-divider-horizontal:before {
+  border-top-style: dashed !important;
+}
+.p-divider-solid.p-divider-vertical:before {
+  border-left-style: solid !important;
+}
+
+.p-inputgroup button {
+  padding: 0.45rem 0.45rem;
+}
+
+.p-inputgroup input {
+  padding: 0.45rem 0.45rem;
+}
+
+.small .p-inputgroup input button{
+  padding: 0.2rem 0.45rem;
+}
+
+.datatable .table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.highlight {
+  color: #4338CA;
+  background: #EEF2FF;
+}
+
+.macro-tree .p-tree {
+  border: none;
+  padding: 0;
+}
+
+.macro-tree .p-link:focus {
+  box-shadow: none;
+}
+
+.macro-tree .p-tree .p-tree-container .p-treenode .p-treenode-content .p-tree-toggler {
+  margin-right: 0px;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.macro-tree .p-tree .p-tree-container .p-treenode .p-treenode-content .p-tree-toggler:focus {
+  transition: none;
+  box-shadow: none;
+}
+
+.macro-tree .p-treenode-leaf > .p-treenode-content .p-tree-toggler {
+  width: 1.0rem !important;
+}
+
+.macro-tree .p-tree .p-tree-container .p-treenode {
+  padding: 0 0 0 5px;
+}
+
+.macro-tree .p-tree .p-treenode-droppoint {
+  height: 0.25rem;
+}
+
+.macro-menubar .p-menubar {
+  -webkit-app-region: no-drag;
+  height: 1.8rem;
+}
+
+.macro-menubar .p-menubar .p-menubar-button {
+  display: none;
+}
+
+.macro-menubar .p-button-icon-only .p-button-label {
+  padding: 0 !important;
+}
+
+.macro-menubar .p-button.p-button-icon-only {
+  height: 1.8rem;
+  width: 1.8rem;
+  margin-right: 2px;
+}
+
+.macro-tree-item .p-button.p-button-icon-only {
+  height: 1.2rem;
+  width: 1.2rem;
+  margin-left: 0.6rem;
+}
+
+.macro-tree-item .p-inputtext{
+  padding: 0;
+}
+
+.slider .p-slider-horizontal, .slider .p-inputtext {
+  width: 12.5rem;
+}
+
+/* Window controls */
+.no-drag {
+  -webkit-app-region: no-drag;
+}
+
+.window-controls {
+  display: grid;
+  grid-template-columns: repeat(3, 46px);
+}
+
+.window-controls .control-button {
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+.control-button:hover {
+  background: rgba(141, 141, 141, 0.1);
+}
+
+.control-button:active {
+  background: rgba(255,255,255,0.2);
+}
+
+.close-button:hover {
+  background: #E81123 !important;
+}
+
+.close-button:active {
+  background: #F1707A !important;
+}
+.close-button:active .icon {
+  filter: invert(1);
+}
+
+.close-button:hover .icon {
+  color: #fff
+}
+
+.gr-icons {
+  filter: invert(.4);
+}
+
+.scrollTop {
+  width: 1.6rem !important;
+  height: 1.8rem !important;
+  margin-right: 2.8rem;
+  position: absolute;
+  display: flex;
+  right: 0px;
+  margin-top: -2.5rem;
+  padding-left: 1rem !important;
+}
+
+.scrollDown {
+  width: 1.6rem !important;
+  height: 1.6rem !important;
+  margin-right: 2.8rem;
+  position: absolute;
+  right: 0px;
+  margin-top: .5rem;
+  padding-left: 1rem !important;
+}
+
+.scrollDown-logs .scrollDown {
+  padding-left: 0rem !important;
+}
+
+.scrollTop-logs .scrollTop {
+  padding-left: 0rem !important;
 }

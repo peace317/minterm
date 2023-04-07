@@ -1,13 +1,22 @@
-import {render, waitFor, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { ipcRenderer, IpcRendererEvent } from 'electron';
-import OutputDataTable from '../renderer/OutputDataTable';
-import ContextProvider, { Context, ContextType } from '../renderer/context';
-import React, { useState } from 'react';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import Enzyme, { mount, shallow } from 'enzyme';
-/*
+import { DataPointType } from 'renderer/types/DataPointType';
+import OutputDataTableCore, {
+  buildCell,
+} from '../renderer/components/output/OutputDataTableCore';
+import { ConversionType } from '../renderer/types/ConversionType';
+
 const { ResizeObserver } = window;
 Enzyme.configure({ adapter: new Adapter() });
+
+jest.mock('react-i18next', () => ({
+  useTranslation: () => {
+    return {
+      t: (str: string): string => str,
+    };
+  },
+}));
 
 beforeEach(() => {
   //@ts-ignore
@@ -25,107 +34,166 @@ afterEach(() => {
 });
 
 test('loads and displays DataTable', async () => {
-
-  const TestComponent = () => renderTableWithContext(createContext([], () => {}), 0);
-  shallow(<TestComponent />)
+  const TestComponent = () => renderTableWithContext(formatData([]), 0);
+  shallow(<TestComponent />);
 });
 
-test('renders DataTable with an initialized context', async () => {
+test('renders DataTable no elements', async () => {
+  const TestComponent = () => renderTableWithContext([], 0);
+  const wrapper = mount(<TestComponent />);
+  expect(wrapper.find('DataTable').prop('value')).toStrictEqual([]);
+});
 
-  const TestComponent = () => renderTableWithContext(createContext(["1", "2", "3", "4", "5"],() => {}), 0);
-  const wrapper = mount(<TestComponent />)
-  expect(wrapper.find('DataTable').prop('value')).toEqual(
-    [{"0": "1"},
-     {"0": "2"},
-     {"0": "3"},
-     {"0": "4"},
-     {"0": "5"}]
-  );
+test('renders DataTable with one elements', async () => {
+  const TestComponent = () => renderTableWithContext(formatData(['1']), 0);
+  const wrapper = mount(<TestComponent />);
+  expect(wrapper.find('DataTable').prop('value')).toStrictEqual([
+    {
+      '0': buildCell(formatData(['1'])[0], [ConversionType.ASCII]),
+      id: 0,
+      colLength: 1,
+    },
+  ]);
+});
+
+test('renders DataTable with multiple elements in one column', async () => {
+  const data = formatData(['1', '2', '3', '4']);
+  const TestComponent = () => renderTableWithContext(data, 0);
+  const wrapper = mount(<TestComponent />);
+  expect(wrapper.find('DataTable').prop('value')).toStrictEqual([
+    {
+      '0': buildCell(data[0], [ConversionType.ASCII]),
+      id: 0,
+      colLength: 1,
+    },
+    {
+      '0': buildCell(data[1], [ConversionType.ASCII]),
+      id: 1,
+      colLength: 1,
+    },
+    {
+      '0': buildCell(data[2], [ConversionType.ASCII]),
+      id: 2,
+      colLength: 1,
+    },
+    {
+      '0': buildCell(data[3], [ConversionType.ASCII]),
+      id: 3,
+      colLength: 1,
+    },
+  ]);
 });
 
 test('building columns on width (two cols)', async () => {
-
-  const TestComponent = () => renderTableWithContext(createContext(["1", "2", "3", "4"],() => {}), 201);
-  const wrapper = mount(<TestComponent />)
-  expect(wrapper.find('DataTable').prop('value')).toEqual(
-    [{ '0': '1', '1': '2' },
-     { '0': '3', '1': '4' }]
-  );
+  const data = formatData(['1', '2', '3', '4']);
+  const TestComponent = () => renderTableWithContext(data, 201);
+  const wrapper = mount(<TestComponent />);
+  expect(wrapper.find('DataTable').prop('value')).toEqual([
+    {
+      '0': buildCell(data[0], [ConversionType.ASCII]),
+      '1': buildCell(data[1], [ConversionType.ASCII]),
+      id: 0,
+      colLength: 2,
+    },
+    {
+      '0': buildCell(data[2], [ConversionType.ASCII]),
+      '1': buildCell(data[3], [ConversionType.ASCII]),
+      id: 1,
+      colLength: 2,
+    },
+  ]);
 });
 
 test('building columns on width (two cols with leftover value)', async () => {
-
-  const TestComponent = () => renderTableWithContext(createContext(["1", "2", "3", "4", "5"],() => {}), 201);
-  const wrapper = mount(<TestComponent />)
-  expect(wrapper.find('DataTable').prop('value')).toEqual(
-    [{ '0': '1', '1': '2' },
-     { '0': '3', '1': '4' },
-     { '0': '5' }]
-  );
+  const data = formatData(['1', '2', '3', '4', '5']);
+  const TestComponent = () => renderTableWithContext(data, 201);
+  const wrapper = mount(<TestComponent />);
+  expect(wrapper.find('DataTable').prop('value')).toEqual([
+    {
+      '0': buildCell(data[0], [ConversionType.ASCII]),
+      '1': buildCell(data[1], [ConversionType.ASCII]),
+      id: 0,
+      colLength: 2,
+    },
+    {
+      '0': buildCell(data[2], [ConversionType.ASCII]),
+      '1': buildCell(data[3], [ConversionType.ASCII]),
+      id: 1,
+      colLength: 2,
+    },
+    {
+      '0': buildCell(data[4], [ConversionType.ASCII]),
+      id: 2,
+      colLength: 2,
+    },
+  ]);
 });
 
 test('building columns on width (five cols)', async () => {
-
-  const TestComponent = () => renderTableWithContext(createContext(["1", "2", "3", "4", "5"],() => {}), 501);
-  const wrapper = mount(<TestComponent />)
-  expect(wrapper.find('DataTable').prop('value')).toEqual(
-    [{ '0': '1', '1': '2', '2': '3', '3': '4', '4': '5' }]
-  );
+  const data = formatData(['1', '2', '3', '4', '5']);
+  const TestComponent = () => renderTableWithContext(data, 501);
+  const wrapper = mount(<TestComponent />);
+  expect(wrapper.find('DataTable').prop('value')).toEqual([
+    {
+      '0': buildCell(data[0], [ConversionType.ASCII]),
+      '1': buildCell(data[1], [ConversionType.ASCII]),
+      '2': buildCell(data[2], [ConversionType.ASCII]),
+      '3': buildCell(data[3], [ConversionType.ASCII]),
+      '4': buildCell(data[4], [ConversionType.ASCII]),
+      id: 0,
+      colLength: 5,
+    },
+  ]);
 });
 
+function formatData(data: Array<string>): Array<DataPointType> {
+  var res: Array<DataPointType> = [];
+  for (let index = 0; index < data.length; index++) {
+    res.push({
+      value: data[index],
+    });
+  }
+  return res;
+}
 
-test('adding values to Context', async () => {
-
-  var data: Array<string> = [];
-  const setData = (value: Array<string>) => {data = value;};
-  const TestComponent = () => renderTableWithContext(createContext(data,() => {}), 0);
-  const wrapper = mount(<TestComponent />)
-  //console.log(wrapper.find('VirtualScroller').html());
-  expect(wrapper.find('DataTable').prop('value')).toEqual(
-    []
-  );
-  setData(["1", "2"]);
-  wrapper.update();
-  expect(wrapper.find('DataTable').prop('value')).toEqual(
-    [{"0": "1"},
-     {"0": "2"}]
-  );
-  setData(["1", "2", "3", "4"]);
-  expect(wrapper.find('DataTable').prop('value')).toEqual(
-    [{"0": "1"},
-     {"0": "2"},
-     {"0": "3"},
-     {"0": "4"}]
-  );
-});
-
-function createContext(data: Array<string>, setData: React.Dispatch<React.SetStateAction<string[]>>) {
-
+/* In case of the need of a funtional context during testing */
+/*
+function createContext(
+  data: Array<DataPointType>,
+  setData: React.Dispatch<React.SetStateAction<DataPointType[]>>
+): ContextType {
   return {
     selectedPort: undefined,
-    setPort: function (value: React.SetStateAction<{ name: string; code: string; } | undefined>): void {
+    setPort: function (
+      value: React.SetStateAction<{ name: string; code: string } | undefined>
+    ): void {
       throw new Error('Function not implemented.');
     },
     selectedBaudRate: undefined,
-    setBaudRate: function (value: React.SetStateAction<{ name: string; code: string; } | undefined>): void {
+    setBaudRate: function (
+      value: React.SetStateAction<{ name: string; code: string } | undefined>
+    ): void {
       throw new Error('Function not implemented.');
     },
     data: data,
-    setData: setData
+    setData: setData,
+    selectedTheme: undefined,
+    setTheme: function (
+      value: React.SetStateAction<
+        { name: string; code: string; theme: string } | undefined
+      >
+    ): void {
+      throw new Error('Function not implemented.');
+    },
   };
-}
-function renderTableWithContext(context: ContextType, width: number) {
-
-  const setPort = jest.fn();
-  const setBaudRate = jest.fn();
-  const setData = jest.fn();
-  const selectedPort = context.selectedPort;
-  const selectedBaudRate = context.selectedPort;
-  const data = context.data;
-
-  return (
-    <Context.Provider value={{ selectedPort, setPort, selectedBaudRate, setBaudRate, data, setData}}>
-      <OutputDataTable id="table" className='mr-2' initialWidth={width}/>
-    </Context.Provider>
-  );
 }*/
+function renderTableWithContext(data: Array<DataPointType>, width: number) {
+  return (
+    <OutputDataTableCore
+      id="table"
+      className="mr-2"
+      width={width}
+      data={data}
+    />
+  );
+}

@@ -4,7 +4,7 @@
   "description": "Serialport terminal",
   "main": "./dist/main/main.js",
   "author": {
-    "name": "MinTerm",
+    "name": "Janik Piepenhagen",
     "email": "tinf103697@stud.fh-wedel.de",
     "url": "https://github.com/electron-react-boilerplate"
   },

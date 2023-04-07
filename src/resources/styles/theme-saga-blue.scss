@@ -1,1 +1,13 @@
-@import "primereact/resources/themes/saga-blue/theme.css";
+@import "~primereact/resources/themes/saga-blue/theme.css";
+
+.toolbar {
+  height: 70px;
+}
+
+.toolbar .p-toolbar {
+  padding: 0.8rem;
+}
+
+.main-body {
+  padding-bottom: calc(70px + 35px);
+}

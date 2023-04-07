@@ -1,1 +1,9 @@
-@import "primereact/resources/themes/md-dark-indigo/theme.css";
+@import "~primereact/resources/themes/md-dark-indigo/theme.css";
+
+.toolbar {
+  height: 87px;
+}
+
+.main-body {
+  padding-bottom: calc(87px + 35px);
+}

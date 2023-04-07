@@ -10,8 +10,7 @@
     "pretty": true,
     "sourceMap": true,
     "baseUrl": "./src",
-    //TODO: Zurückstellen
-    "noUnusedLocals": false,
+    "noUnusedLocals": true,
     "noUnusedParameters": false,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,

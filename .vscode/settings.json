@@ -19,5 +19,31 @@
     "test/**/__snapshots__": true,
     "package-lock.json": true,
     "*.{css,sass,scss}.d.ts": true
-  }
+  },
+  "cSpell.words": [
+    "blockui",
+    "confirmdialog",
+    "dismissable",
+    "dragdrop",
+    "droppoint",
+    "edata",
+    "hupcl",
+    "inputgroup",
+    "inputnumber",
+    "inputswitch",
+    "inputtext",
+    "integeronly",
+    "keyfilter",
+    "outputnumber",
+    "overlaypanel",
+    "rebalance",
+    "Rebalances",
+    "rtscts",
+    "Scroller",
+    "togglebutton",
+    "treenode",
+    "UNMAXIMIZE",
+    "xany",
+    "xoff"
+  ]
 }

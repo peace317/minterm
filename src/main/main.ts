@@ -12,36 +12,46 @@ import path from 'path';
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
-import { SerialPort } from 'serialport';
-import { DelimiterParser } from '@serialport/parser-delimiter';
 import MenuBuilder from './menu';
-import defaults from './daufaultSettings'
+import defaults from './defaultSettings';
 import { resolveHtmlPath } from './util';
-import { ConnectionStatusType } from '../renderer/types'
 import Store from 'electron-store';
+import { IPCChannelType } from '../renderer/types/IPCChannelType';
+import SerialPortListener from './serialportListener';
+import ElectronLogger from './logger';
 
 export default class AppUpdater {
   constructor() {
-    log.transports.file.level = 'info';
+    log.transports.file.level = isDevelopment ? 'debug' : 'info';
+    log.transports.file.fileName = app.getName() + '.log';
+    log.transports.remote.level = 'debug';
     autoUpdater.logger = log;
     autoUpdater.checkForUpdatesAndNotify();
   }
 }
 
 let mainWindow: BrowserWindow | null = null;
-const store = new Store({defaults});
+
+const store = new Store({
+  defaults,
+  clearInvalidConfig: true,
+});
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
   sourceMapSupport.install();
 }
 
-const isDevelopment =
+export const isDevelopment =
   process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
 
 if (isDevelopment) {
+  // accessing application debugging (https://www.electronjs.org/docs/latest/tutorial/application-debugging)
   require('electron-debug')();
 }
+
+// overriding console log functions
+Object.assign(console, log.functions);
 
 const installExtensions = async () => {
   const installer = require('electron-devtools-installer');
@@ -57,23 +67,24 @@ const installExtensions = async () => {
 };
 
 const createWindow = async () => {
+
   if (isDevelopment) {
     await installExtensions();
   }
 
-  const RESOURCES_PATH = app.isPackaged
-    ? path.join(process.resourcesPath, 'assets')
-    : path.join(__dirname, '../../assets');
-
-  const getAssetPath = (...paths: string[]): string => {
-    return path.join(RESOURCES_PATH, ...paths);
-  };
+  const logger = new ElectronLogger();
+  logger.init();
+  console.info("versions: " + JSON.stringify(process.versions));
+  console.info("userData: " + app.getPath('userData'));
+  console.info("logs: " + app.getPath('logs'));
 
   mainWindow = new BrowserWindow({
     show: false,
     width: 1024,
     height: 728,
-    icon: getAssetPath('icon.png'),
+    autoHideMenuBar: true,
+    frame: false,
+    titleBarStyle: 'hidden',
     webPreferences: {
       preload: app.isPackaged
         ? path.join(__dirname, 'preload.js')
@@ -81,6 +92,9 @@ const createWindow = async () => {
       nodeIntegration: true,
     },
   });
+
+  const serialPortConnector = new SerialPortListener(mainWindow, store);
+  serialPortConnector.init();
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
@@ -93,11 +107,19 @@ const createWindow = async () => {
     } else {
       mainWindow.show();
     }
-    sendPortList();
+
   });
 
   mainWindow.on('closed', () => {
     mainWindow = null;
+  });
+
+  mainWindow.on('maximize', () => {
+    mainWindow?.webContents.send(IPCChannelType.APP_MAXIMIZE);
+  });
+
+  mainWindow.on('unmaximize', () => {
+    mainWindow?.webContents.send(IPCChannelType.APP_UNMAXIMIZE);
   });
 
   const menuBuilder = new MenuBuilder(mainWindow);
@@ -109,7 +131,7 @@ const createWindow = async () => {
     return { action: 'deny' };
   });
 
-  // Remove this if your app does not use auto updates
+  // Remove this if app does not use auto updates
   // eslint-disable-next-line
   new AppUpdater();
 };
@@ -117,13 +139,18 @@ const createWindow = async () => {
 /**
  * Add event listeners...
  */
-
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
   if (process.platform !== 'darwin') {
     app.quit();
   }
+});
+
+app.on('render-process-gone', (event, webContents, details) => {
+  // Emitted when the renderer process unexpectedly disappears.
+  // This is normally because it was crashed or killed.
+  log.error(details.reason);
 });
 
 app
@@ -138,84 +165,54 @@ app
   })
   .catch(console.log);
 
-// Ab hier beginnt funktionaler code
-var serialPortConnection: SerialPort;
-
-async function sendPortList() {
-  if (mainWindow != null) {
-    var ports = await getPortList();
-    mainWindow.webContents.send('asynchronous-message', ports);
-  }
-  setTimeout(sendPortList, 5000);
-}
-
-async function getPortList() {
-  var portList = await SerialPort.list().then((ports) => {
-    if (ports.length === 0) {
-      console.log('No ports discovered');
-    }
-    return ports;
-  });
-  return portList;
-}
-
-/**
- * IPC-Listener for connecting with a SerialPort
- */
-ipcMain.on('connect:port', async (event, args) => {
-  if (args.length < 2) {
-    console.error("Not enough arguments given for connection. " + args);
-  }
-  var port = args[0] as {name: string, code: string} | undefined;
-  var baudRate = args[1] as {name: string, code: string} | undefined;
-  var response = ConnectionStatusType.CONNECTED;
-  if (port == undefined) {
-    response = ConnectionStatusType.NO_PORT_SELECTED;
-    event.reply('port:status', response);
-    return;
-  }
-  if (baudRate == undefined) {
-    response = ConnectionStatusType.NO_BAUD_RATE_SELECTED;
-    event.reply('port:status', response);
-    return;
-  }
-  serialPortConnection = new SerialPort({
-    path: port.code,
-    baudRate: Number(baudRate.code),
-  });
-  const parser = serialPortConnection.pipe(new DelimiterParser({ delimiter: '\n' }));
-  parser.on('data', logText);
-});
-
-/**
- * IPC-Listener for disconnection with SerialPort
- */
-ipcMain.on('disconnect:port', async (event, arg) => {
-
-  serialPortConnection.close(function (err: any) {
-    console.log('port closed', err);
-  });
-  console.log(arg);
-});
-
-ipcMain.on('kill:app', async (event, arg) => {
+ipcMain.on(IPCChannelType.APP_CLOSE, async (event, arg) => {
   mainWindow?.close();
 });
 
-ipcMain.on('reload:app', async (event, arg) => {
+ipcMain.on(IPCChannelType.APP_RELOAD, async (event, arg) => {
   mainWindow?.reload();
 });
 
-ipcMain.on('electron-store-get', async (event, val) => {
+ipcMain.on(IPCChannelType.APP_MINIMIZE, async (event, arg) => {
+  mainWindow?.minimize();
+});
+
+ipcMain.on(IPCChannelType.APP_MAXIMIZE, async (event, arg) => {
+  mainWindow?.maximize();
+});
+
+ipcMain.on(IPCChannelType.APP_RESTORE, async (event, arg) => {
+  mainWindow?.restore();
+});
+
+ipcMain.on(IPCChannelType.APP_VERSIONS, async (event, arg) => {
+  event.returnValue = process.versions;
+});
+
+ipcMain.on(IPCChannelType.STORE_GET, async (event, val) => {
   event.returnValue = store.get(val);
 });
 
-ipcMain.on('electron-store-set', async (event, key, val) => {
-  store.set(key, val);
+ipcMain.on(IPCChannelType.STORE_SET, async (event, key, val) => {
+  if (val === null || val === undefined) {
+    store.delete(key);
+  } else {
+    store.set(key, val);
+  }
 });
 
-function logText(buffer: Buffer) {
-    var buf = Buffer.from(buffer).toString();
-    console.log(buf);
-    mainWindow?.webContents.send('port:connection:data', buf);
-}
+ipcMain.on(IPCChannelType.LOG_FILE, async (event, arg) => {
+  event.returnValue = log.transports.file.readAllLogs();
+});
+
+ipcMain.on(IPCChannelType.OPEN_FILE, async (event, arg) => {
+  shell.openPath(arg[0]);
+});
+
+ipcMain.on(IPCChannelType.IS_DEVELOPMENT, async (event, arg) => {
+  event.returnValue = isDevelopment;
+});
+
+ipcMain.on(IPCChannelType.GET_ENV, async (event, arg) => {
+  event.returnValue = process.env[arg];
+});

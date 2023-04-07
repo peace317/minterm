@@ -24,6 +24,7 @@ export default class MenuBuilder {
       process.env.DEBUG_PROD === 'true'
     ) {
       this.setupDevelopmentEnvironment();
+      this.mainWindow.webContents.openDevTools();
     }
 
     const template =
