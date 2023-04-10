@@ -12,9 +12,18 @@ On Windows on the other hand an executable needs to be installed. After the setu
 
 ### What is MinTerm?
 
-Like many other serialport communication tools MinTerm provides a basic set of functionality to exchange data with yout microcontroller. But many of these apps differ in functionality to process or visualize the data and are also most of the time kinda old, unsopported and not cross-functional.
+Like many other serialport communication tools, MinTerm provides a basic set of functionality to exchange data with your microcontroller. But many of these apps differ in how to process or visualize the data, where one app has a feature the other doesen't have and vise versa. Also most of the time, they are kinda old, unsopported and not cross-functional.
 
 So MinTerm shall become a modern solution in combining varies features and a fresh look.
+
+Features:
+  - table view like seen in HTerm
+  - normal text monitor
+  - a plotter to display values
+  - macro creation
+  - varies export options
+  - use of parsers for grouping data (byte parser, delimiter parser, ready parser etc.)
+  - user storage
 
 ![Screenshot_11](https://user-images.githubusercontent.com/102929517/230526092-feaa0b63-0f6f-4840-a702-c5d87522f907.png)
 
