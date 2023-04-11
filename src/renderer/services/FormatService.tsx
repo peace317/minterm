@@ -1,8 +1,4 @@
-import { stringify } from 'querystring';
-import { useTranslation } from 'react-i18next';
 import { ISelectValue } from 'renderer/types/AppInterfaces';
-import { DataPointType } from 'renderer/types/DataPointType';
-import { ConversionType } from '../types/ConversionType';
 
 export class FormatService {
 

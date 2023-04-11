@@ -3,8 +3,6 @@ import { ConversionType } from '../renderer/types/ConversionType';
 import { MacroDataType } from 'renderer/types/MacroDataType';
 import { MacroVariableType } from 'renderer/types/MacroVariableType';
 import { MacroService } from '../renderer/services/MacroService';
-import { TreeNodeService } from '../renderer/services/TreeNodeService';
-import { ITreeNode } from '../renderer/types/TreeNodeType';
 
 function getDecVars(nums: number[]): MacroVariableType[] {
   var res = [];

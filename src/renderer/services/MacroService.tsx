@@ -1,4 +1,3 @@
-import e from 'express';
 import { ConversionType } from 'renderer/types/ConversionType';
 import { MacroDataType } from 'renderer/types/MacroDataType';
 import { MacroVariableType } from 'renderer/types/MacroVariableType';

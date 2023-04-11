@@ -1,7 +1,6 @@
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useResizeDetector } from 'react-resize-detector';
 import { DataPointType } from 'renderer/types/DataPointType';
 import { ConversionType } from '../../types/ConversionType';
@@ -70,11 +69,8 @@ const OutputDataTableCore: React.FC<IOutputDataTableCoreProps> = ({
   setSelectedCells = () => {},
 }) => {
   const WIDTH_PER_COLUMN = 100;
-  const { t } = useTranslation();
-  const [initWidth, setInitWidth] = useState<number | undefined>(initialWidth);
   const [colHeight, setColHeight] = useState<number>(0);
   const [tableData, setTableData] = useState<any>([]);
-  const [dataBuffer, setDataBuffer] = useState<any>([]);
   const [sticky, setSticky] = useState<boolean>(true);
   const dataTableRef = useRef<DataTable>(null);
   const [selectedConversions, setConversions] = useState<Array<ConversionType>>([
@@ -112,17 +108,13 @@ const OutputDataTableCore: React.FC<IOutputDataTableCoreProps> = ({
   }, [data]);
 
   useEffect(() => {
-    //updateTableData();
-  }, [dataBuffer]);
-
-  useEffect(() => {
     if (!conversionsDisabled) {
       setConversions([ConversionType.ASCII]);
     }
   }, [conversionsDisabled]);
 
   const buildColumns = () => {
-    let leftWidth: number = initWidth || ref.current.offsetWidth;
+    let leftWidth: number = initialWidth || ref.current.offsetWidth;
     const cols: any[] = [];
     let index = 0;
     while (leftWidth > WIDTH_PER_COLUMN) {
@@ -139,32 +131,6 @@ const OutputDataTableCore: React.FC<IOutputDataTableCoreProps> = ({
     if (columns.length !== cols.length) {
       setColumns(cols);
     }
-  };
-
-  const updateTableData = () => {
-    return new Promise(() => {
-      var colIndex = data.length % columns.length;
-      let rowObj = {};
-      let tData = [];
-      if (colIndex === undefined) return;
-      let value = dataBuffer.shift();
-      if (value === undefined) return;
-      if (colIndex !== 0) {
-        rowObj = tableData.pop();
-      }
-      console.log('buffer val: ' + value);
-      rowObj = {
-        ...rowObj,
-        [colIndex]: buildCell(value, selectedConversions),
-      };
-      tData = [...tableData, rowObj];
-      setTableData(tData);
-      if (sticky) {
-        virtualScroller?.scrollToIndex(
-          virtualScroller?.getRenderedRange().last
-        );
-      }
-    });
   };
 
   const buildTableData = () => {

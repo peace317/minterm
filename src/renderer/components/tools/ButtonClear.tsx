@@ -1,8 +1,6 @@
 import React from 'react';
 import { Button } from 'primereact/button';
-import { useTranslation } from 'react-i18next';
 import { IDefaultProps } from 'renderer/types/AppInterfaces';
-import { useContext } from 'renderer/context';
 import { VscTrash } from 'react-icons/vsc';
 
 interface IButtonClearProps extends IDefaultProps {
@@ -21,8 +19,6 @@ const ButtonClear: React.FC<IButtonClearProps> = ({
   toolTip,
   clearObject = () => {}
 }) => {
-
-  const { t } = useTranslation();
 
   const onClear = () => {
     clearObject([]);
