@@ -103,6 +103,12 @@ const SequenceInput: React.FC<ISequenceInputProps> = ({
     SerialPortService.sendMessage(message, selectedEncoding);
   };
 
+  const handleKeyDown = (event: any) => {
+    if (event.key === 'Enter' && !sendButtonHidden) {
+      onSend();
+    }
+  };
+
   return (
     <div id={id + ':container'} className={className}>
       <div className="p-mention w-full">
@@ -126,7 +132,8 @@ const SequenceInput: React.FC<ISequenceInputProps> = ({
             placeholder={t('INPUT')}
             className="w-full"
             value={userInput}
-            onChange={(e) => setUserInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            onChange={(e) => {console.log(e.target.value); setUserInput(e.target.value)}}
             keyfilter={keyFilter}
           />
         </div>
