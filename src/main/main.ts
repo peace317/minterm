@@ -26,7 +26,13 @@ export default class AppUpdater {
     log.transports.file.fileName = app.getName() + '.log';
     log.transports.remote.level = 'debug';
     autoUpdater.logger = log;
-    autoUpdater.checkForUpdatesAndNotify();
+    /*autoUpdater.setFeedURL({
+      provider: 'github',
+      repo: 'repo',
+      owner: 'peace317',
+      private: false,
+    });
+    autoUpdater.checkForUpdatesAndNotify();*/
   }
 }
 
@@ -67,16 +73,15 @@ const installExtensions = async () => {
 };
 
 const createWindow = async () => {
-
   if (isDevelopment) {
     await installExtensions();
   }
 
   const logger = new ElectronLogger();
   logger.init();
-  console.info("versions: " + JSON.stringify(process.versions));
-  console.info("userData: " + app.getPath('userData'));
-  console.info("logs: " + app.getPath('logs'));
+  console.info('versions: ' + JSON.stringify(process.versions));
+  console.info('userData: ' + app.getPath('userData'));
+  console.info('logs: ' + app.getPath('logs'));
 
   mainWindow = new BrowserWindow({
     show: false,
@@ -107,7 +112,6 @@ const createWindow = async () => {
     } else {
       mainWindow.show();
     }
-
   });
 
   mainWindow.on('closed', () => {
