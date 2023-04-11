@@ -95,8 +95,8 @@
     }
   },
   "repository": {
-    "type": "svn",
-    "url": "https://stud.fh-wedel.de/repos/laborprojekte/laborprojekt_08/"
+    "type": "git",
+    "url": "https://github.com/peace317/minterm/"
   },
   "author": {
     "name": "Janik Piepenhagen",
