@@ -1,12 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useContext } from '../../context';
-import { InputTextarea } from 'primereact/inputtextarea';
-import { IDefaultProps } from 'renderer/types/AppInterfaces';
-import { ScrollTop } from 'primereact/scrolltop';
 import { Button } from 'primereact/button';
-import { useResizeDetector } from 'react-resize-detector';
-import ButtonClear from '../tools/ButtonClear';
+import { InputTextarea } from 'primereact/inputtextarea';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useResizeDetector } from 'react-resize-detector';
+import { IDefaultProps } from '@minterm/types';
 import ActionBar from './ActionBar';
 
 interface IOutputTextAreaProps extends IDefaultProps {
@@ -44,8 +41,14 @@ const OutputTextArea: React.FC<IOutputTextAreaProps> = ({
     setScrollable();
   }, []);
 
+  const setScrollable = () => {
+    const maxScroll = ref.current?.scrollHeight - ref.current?.clientHeight;
+    setDownScrollable(ref.current?.scrollTop - maxScroll !== 0);
+    setTopScrollable(ref.current?.scrollTop !== 0);
+  };
+
   const goUp = () => {
-    var maxScrollTop = ref.current.scrollHeight - ref.current.clientHeight;
+    const maxScrollTop = ref.current.scrollHeight - ref.current.clientHeight;
 
     if (ref.current.scrollTop !== 0) {
       ref.current.scrollTo({
@@ -57,7 +60,7 @@ const OutputTextArea: React.FC<IOutputTextAreaProps> = ({
   };
 
   const goDown = () => {
-    var maxScrollDown = ref.current.scrollHeight - ref.current.clientHeight;
+    const maxScrollDown = ref.current.scrollHeight - ref.current.clientHeight;
     ref.current.scrollTo({
       top: ref.current.scrollTop + maxScrollDown,
       left: 0,
@@ -65,23 +68,16 @@ const OutputTextArea: React.FC<IOutputTextAreaProps> = ({
     });
   };
 
-  const setScrollable = () => {
-    var maxScroll = ref.current.scrollHeight - ref.current.clientHeight;
-    setDownScrollable(ref.current.scrollTop - maxScroll !== 0);
-    setTopScrollable(ref.current.scrollTop !== 0);
-  };
+
 
   return (
-    <div
-      id={id + ':container'}
-      className={className + ' card h-full'}
-    >
+    <div id={`${id}:container`} className={`${className} card h-full`}>
       <div hidden={actionBarHidden}>
         <ActionBar
-          id={id + ':outputActionBar'}
+          id={`${id}:outputActionBar`}
           data={data}
           setData={setData}
-          dataCountLabel={'Rx'}
+          dataCountLabel="Rx"
           dataCounterHidden={dataCounterHidden}
           clearButtonHidden={clearButtonHidden}
           clearButtonToolTip={t('CLEAR_RECEIVED')}

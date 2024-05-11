@@ -1,30 +1,21 @@
+/* eslint-disable no-unused-vars */
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
-import { Logger } from 'renderer/services/Logger';
-import { IPCChannelType } from 'renderer/types/IPCChannelType';
-import { StoreKey } from 'renderer/types/StoreKeyType';
+import { IPCChannelType } from '../renderer/types/enums/IPCChannelType';
+import { StoreKey } from '../renderer/types/enums/StoreKeyType';
 
-const className = 'preload';
-
-contextBridge.exposeInMainWorld('electron', {
+const electronHandler = {
   ipcRenderer: {
     sendMessage(channel: IPCChannelType, ...args: unknown[]) {
       ipcRenderer.send(channel, args);
     },
     on(channel: IPCChannelType, func: (...args: unknown[]) => void) {
-      ipcRenderer.send(IPCChannelType.INFO, [
-        Logger.buildMessageTemplate(
-          className,
-          'Registering new IPC-listener ' +
-            channel +
-            ': ' +
-            ipcRenderer.listenerCount(channel)
-        ),
-      ]);
       const subscription = (_event: IpcRendererEvent, ...args: unknown[]) =>
         func(...args);
-      // Deliberately strip event as it includes `sender`
       ipcRenderer.on(channel, subscription);
-      return () => ipcRenderer.removeListener(channel, subscription);
+
+      return () => {
+        ipcRenderer.removeListener(channel, subscription);
+      };
     },
     once(channel: IPCChannelType, func: (...args: unknown[]) => void) {
       ipcRenderer.once(channel, (_event, ...args) => func(...args));
@@ -36,10 +27,10 @@ contextBridge.exposeInMainWorld('electron', {
       channel: IPCChannelType,
       listener: (...args: any[]) => void
     ) {
-      var cnt = ipcRenderer.listenerCount(channel);
+      const cnt = ipcRenderer.listenerCount(channel);
       ipcRenderer.removeListener(channel, listener);
       if (cnt === ipcRenderer.listenerCount(channel)) {
-        console.warn('Listener was not removed! Channel: ' + channel);
+        console.warn(`Listener was not removed! Channel: ${channel}`);
       }
     },
     removeAllListener(channel: IPCChannelType) {
@@ -71,4 +62,8 @@ contextBridge.exposeInMainWorld('electron', {
       ipcRenderer.send(IPCChannelType.WARN, params);
     },
   },
-});
+};
+
+contextBridge.exposeInMainWorld('electron', electronHandler);
+
+export type ElectronHandler = typeof electronHandler;

@@ -1,13 +1,12 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Chart } from 'primereact/chart';
 import { useContext } from '../../context';
 import { useResizeDetector } from 'react-resize-detector';
 import { Button } from 'primereact/button';
 import { useTranslation } from 'react-i18next';
 import { AiOutlineDownload } from 'react-icons/ai';
-import { IDefaultProps } from 'renderer/types/AppInterfaces';
 import ActionBar from './ActionBar';
-import { FormatService } from 'renderer/services/FormatService';
+import { StoreKey } from '@/renderer/types';
 
 /**
  * Functional component for the live data representation in a line chart,
@@ -16,7 +15,7 @@ import { FormatService } from 'renderer/services/FormatService';
  *
  * @param IDefaultProps
  */
-const OutputLineChart: React.FC<IDefaultProps> = ({ id, className }) => {
+const OutputLineChart: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ id, className }) => {
   const getThemes = () => {
     let plugins = {
       legend: {
@@ -107,7 +106,7 @@ const OutputLineChart: React.FC<IDefaultProps> = ({ id, className }) => {
   };
 
   const WIDTH_PER_DATA_POINT = 20;
-  const { receivedData, setReceivedData, selectedTheme } = useContext();
+  const { receivedData, setReceivedData } = useContext();
   const { lightOptions, darkOptions } = getThemes();
   const chartRef = useRef<Chart>(null);
   const [initWidth, setInitWidth] = useState<number>(0);
@@ -131,6 +130,9 @@ const OutputLineChart: React.FC<IDefaultProps> = ({ id, className }) => {
       },
     ],
   });
+  const theme = useMemo(() => {
+    return window.electron.store.get(StoreKey.THEME);
+  }, []);
 
   useEffect(() => {
     buildLineChart();
@@ -199,7 +201,7 @@ const OutputLineChart: React.FC<IDefaultProps> = ({ id, className }) => {
     const ctx: any = chartRef.current?.getCanvas().getContext('2d');
     // fillstyle need be set in the back
     ctx.globalCompositeOperation = 'destination-over';
-    if (selectedTheme?.theme === 'dark') {
+    if (theme === 'dark') {
       ctx.fillStyle = '#2a323d';
     } else {
       ctx.fillStyle = 'white';
@@ -225,7 +227,7 @@ const OutputLineChart: React.FC<IDefaultProps> = ({ id, className }) => {
   };
 
   const getChart = () => {
-    var options = selectedTheme?.theme === 'dark' ? darkOptions : lightOptions;
+    var options = theme === 'dark' ? darkOptions : lightOptions;
     var opacity = isDataNumeric ? '1' : '0.5';
     return (
       <Chart

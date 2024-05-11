@@ -5,15 +5,10 @@ import { InputTextarea } from 'primereact/inputtextarea';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TfiPlus } from 'react-icons/tfi';
-import { MacroService } from 'renderer/services/MacroService';
-import { IDefaultProps } from 'renderer/types/AppInterfaces';
-import { AppendSequenceType } from 'renderer/types/AppendSequenceType';
-import { ConversionType } from 'renderer/types/ConversionType';
-import { MacroDataType } from 'renderer/types/MacroDataType';
-import { MacroVariableType } from 'renderer/types/MacroVariableType';
-import { ITreeNode } from 'renderer/types/TreeNodeType';
-import SequenceInput from '../SequenceInput';
+import SequenceInput from '../tools/SequenceInput';
 import MacroVariableList from './MacroVariableList';
+import { AppendSequenceType, ConversionType, IDefaultProps, ITreeNode, MacroDataType, MacroVariableType } from '@minterm/types';
+import { MacroService } from '@minterm/services';
 
 interface IMacroDialogProps extends IDefaultProps {
   display: boolean;
@@ -69,13 +64,13 @@ const MacroDialog: React.FC<IMacroDialogProps> = ({
   };
 
   const onAccept = () => {
-    var macro: MacroDataType = {
+    const macro: MacroDataType = {
       name: sequenceName,
-      description: description,
-      sequence: sequence,
+      description,
+      sequence,
       sequenceFormat: selectedEncoding,
-      appendSequence: appendSequence,
-      variables: variables,
+      appendSequence,
+      variables,
     };
     if (editMacro !== undefined && editMacro !== null) {
       onEditMacro(macro);
@@ -104,9 +99,9 @@ const MacroDialog: React.FC<IMacroDialogProps> = ({
    * is then included at the end of the sequence.
    */
   const addVariable = () => {
-    var newVar = MacroService.createNewVariable(sequence, getEncoding());
+    const newVar = MacroService.createNewVariable(sequence, getEncoding());
     if (newVar == undefined) return;
-    var newSequence = MacroService.addVariableToSequence(sequence, newVar);
+    const newSequence = MacroService.addVariableToSequence(sequence, newVar);
     setSequence(newSequence);
     setVariables([...variables, newVar]);
   };
@@ -129,11 +124,11 @@ const MacroDialog: React.FC<IMacroDialogProps> = ({
    * @param variable changed varaible
    */
   const onVariableChange = (variable: MacroVariableType) => {
-    var current: MacroVariableType | undefined = variables.filter(
+    let current: MacroVariableType | undefined = variables.filter(
       (e) => e.name === variable.name
     )[0];
     if (current === undefined)
-      console.error('Variable `' + variable.name + '` not found.');
+      console.error(`Variable \`${variable.name}\` not found.`);
     current = variable;
   };
 
@@ -154,7 +149,7 @@ const MacroDialog: React.FC<IMacroDialogProps> = ({
         return ConversionType.HEX;
       default:
         console.error(
-          'Unhandled conversion type for variable encoding ' + selectedEncoding
+          `Unhandled conversion type for variable encoding ${selectedEncoding}`
         );
         return ConversionType.DEC;
     }
@@ -185,7 +180,7 @@ const MacroDialog: React.FC<IMacroDialogProps> = ({
   };
 
   return (
-    <div id={id + ':container'} className={className}>
+    <div id={`${id}:container`} className={className}>
       <Dialog
         id={id}
         header={getHeaderName}
@@ -193,7 +188,7 @@ const MacroDialog: React.FC<IMacroDialogProps> = ({
         onHide={() => onHide()}
         footer={renderFooter()}
         style={{ width: '40rem' }}
-        resizable={true}
+        resizable
       >
         <div className="card">
           <div className="field">
@@ -218,7 +213,7 @@ const MacroDialog: React.FC<IMacroDialogProps> = ({
           </div>
           <div className="field">
             <h4 className="label-h4">{t('SEQUENCE')}</h4>
-            <div className="p-mention w-full">
+            <div className="flex w-full">
               <SequenceInput
                 id="sequenceInput"
                 className="w-full"
@@ -228,7 +223,7 @@ const MacroDialog: React.FC<IMacroDialogProps> = ({
                 onEncodingChange={setEncoding}
                 appendCommand={appendSequence}
                 onAppendCommandChange={setAppendSequence}
-                sendButtonHidden={true}
+                sendButtonHidden
               />
               <Button
                 tooltip={t('ADD_VARIABLE')}
@@ -240,7 +235,7 @@ const MacroDialog: React.FC<IMacroDialogProps> = ({
           </div>
           <div>
             <MacroVariableList
-              id={':' + id + ':variableList'}
+              id={`:${id}:variableList`}
               variables={variables}
               typeChangeable={selectedEncoding === ConversionType.ASCII}
               onVariableChange={onVariableChange}

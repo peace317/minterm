@@ -1,9 +1,9 @@
 import React from 'react';
 import { Button } from 'primereact/button';
-import { IDefaultProps } from 'renderer/types/AppInterfaces';
 import { VscTrash } from 'react-icons/vsc';
+import { IDefaultProps } from '@/renderer/types/AppInterfaces';
 
-interface IButtonClearProps extends IDefaultProps {
+interface IButtonClearProps extends React.HTMLAttributes<HTMLDivElement> {
   toolTip?: string;
   clearObject?: React.Dispatch<React.SetStateAction<any[]>>;
 }
@@ -16,8 +16,9 @@ interface IButtonClearProps extends IDefaultProps {
 const ButtonClear: React.FC<IButtonClearProps> = ({
   id,
   className,
-  toolTip,
-  clearObject = () => {}
+  toolTip = '',
+  clearObject = () => {},
+  ...props
 }) => {
 
   const onClear = () => {
@@ -25,12 +26,12 @@ const ButtonClear: React.FC<IButtonClearProps> = ({
   };
 
   return (
-    <div id={id +":container"} className={className}>
+    <div id={`${id}:container`} className={className} {...props}>
       <Button
         id={id}
-        className='p-button-danger'
+        severity="danger"
         tooltip={toolTip}
-        tooltipOptions={{position: 'left', showDelay: 500}}
+        tooltipOptions={{ position: 'left', showDelay: 500 }}
         icon={<VscTrash className="p-button-icon-left" />}
         onClick={onClear}
       />

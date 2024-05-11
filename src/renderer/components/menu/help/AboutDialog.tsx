@@ -1,10 +1,7 @@
-import React, { useEffect } from 'react';
 import { Button } from 'primereact/button';
-import { useTranslation } from 'react-i18next';
-import { IDefaultProps, IDialogProps } from 'renderer/types/AppInterfaces';
-import { useContext } from 'renderer/context';
 import { Dialog } from 'primereact/dialog';
-import { IPCChannelType } from 'renderer/types/IPCChannelType';
+import { useTranslation } from 'react-i18next';
+import { IDialogProps, IPCChannelType } from '@minterm/types';
 
 /**
  * Shows information about current versions and contribution.
@@ -33,28 +30,28 @@ const AboutDialog: React.FC<IDialogProps> = ({
   };
 
   const getVersions = () => {
-    var versions = window.electron.ipcRenderer.fetch(IPCChannelType.APP_VERSIONS);
-    var res = "";
+    const versions = window.electron.ipcRenderer.fetch(
+      IPCChannelType.APP_VERSIONS
+    );
+    let res = '';
     for (const versionType of ['chrome', 'electron', 'node', 'v8']) {
-      res += versionType + ": " + versions[versionType] + "\n";
+      res += `${versionType}: ${versions[versionType]}\n`;
     }
     return res;
-  }
+  };
 
   return (
-    <div id={id +":container"} className={className}>
+    <div id={`${id}:container`} className={className}>
       <Dialog
         id={id}
         header={t('ABOUT')}
         visible={display}
         onHide={() => setDisplay(false)}
-        style={{ width: '35rem'}}
+        style={{ width: '35rem' }}
         resizable={false}
         footer={renderFooter()}
       >
-        <p style={{whiteSpace: "pre-line"}}>
-          {getVersions()}
-        </p>
+        <p style={{ whiteSpace: 'pre-line' }}>{getVersions()}</p>
       </Dialog>
     </div>
   );

@@ -1,14 +1,12 @@
 import { Button } from 'primereact/button';
-import { Checkbox } from 'primereact/checkbox';
+import { Checkbox, CheckboxChangeEvent } from 'primereact/checkbox';
 import { InputNumber } from 'primereact/inputnumber';
 import { Tooltip } from 'primereact/tooltip';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { FormatService } from '../../services/FormatService';
-import { IDefaultProps, ISelectValue } from 'renderer/types/AppInterfaces';
-import { ConversionType } from '../../types/ConversionType';
-import { DataPointType } from '../../types/DataPointType';
+import { ConversionType, DataPointType, IDefaultProps, ISelectValue } from '@minterm/types';
 import ButtonClear from '../tools/ButtonClear';
+import { typeToSelectList } from '@minterm/services';
 
 export interface IActionBarProps extends IDefaultProps {
   data?: Array<DataPointType>;
@@ -48,14 +46,14 @@ const ActionBar: React.FC<IActionBarProps> = ({
   clearButtonHidden = true,
   clearButtonToolTip = '',
   saveButtonHidden = true,
-  onSave
+  onSave = () => {},
 }) => {
   const { t } = useTranslation();
 
-  const encodings = FormatService.typeToSelectList(ConversionType);
+  const encodings = typeToSelectList(ConversionType);
 
-  const onEncodingChange = (e: { value: ISelectValue; checked: boolean }) => {
-    let _selectedEncodings = [...selectedConversions];
+  const onEncodingChange = (e: CheckboxChangeEvent) => {
+    const _selectedEncodings = [...selectedConversions];
     if (e.checked) {
       _selectedEncodings.push(e.value.key);
     } else {
@@ -71,7 +69,7 @@ const ActionBar: React.FC<IActionBarProps> = ({
   };
 
   return (
-    <div id={id + ':container'} className={className}>
+    <div id={`${id}:container`} className={className}>
       <div className="p-checkbox h-2rem w-full" style={{ cursor: 'unset' }}>
         <div className="p-checkbox h-2rem">
           {!conversionsHidden &&
@@ -104,16 +102,21 @@ const ActionBar: React.FC<IActionBarProps> = ({
             <i className="pi pi-info-circle noConversionTooltip" />
           </span>
         </div>
-        <div className='action-button h-2rem' hidden={saveButtonHidden}>
-          <Button type="button" icon="pi pi-image" label={t('SAVE')} onClick={onSave}/>
+        <div className="action-button h-2rem" hidden={saveButtonHidden}>
+          <Button
+            type="button"
+            icon="pi pi-image"
+            label={t('SAVE')}
+            onClick={onSave}
+          />
         </div>
         <div className="outputnumber-small absolute right-0">
           <div hidden={dataCounterHidden}>
             <label htmlFor="receiveCount">{dataCountLabel}</label>
             <InputNumber
-              id={id + ':inputNumber'}
+              id={`${id}:inputNumber`}
               inputId="receiveCount"
-              readOnly={true}
+              readOnly
               size={10}
               value={data.length}
             />

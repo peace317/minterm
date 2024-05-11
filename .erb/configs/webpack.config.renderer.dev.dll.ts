@@ -23,13 +23,7 @@ const configuration: webpack.Configuration = {
 
   target: 'electron-renderer',
 
-  externals: [
-    'fsevents',
-    'crypto-browserify',
-    'primereact',
-    'primeflex',
-    'primeicons',
-  ],
+  externals: ['fsevents', 'crypto-browserify'],
 
   /**
    * Use `module` from `webpack.config.renderer.dev.js`

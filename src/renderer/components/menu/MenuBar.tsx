@@ -5,14 +5,14 @@ import {
   VscChromeClose,
   VscChromeMaximize,
   VscChromeMinimize,
-  VscChromeRestore, VscQuestion
+  VscChromeRestore,
+  VscQuestion,
 } from 'react-icons/vsc';
-import { IDefaultProps } from 'renderer/types/AppInterfaces';
-import { IPCChannelType } from 'renderer/types/IPCChannelType';
-import ConnectionSettingsDialog from './connection/ConnectionSettingsDialog';
+import { IDefaultProps, IPCChannelType } from '@minterm/types';
 import ParserSettingsDialog from './connection/ParserSettingsDialog';
-import ExportDialog from './file/ExportDialog';
 import GeneralSettingsDialog from './general/GeneralSettingsDialog';
+import ConnectionSettingsDialog from './connection/ConnectionSettingsDialog';
+import ExportDialog from './file/ExportDialog';
 import AboutDialog from './help/AboutDialog';
 import LoggingDialog from './help/LoggingDialog';
 
@@ -24,7 +24,7 @@ const MenuBar: React.FC<IDefaultProps> = ({ id, className }) => {
   const [exportOptions, setExportOptions] = useState(false);
   const [loggingDialog, setLoggingDialog] = useState(false);
   const [aboutDialog, setAboutDialog] = useState(false);
-  const start = <i className="pi"></i>;
+  const start = <i className="pi" />;
   const end = (
     <div className="window-controls">
       <div
@@ -107,7 +107,6 @@ const MenuBar: React.FC<IDefaultProps> = ({ id, className }) => {
       items: [
         {
           label: t('CONNECTION_OPTIONS'),
-          //icon: <TbPlugConnected className="pi pi-fw mr-2" />,
           className: 'menu-item-no-icon',
           command: () => {
             setConnectionSettings(true);
@@ -125,7 +124,7 @@ const MenuBar: React.FC<IDefaultProps> = ({ id, className }) => {
         },
       ],
     },
-    /*{
+    /* {
       label: t('MACROS'),
       items: [
         {
@@ -133,7 +132,7 @@ const MenuBar: React.FC<IDefaultProps> = ({ id, className }) => {
           icon: 'pi pi-fw pi-user-plus',
         },
       ],
-    },*/
+    }, */
     {
       label: t('SETTINGS'),
       items: [
@@ -150,7 +149,7 @@ const MenuBar: React.FC<IDefaultProps> = ({ id, className }) => {
       label: t('HELP'),
       items: [
         {
-          label: t('HELP') + '...',
+          label: `${t('HELP')}...`,
           icon: <VscQuestion className="pi pi-fw mr-2" size={18} />,
           className: '',
           command: () => {
@@ -190,9 +189,10 @@ const MenuBar: React.FC<IDefaultProps> = ({ id, className }) => {
   ];
 
   return (
-    <div id={id +":container"} className={className + ' menubar menubar-drag'}>
+    <div id={`${id}:container`} className={`${className} menubar menubar-drag`}>
+      <Menubar id={id} model={menubarItems} start={start} end={end} />
       <GeneralSettingsDialog
-        id={'settingsDialog'}
+        id="settingsDialog"
         display={displaySettings}
         setDisplay={setDisplaySettings}
       />
@@ -202,7 +202,7 @@ const MenuBar: React.FC<IDefaultProps> = ({ id, className }) => {
         setDisplay={setParserSettings}
       />
       <ConnectionSettingsDialog
-        id={'connectionSettingsDialog'}
+        id="connectionSettingsDialog"
         display={connectionSettings}
         setDisplay={setConnectionSettings}
       />
@@ -221,7 +221,6 @@ const MenuBar: React.FC<IDefaultProps> = ({ id, className }) => {
         display={aboutDialog}
         setDisplay={setAboutDialog}
       />
-      <Menubar id={id} model={menubarItems} start={start} end={end} />
     </div>
   );
 };

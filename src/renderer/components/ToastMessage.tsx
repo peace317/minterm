@@ -1,11 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Toast } from 'primereact/toast';
 import { useTranslation } from 'react-i18next';
-import { IDefaultProps } from 'renderer/types/AppInterfaces';
-import { IPCChannelType } from 'renderer/types/IPCChannelType';
-import { ConnectionStatusType } from 'renderer/types/ConnectionStatusType';
+import { IDefaultProps, ConnectionStatusType, IPCChannelType } from '@minterm/types';
 
-const ToastMessage: React.FC<IDefaultProps> = ({ id, className }) => {
+const ToastMessage = () => {
   const toast = useRef<Toast>(null);
   const { t } = useTranslation();
   const [connectionStatus, setConnectionStatus] = useState<
@@ -73,15 +71,15 @@ const ToastMessage: React.FC<IDefaultProps> = ({ id, className }) => {
         break;
       default:
         if (connectionStatus !== undefined) {
-          console.error('Unknown status type ' + connectionStatus);
+          console.error(`Unknown status type ${connectionStatus}`);
         }
     }
     setConnectionStatus(undefined);
   }, [connectionStatus]);
 
   return (
-    <div id={id +":container"} className={className}>
-      <Toast id={id} ref={toast} />
+    <div>
+      <Toast ref={toast} />
     </div>
   );
 };

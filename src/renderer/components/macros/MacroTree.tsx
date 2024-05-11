@@ -5,29 +5,18 @@ import { Menubar } from 'primereact/menubar';
 import { MenuItem } from 'primereact/menuitem';
 import {
   Tree,
-  TreeDragDropParams,
+  TreeDragDropEvent,
   TreeExpandedKeysType,
-  TreeNodeTemplateOptions
+  TreeNodeTemplateOptions,
 } from 'primereact/tree';
-import TreeNode from 'primereact/treenode';
+import { TreeNode } from 'primereact/treenode';
 import React, { useEffect, useRef, useState } from 'react';
-import {
-  VscAdd,
-  VscCollapseAll,
-  VscGroupByRefType
-} from 'react-icons/vsc';
-import { MacroService } from 'renderer/services/MacroService';
-import { SerialPortService } from 'renderer/services/SerialPortService';
-import { TreeNodeService } from 'renderer/services/TreeNodeService';
-import { IDefaultProps } from 'renderer/types/AppInterfaces';
-import { ConnectionStatusType } from 'renderer/types/ConnectionStatusType';
-import { ConversionType } from 'renderer/types/ConversionType';
-import { IPCChannelType } from 'renderer/types/IPCChannelType';
-import { MacroDataType } from 'renderer/types/MacroDataType';
-import { StoreKey } from 'renderer/types/StoreKeyType';
-import { ITreeNode } from 'renderer/types/TreeNodeType';
+import { VscAdd, VscCollapseAll, VscGroupByRefType } from 'react-icons/vsc';
 import MacroDialog from './MacroDialog';
 import MacroTreeItem from './MacroTreeItem';
+import { ConnectionStatusType, ConversionType, IDefaultProps, IPCChannelType, ITreeNode, MacroDataType, StoreKey } from '@minterm/types';
+import { MacroService, SerialPortService, TreeNodeService } from '@minterm/services';
+import clsx from 'clsx';
 
 /**
  * Component for a macro tree. A macro tree is a dynamic listing of
@@ -50,7 +39,7 @@ const MacroTree: React.FC<IDefaultProps> = ({ id, className }) => {
   const cmMacro = useRef<any>(null);
   const cmMacroGroup = useRef<any>(null);
   const getContextMenu = (isMacroGroup: boolean) => {
-    var menuMacro: Array<MenuItem> = [];
+    const menuMacro: Array<MenuItem> = [];
     if (!isMacroGroup) {
       menuMacro.push(
         {
@@ -88,7 +77,7 @@ const MacroTree: React.FC<IDefaultProps> = ({ id, className }) => {
       {
         label: t('RENAME'),
         command: () => {
-          var node = TreeNodeService.searchNode(
+          const node = TreeNodeService.searchNode(
             selectedContextNode?.key?.toString(),
             nodes
           );
@@ -132,7 +121,7 @@ const MacroTree: React.FC<IDefaultProps> = ({ id, className }) => {
    * @param macro macro to add
    */
   const addMacro = (macro: MacroDataType) => {
-    var newNode: ITreeNode = {
+    const newNode: ITreeNode = {
       key: crypto.randomUUID(),
       data: macro,
       label: macro.name,
@@ -154,7 +143,7 @@ const MacroTree: React.FC<IDefaultProps> = ({ id, className }) => {
    * @param macro macro to be replaced
    */
   const onEditMacro = (macro: MacroDataType) => {
-    var newNode: ITreeNode = {
+    const newNode: ITreeNode = {
       key: crypto.randomUUID(),
       data: macro,
       label: macro.name,
@@ -175,7 +164,7 @@ const MacroTree: React.FC<IDefaultProps> = ({ id, className }) => {
    * Creates a new macro group and adds this at the end of the node list.
    */
   const createNewMacroGroup = () => {
-    var newNode: ITreeNode = {
+    const newNode: ITreeNode = {
       key: crypto.randomUUID(),
       label: '',
       leaf: false,
@@ -202,11 +191,11 @@ const MacroTree: React.FC<IDefaultProps> = ({ id, className }) => {
     setExpandedKeys({});
   };
 
-  const onDragDrop = (event: TreeDragDropParams) => {
-    var dropNode = event.dropNode as ITreeNode;
+  const onDragDrop = (event: TreeDragDropEvent) => {
+    const dropNode = event.dropNode as ITreeNode;
     // dropNode can be a drop anchor or a macro group
     if (dropNode === null || dropNode.isMacroGroup) {
-      let nodes = event.value as Array<ITreeNode>;
+      const nodes = event.value as Array<ITreeNode>;
       setNodes(nodes);
     }
   };
@@ -243,7 +232,7 @@ const MacroTree: React.FC<IDefaultProps> = ({ id, className }) => {
    * @param node macro group
    */
   const executeMacroGroup = (node: ITreeNode) => {
-    let portStatus = window.electron.ipcRenderer.fetch(
+    const portStatus = window.electron.ipcRenderer.fetch(
       IPCChannelType.PORT_STATUS
     );
     if (portStatus !== ConnectionStatusType.CONNECTED) {
@@ -251,7 +240,7 @@ const MacroTree: React.FC<IDefaultProps> = ({ id, className }) => {
       return;
     }
 
-    let nodesToSend = TreeNodeService.collectAsList(
+    const nodesToSend = TreeNodeService.collectAsList(
       node?.key?.toString(),
       nodes
     );
@@ -271,10 +260,10 @@ const MacroTree: React.FC<IDefaultProps> = ({ id, className }) => {
   };
 
   const nodeTemplate = (node: TreeNode, options: TreeNodeTemplateOptions) => {
-    var _node = node as ITreeNode;
+    const _node = node as ITreeNode;
     return (
       <MacroTreeItem
-        id={'' + node.key}
+        id={`${node.key}`}
         node={_node}
         options={options}
         removeNode={removeNode}
@@ -318,7 +307,7 @@ const MacroTree: React.FC<IDefaultProps> = ({ id, className }) => {
   );
 
   return (
-    <div id={id + ':container'} className={className + ' h-full'}>
+    <div id={`${id}:container`} className={clsx(className, "h-full w-full")}>
       <ContextMenu
         model={getContextMenu(false)}
         ref={cmMacro}
@@ -360,7 +349,7 @@ const MacroTree: React.FC<IDefaultProps> = ({ id, className }) => {
             );
           }}
           onContextMenu={(event) => {
-            let node = event.node as ITreeNode;
+            const node = event.node as ITreeNode;
             if (node.isMacroGroup) {
               cmMacro.current?.hide(selectedContextNode !== undefined);
               cmMacroGroup.current?.show(event.originalEvent);
@@ -371,7 +360,7 @@ const MacroTree: React.FC<IDefaultProps> = ({ id, className }) => {
           }}
           header={getHeader}
           nodeTemplate={nodeTemplate}
-          showHeader={true}
+          showHeader
         />
       </div>
     </div>

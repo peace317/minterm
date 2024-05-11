@@ -1,8 +1,7 @@
 import '@testing-library/jest-dom';
-import { ConversionType } from '../renderer/types/ConversionType';
-import { MacroDataType } from 'renderer/types/MacroDataType';
-import { MacroVariableType } from 'renderer/types/MacroVariableType';
-import { MacroService } from '../renderer/services/MacroService';
+import { MacroService } from '@minterm/services';
+import { ConversionType, MacroDataType, MacroVariableType } from '@minterm/types';
+
 
 function getDecVars(nums: number[]): MacroVariableType[] {
   var res = [];

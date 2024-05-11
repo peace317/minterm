@@ -5,13 +5,9 @@ import { Dropdown } from 'primereact/dropdown';
 import { InputSwitch } from 'primereact/inputswitch';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import BaudRateSelect from 'renderer/components/tools/BaudRateSelect';
-import PortSelect from 'renderer/components/tools/PortSelect';
-import {
-  IDialogProps,
-  ISelectValue
-} from 'renderer/types/AppInterfaces';
-import { StoreKey } from 'renderer/types/StoreKeyType';
+import BaudRateSelect from '@/renderer/components/tools/BaudRateSelect';
+import PortSelect from '@/renderer/components/tools/PortSelect';
+import { IDialogProps, ISelectValue, StoreKey } from '@minterm/types';
 
 const ConnectionSettingsDialog: React.FC<IDialogProps> = ({
   id,
@@ -119,21 +115,19 @@ const ConnectionSettingsDialog: React.FC<IDialogProps> = ({
   };
 
   return (
-    <div id={id + ':container'} className={className + ' card'}>
+    <div id={`${id}:container`} className={`${className} card`}>
       <ConfirmDialog />
       <Dialog
-        id={'dialogWrapper:dialog:' + id}
+        id={`dialogWrapper:dialog:${id}`}
         header={t('CONNECTION_OPTIONS')}
         visible={display}
         onHide={() => onHide()}
         style={{ width: '40rem' }}
-        resizable={true}
+        resizable
         footer={renderFooter()}
       >
         <div>
-        <p>
-          {t('CONNECTION_OPTION_EXPLANATION')}
-        </p>
+          <p>{t('CONNECTION_OPTION_EXPLANATION')}</p>
           <div className="grid">
             <div className="col-6 dropdown">
               <h4 className="">{t('PORT')}</h4>
@@ -187,50 +181,32 @@ const ConnectionSettingsDialog: React.FC<IDialogProps> = ({
             </div>
           </div>
           <div className="mt-2">
-              <h4 className="label-h4">{t('LOCK')}</h4>
-              <p>{t('LOCK_TOOLTIP')}</p>
-              <InputSwitch
-                checked={lock}
-                onChange={(e) => setLock(e.value)}
-              />
+            <h4 className="label-h4">{t('LOCK')}</h4>
+            <p>{t('LOCK_TOOLTIP')}</p>
+            <InputSwitch checked={lock} onChange={(e) => setLock(e.value || false)} />
           </div>
           <h4 className="label-h4">rtscts</h4>
           <p>{t('FLOW_CTRL_TOOLTIP')}</p>
-          <InputSwitch
-            checked={rtscts}
-            onChange={(e) => setRtscts(e.value)}
-          />
+          <InputSwitch checked={rtscts} onChange={(e) => setRtscts(e.value || false)} />
           <div>
             <h4 className="label-h4">xon</h4>
             <p>{t('FLOW_CTRL_TOOLTIP')}</p>
-            <InputSwitch
-              checked={xon}
-              onChange={(e) => setXon(e.value)}
-            />
+            <InputSwitch checked={xon} onChange={(e) => setXon(e.value || false)} />
           </div>
           <div>
             <h4 className="label-h4">xoff</h4>
             <p>{t('FLOW_CTRL_TOOLTIP')}</p>
-            <InputSwitch
-              checked={xoff}
-              onChange={(e) => setXoff(e.value)}
-            />
+            <InputSwitch checked={xoff} onChange={(e) => setXoff(e.value || false)} />
           </div>
           <div>
             <h4 className="label-h4">xany</h4>
             <p>{t('FLOW_CTRL_TOOLTIP')}</p>
-            <InputSwitch
-              checked={xany}
-              onChange={(e) => setXany(e.value)}
-            />
+            <InputSwitch checked={xany} onChange={(e) => setXany(e.value || false)} />
           </div>
           <div>
             <h4 className="label-h4">hupcl</h4>
             <p>{t('HUPCL_TOOLTIP')}</p>
-            <InputSwitch
-              checked={hupcl}
-              onChange={(e) => setHupcl(e.value)}
-            />
+            <InputSwitch checked={hupcl} onChange={(e) => setHupcl(e.value || false)} />
           </div>
         </div>
       </Dialog>

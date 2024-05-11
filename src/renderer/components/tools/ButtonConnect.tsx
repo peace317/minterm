@@ -1,18 +1,17 @@
 import { ToggleButton } from 'primereact/togglebutton';
 import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Context } from 'renderer/context';
-import { IDefaultProps } from 'renderer/types/AppInterfaces';
-import { ConnectionStatusType } from 'renderer/types/ConnectionStatusType';
-import { IPCChannelType } from 'renderer/types/IPCChannelType';
+import { Context } from '@/renderer/context';
+import { IDefaultProps, ConnectionStatusType, IPCChannelType } from '@minterm/types';
+import { ColorPicker } from 'primereact/colorpicker';
 
 /**
  * Component for a taggable button that opens a connection to a serialport. If
  * the connection can't be opened, an info message occurs.
  *
- * @param IDefaultProps
+ * @param HTMLAttributes
  */
-const ButtonConnect: React.FC<IDefaultProps> = ({ id, className }) => {
+const ButtonConnect: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ id, className, ...props }) => {
   const [checked, setChecked] = useState(false);
   const context = useContext(Context);
   const { t } = useTranslation();
@@ -42,10 +41,11 @@ const ButtonConnect: React.FC<IDefaultProps> = ({ id, className }) => {
   };
 
   return (
-    <div id={id +":container"} className={className}>
+    <div id={`${id}:container`} className={className} {...props}>
       <ToggleButton
         id={id}
-        className='p-button-sm p-button-success'
+        className="p-button-sm"
+        style={{backgroundColor: '#689f38'}}
         onLabel={t('DISCONNECT')}
         offLabel={t('CONNECT')}
         onIcon="pi pi-sort-alt-slash"

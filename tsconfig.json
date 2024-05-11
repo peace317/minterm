@@ -1,25 +1,25 @@
 {
   "compilerOptions": {
+    "incremental": true,
     "target": "es2021",
     "module": "commonjs",
-    "lib": ["dom", "esnext"],
-    "declaration": true,
-    "declarationMap": true,
+    "lib": ["dom", "es2021"],
     "jsx": "react-jsx",
     "strict": true,
-    "pretty": true,
     "sourceMap": true,
-    "baseUrl": "./src",
-    "noUnusedLocals": true,
-    "noUnusedParameters": false,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
+    "baseUrl": ".",
     "moduleResolution": "node",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
+    "skipLibCheck": true,
     "allowJs": true,
-    "outDir": "release/app/dist"
+    "outDir": ".erb/dll",
+    "paths": {
+      "@/*": ["src/*"],
+      "@minterm/types": ["./src/renderer/types/index.ts"],
+      "@minterm/services": ["./src/renderer/services/index.ts"],
+    }
   },
   "exclude": ["test", "release/build", "release/app/dist", ".erb/dll"]
 }

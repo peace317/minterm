@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom';
-import { TreeNodeService } from '../renderer/services/TreeNodeService';
-import { ITreeNode } from '../renderer/types/TreeNodeType';
+import { ITreeNode } from '@minterm/types';
+import { TreeNodeService } from '@minterm/services';
+
 
 function createMacroGroup(key: string): ITreeNode {
   return {

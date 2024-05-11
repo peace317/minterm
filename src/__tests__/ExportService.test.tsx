@@ -1,8 +1,6 @@
 import '@testing-library/jest-dom';
-import { ExportService } from '../renderer/services/ExportService';
-import { DataPointType } from 'renderer/types/DataPointType';
-import { ConversionType } from '../renderer/types/ConversionType';
-import { FormatService } from '../renderer/services/FormatService';
+import { ConversionType, DataPointType } from '@minterm/types';
+import { ExportService, asciiToBin, asciiToDecimal, asciiToHex } from '@minterm/services';
 
 const defaultTime: Date = new Date('2000-01-01');
 
@@ -12,9 +10,9 @@ function addStringData(...elements: string[]): DataPointType[] {
     data.push({
       timestamp: defaultTime,
       value: e,
-      valueAsBin: FormatService.asciiToBin(e),
-      valueAsDec: FormatService.asciiToDecimal(e),
-      valueAsHex: FormatService.asciiToHex(e),
+      valueAsBin: asciiToBin(e),
+      valueAsDec: asciiToDecimal(e),
+      valueAsHex: asciiToHex(e),
     });
   });
   return data;

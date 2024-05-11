@@ -1,13 +1,13 @@
-import React, { useRef, useState } from 'react';
-import { TabView, TabPanel } from 'primereact/tabview';
-import OutputDataTable from './OutputDataTable';
-import OutputLineChart from './OutputLineChart';
-import OutputTextArea from './OutputTextArea';
+import { TabPanel, TabView } from 'primereact/tabview';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { IDefaultProps } from 'renderer/types/AppInterfaces';
+import { useContext } from '@/renderer/context';
+import { IDefaultProps, IPCChannelType } from '@minterm/types';
 import ContextMenuOutput from './ContextMenuOutput';
-import { useContext } from 'renderer/context';
-import { IPCChannelType } from 'renderer/types/IPCChannelType';
+import OutputDataTable from './OutputDataTable';
+import OutputTextArea from './OutputTextArea';
+import clsx from 'clsx';
+import OutputLineChart from './OutputLineChart';
 
 const OutputTabView: React.FC<IDefaultProps> = ({ id, className }) => {
   const { t } = useTranslation();
@@ -18,7 +18,7 @@ const OutputTabView: React.FC<IDefaultProps> = ({ id, className }) => {
   );
 
   const isContextEnabled = () => {
-    var env = window.electron?.ipcRenderer.fetch(
+    const env = window.electron?.ipcRenderer.fetch(
       IPCChannelType.GET_ENV,
       'REACT_APP_ALLOW_CONTEXT_MENU'
     );
@@ -26,14 +26,14 @@ const OutputTabView: React.FC<IDefaultProps> = ({ id, className }) => {
   };
 
   return (
-    <div id={id +":container"} className={className + ' tabview h-full'}>
-      { isContextEnabled() &&
-      <ContextMenuOutput
-        data={useContext().receivedData}
-        selectedCells={selectedCellsInTable}
-        onContextMenu={contextEvent}
-      />
-      }
+    <div id={`${id}:container`} className={clsx(className, "tabview w-full h-full")}>
+      {isContextEnabled() && (
+        <ContextMenuOutput
+          data={useContext().receivedData}
+          selectedCells={selectedCellsInTable}
+          onContextMenu={contextEvent}
+        />
+      )}
       <TabView
         id={id}
         className="tabview-header-icon h-full"
@@ -57,7 +57,7 @@ const OutputTabView: React.FC<IDefaultProps> = ({ id, className }) => {
         >
           <OutputTextArea
             id="lineChart"
-            className='pb-5'
+            className="pb-5"
             data={receivedData.map((i) => i.value).join('')}
             setData={setReceivedData}
           />

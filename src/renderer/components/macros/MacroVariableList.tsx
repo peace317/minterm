@@ -1,10 +1,4 @@
-import React, { useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { IDefaultProps } from 'renderer/types/AppInterfaces';
-import { OverlayPanel } from 'primereact/overlaypanel';
-import { Slider, SliderChangeParams } from 'primereact/slider';
-import { MacroVariableType } from 'renderer/types/MacroVariableType';
-import { InputText } from 'primereact/inputtext';
+import { IDefaultProps, MacroVariableType } from '@minterm/types';
 import MacroVariable from './MacroVariable';
 
 interface IMacroVariableProps extends IDefaultProps {
@@ -27,23 +21,21 @@ const MacroVariableList: React.FC<IMacroVariableProps> = ({
   deletable = true,
   typeChangeable,
   onVariableChange = () => {},
-  onVariableDelete = () => {}
+  onVariableDelete = () => {},
 }) => {
-  const { t } = useTranslation();
-
   return (
-    <div id={id +":container"} className={className}>
+    <div id={`${id}:container`} className={className}>
       {variables.map((variable) => {
         return (
           <div key={variable.name}>
             <MacroVariable
-              id={':' + id + ':' + variable.name}
+              id={`:${id}:${variable.name}`}
               variable={variable}
               deletable={deletable}
               typeChangeable={typeChangeable}
               onVariableChange={onVariableChange}
               onVariableDelete={() => onVariableDelete(variable)}
-            ></MacroVariable>
+            />
           </div>
         );
       })}

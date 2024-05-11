@@ -1,9 +1,9 @@
+import { useContext } from '@/renderer/context';
+import { IDefaultProps, IPCChannelType } from '@minterm/types';
+import clsx from 'clsx';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useContext } from 'renderer/context';
-import { IDefaultProps } from 'renderer/types/AppInterfaces';
-import { IPCChannelType } from 'renderer/types/IPCChannelType';
-import SequenceInput from '../SequenceInput';
+import SequenceInput from '../tools/SequenceInput';
 import ContextMenuOutput from './ContextMenuOutput';
 import OutputDataTableCore from './OutputDataTableCore';
 
@@ -14,7 +14,7 @@ const TransmitDataTable: React.FC<IDefaultProps> = ({ id, className }) => {
   const [selectedCells, setSelectedCells] = useState<Array<any>>([]);
 
   const isContextEnabled = () => {
-    var env = window.electron?.ipcRenderer.fetch(
+    const env = window.electron?.ipcRenderer.fetch(
       IPCChannelType.GET_ENV,
       'REACT_APP_ALLOW_CONTEXT_MENU'
     );
@@ -22,7 +22,7 @@ const TransmitDataTable: React.FC<IDefaultProps> = ({ id, className }) => {
   };
 
   return (
-    <div id={id + ':container'} className={className + ' h-full'}>
+    <div id={`${id}:container`} className={clsx(className, 'w-full h-full')}>
       {isContextEnabled() && (
         <ContextMenuOutput
           data={transmittedData}
@@ -42,7 +42,7 @@ const TransmitDataTable: React.FC<IDefaultProps> = ({ id, className }) => {
           setData={setTransmittedData}
           clearButtonToolTip={t('CLEAR_TRANSMITTED')}
           className="pb-3"
-          dataCountLabel={'Tx'}
+          dataCountLabel="Tx"
           selectedCells={selectedCells}
           setSelectedCells={setSelectedCells}
         />

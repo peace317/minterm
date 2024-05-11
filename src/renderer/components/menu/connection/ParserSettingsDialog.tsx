@@ -2,20 +2,22 @@ import { Button } from 'primereact/button';
 import { ConfirmDialog } from 'primereact/confirmdialog';
 import { Dialog } from 'primereact/dialog';
 import { Divider } from 'primereact/divider';
+import { InputSwitch } from 'primereact/inputswitch';
 import { RadioButton } from 'primereact/radiobutton';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { IDialogProps } from 'renderer/types/AppInterfaces';
-import { EncodingType } from 'renderer/types/EncodingType';
-import { IPCChannelType } from 'renderer/types/IPCChannelType';
-import { ParserType } from 'renderer/types/ParserType';
-import { StoreKey } from 'renderer/types/StoreKeyType';
+import {
+  IDialogProps,
+  ConnectionStatusType,
+  EncodingType,
+  IPCChannelType,
+  ParserType,
+  StoreKey,
+} from '@minterm/types';
 import ByteLengthSettings from './ByteLengthSettings';
 import DelimiterSettings from './DelimiterSettings';
-import RegexSettings from './RegexSettings';
 import ReadyParserSettings from './ReadyParserSettings';
-import { InputSwitch } from 'primereact/inputswitch';
-import { ConnectionStatusType } from 'renderer/types/ConnectionStatusType';
+import RegexSettings from './RegexSettings';
 
 const ParserSettingsDialog: React.FC<IDialogProps> = ({
   id,
@@ -92,8 +94,11 @@ const ParserSettingsDialog: React.FC<IDialogProps> = ({
       StoreKey.FORCE_BYTE_DELIMITER,
       forceByteDelimiter
     );
-    if (window.electron.ipcRenderer.fetch(IPCChannelType.PORT_STATUS) === ConnectionStatusType.CONNECTED) {
-      window.electron.ipcRenderer.sendMessage(IPCChannelType.PORT_STATUS, true)
+    if (
+      window.electron.ipcRenderer.fetch(IPCChannelType.PORT_STATUS) ===
+      ConnectionStatusType.CONNECTED
+    ) {
+      window.electron.ipcRenderer.sendMessage(IPCChannelType.PORT_STATUS, true);
     }
     window.electron.ipcRenderer.sendMessage(
       IPCChannelType.PARSER_SUPPORT_CONVERSION
@@ -121,19 +126,19 @@ const ParserSettingsDialog: React.FC<IDialogProps> = ({
   };
 
   return (
-    <div id={id + ':container'} className={className}>
+    <div id={`${id}:container`} className={className}>
       <ConfirmDialog />
       <Dialog
-        id={'dialogWrapper:dialog:' + id}
+        id={`dialogWrapper:dialog:${id}`}
         header={t('PARSER_OPTIONS')}
         visible={display}
         onHide={() => onHide()}
         style={{ width: '40rem' }}
-        resizable={true}
+        resizable
         footer={renderFooter()}
       >
         <p>
-          <i className="pi pi-check-circle mr-2"></i>
+          <i className="pi pi-check-circle mr-2" />
           {t('PARSER_EXPLANATION')}
         </p>
         <div className="card">
@@ -141,7 +146,7 @@ const ParserSettingsDialog: React.FC<IDialogProps> = ({
           <p className="mt-0">{t('FORCE_BYTE_DELIMITER_EXPLANATION')}</p>
           <InputSwitch
             checked={forceByteDelimiter}
-            onChange={(e) => setForceByteDelimiter(e.value)}
+            onChange={(e) => setForceByteDelimiter(e.value || false)}
           />
         </div>
         <Divider />

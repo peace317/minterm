@@ -1,8 +1,9 @@
-import React from 'react';
 import { Dropdown } from 'primereact/dropdown';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { IDefaultProps, ISelectValue } from 'renderer/types/AppInterfaces';
-import { useContext } from 'renderer/context';
+import { useContext } from '@/renderer/context';
+import { ISelectValue, IDefaultProps } from '@minterm/types';
+import clsx from 'clsx';
 
 const baudOptions: Array<ISelectValue> = [
   { name: '110', key: '110' },
@@ -18,18 +19,15 @@ const baudOptions: Array<ISelectValue> = [
   { name: '115200', key: '115200' },
 ];
 
-const BaudRateSelect: React.FC<IDefaultProps> = ({
-  id,
-  className,
-}) => {
-
+const BaudRateSelect: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ className, ...props }) => {
   const { selectedBaudRate, setBaudRate } = useContext();
   const { t } = useTranslation();
 
   return (
-    <div id={id +":container"} className={className + ''}>
+    <div className={clsx(className)} {...props}>
       <Dropdown
-        id={id}
+        id={"baudRateSelect"}
+        style={{width: "150px"}}
         value={selectedBaudRate}
         options={baudOptions}
         onChange={(e) => setBaudRate(e.target.value)}

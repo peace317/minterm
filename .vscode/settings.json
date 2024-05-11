@@ -5,6 +5,13 @@
     ".eslintignore": "ignore"
   },
 
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "html",
+    "typescriptreact"
+  ],
+
   "javascript.validate.enable": false,
   "javascript.format.enable": false,
   "typescript.format.enable": false,
@@ -21,12 +28,15 @@
     "*.{css,sass,scss}.d.ts": true
   },
   "cSpell.words": [
+    "asar",
     "blockui",
+    "compat",
     "confirmdialog",
     "dismissable",
     "dragdrop",
     "droppoint",
     "edata",
+    "electronmon",
     "hupcl",
     "inputgroup",
     "inputnumber",
@@ -34,15 +44,21 @@
     "inputtext",
     "integeronly",
     "keyfilter",
+    "nsis",
     "outputnumber",
     "overlaypanel",
+    "pmmmwh",
     "rebalance",
     "Rebalances",
     "rtscts",
     "Scroller",
+    "svgr",
+    "teamsupercell",
     "togglebutton",
     "treenode",
     "UNMAXIMIZE",
+    "webm",
+    "webp",
     "xany",
     "xoff"
   ]

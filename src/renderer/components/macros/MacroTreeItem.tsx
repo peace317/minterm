@@ -4,15 +4,8 @@ import { InputText } from 'primereact/inputtext';
 import { TreeNodeTemplateOptions } from 'primereact/tree';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  VscDebugStart,
-  VscEdit,
-  VscRunAll
-} from 'react-icons/vsc';
-import { IDefaultProps } from 'renderer/types/AppInterfaces';
-import { ConversionType } from 'renderer/types/ConversionType';
-import { MacroVariableType } from 'renderer/types/MacroVariableType';
-import { ITreeNode } from 'renderer/types/TreeNodeType';
+import { VscDebugStart, VscEdit, VscRunAll } from 'react-icons/vsc';
+import { ConversionType, IDefaultProps, ITreeNode, MacroVariableType } from '@minterm/types';
 import MacroVariableList from './MacroVariableList';
 
 interface IMacroTreeItemProps extends IDefaultProps {
@@ -58,7 +51,7 @@ const MacroTreeItem: React.FC<IMacroTreeItemProps> = ({
   useEffect(() => {
     if (isEditName) {
       document
-        .getElementById(':' + id + ':treeitem')
+        .getElementById(`:${id}:treeitem`)
         ?.addEventListener('mousedown', onMouseInTextField, false);
       window.addEventListener('mousedown', onMouseDownWindow, false);
     }
@@ -111,17 +104,17 @@ const MacroTreeItem: React.FC<IMacroTreeItemProps> = ({
 
   const removeListener = () => {
     document
-      .getElementById(':' + id + ':treeitem')
+      .getElementById(`:${id}:treeitem`)
       ?.removeEventListener('mousedown', onMouseInTextField, false);
     window.removeEventListener('mousedown', onMouseDownWindow, false);
   };
 
   const onVariableChange = (variable: MacroVariableType) => {
-    var current: MacroVariableType | undefined = node.data?.variables?.filter(
+    let current: MacroVariableType | undefined = node.data?.variables?.filter(
       (e) => e.name === variable.name
     )[0];
     if (current === undefined)
-      console.error('Variable with name ' + variable.name + ' not found.');
+      console.error(`Variable with name ${variable.name} not found.`);
     current = variable;
     updateNode(node);
   };
@@ -137,7 +130,6 @@ const MacroTreeItem: React.FC<IMacroTreeItemProps> = ({
       );
     }
     document.getElementById('renameInput')?.classList.remove('p-invalid');
-    return;
   };
 
   const executeButton = () => {
@@ -148,7 +140,7 @@ const MacroTreeItem: React.FC<IMacroTreeItemProps> = ({
       return (
         <div>
           <Button
-            id={'buttonExecuteAll'}
+            id="buttonExecuteAll"
             visible={mouseOver}
             icon={<VscRunAll className="pi" />}
             className="p-button-text"
@@ -158,21 +150,20 @@ const MacroTreeItem: React.FC<IMacroTreeItemProps> = ({
           />
         </div>
       );
-    } else {
-      return (
-        <div>
-          <Button
-            id={'buttonExecute'}
-            visible={mouseOver}
-            icon={<VscDebugStart className="pi" />}
-            className="p-button-text"
-            tooltip={t('SEND')}
-            tooltipOptions={{ showDelay: 500 }}
-            onClick={(e) => onExecute(node)}
-          />
-        </div>
-      );
     }
+    return (
+      <div>
+        <Button
+          id="buttonExecute"
+          visible={mouseOver}
+          icon={<VscDebugStart className="pi" />}
+          className="p-button-text"
+          tooltip={t('SEND')}
+          tooltipOptions={{ showDelay: 500 }}
+          onClick={(e) => onExecute(node)}
+        />
+      </div>
+    );
   };
 
   const changeVariablePopupButton = () => {
@@ -183,7 +174,7 @@ const MacroTreeItem: React.FC<IMacroTreeItemProps> = ({
     return (
       <div>
         <Button
-          id={'buttonShowVarOverlay'}
+          id="buttonShowVarOverlay"
           visible={mouseOver && node.data?.variables?.length !== 0}
           icon={<VscEdit className="pi" />}
           className="p-button-text"
@@ -191,7 +182,6 @@ const MacroTreeItem: React.FC<IMacroTreeItemProps> = ({
           tooltipOptions={{ showDelay: 500 }}
           onClick={(e) => setDisplayVariableDialog(true)}
         />
-
       </div>
     );
   };
@@ -213,48 +203,42 @@ const MacroTreeItem: React.FC<IMacroTreeItemProps> = ({
           {getErrorMessage()}
         </div>
       );
-    } else {
-      return <span id="macroName">{node.label}</span>;
     }
+    return <span id="macroName">{node.label}</span>;
   };
 
   return (
-    <div
-      id="container"
-      className={className + ' w-full'}
-    >
+    <div id="container" className={`${className} w-full`}>
       <div
-        className={' macro-tree-item w-full'}
+        className=" macro-tree-item w-full"
         onMouseOver={(e) => setMouseOver(true)}
         onMouseLeave={(e) => setMouseOver(false)}
       >
-        <div id={':' + id + ':treeitem'} className="inline-flex">
+        <div id={`:${id}:treeitem`} className="inline-flex">
           {labelName()}
           {executeButton()}
           {changeVariablePopupButton()}
         </div>
       </div>
       <Dialog
-          id={'changeVariablesDialog'}
-          header={t('CHANGE_VARIABLES') + ': ' + node.data?.name}
-          visible={displayVariableDialog}
-          onHide={() => setDisplayVariableDialog(false)}
-          modal={false}
-          style={{ width: '40rem' }}
-          resizable={true}
-        >
-          {node.data?.variables !== undefined && (
-            <MacroVariableList
-              id={':' + id + ':variableList'}
-              variables={node.data?.variables}
-              typeChangeable={
-                node.data?.sequenceFormat === ConversionType.ASCII
-              }
-              deletable={false}
-              onVariableChange={onVariableChange}
-            />
-          )}
-        </Dialog>
+        id="changeVariablesDialog"
+        header={`${t('CHANGE_VARIABLES')}: ${node.data?.name}`}
+        visible={displayVariableDialog}
+        onHide={() => setDisplayVariableDialog(false)}
+        modal={false}
+        style={{ width: '40rem' }}
+        resizable
+      >
+        {node.data?.variables !== undefined && (
+          <MacroVariableList
+            id={`:${id}:variableList`}
+            variables={node.data?.variables}
+            typeChangeable={node.data?.sequenceFormat === ConversionType.ASCII}
+            deletable={false}
+            onVariableChange={onVariableChange}
+          />
+        )}
+      </Dialog>
     </div>
   );
 };

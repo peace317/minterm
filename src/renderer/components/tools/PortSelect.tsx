@@ -1,8 +1,9 @@
 import { Dropdown } from 'primereact/dropdown';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { IDefaultProps, ISelectValue } from 'renderer/types/AppInterfaces';
-import { useContext } from '../../context';
+import { IDefaultProps, ISelectValue } from '@minterm/types';
+import { useContext } from '@/renderer/context';
+
 
 const PortSelect: React.FC<IDefaultProps> = ({ id, className }) => {
   const { selectedPort, setPort, portList } = useContext();
@@ -10,7 +11,7 @@ const PortSelect: React.FC<IDefaultProps> = ({ id, className }) => {
   const [portOptions, setPorts] = useState<Array<ISelectValue>>([]);
 
   useEffect(() => {
-    var selectablePorts: Array<ISelectValue> = [];
+    const selectablePorts: Array<ISelectValue> = [];
     if (portList !== undefined) {
       for (let i = 0; i < portList.length; i++) {
         if (portList[i].pnpId != undefined) {
@@ -25,9 +26,10 @@ const PortSelect: React.FC<IDefaultProps> = ({ id, className }) => {
   }, [portList]);
 
   return (
-    <div id={id + ':container'} className={className}>
+    <div id={`${id}:container`} className={className}>
       <Dropdown
-        id={id + ':portSelect'}
+        id={`${id}:portSelect`}
+        style={{width: "150px"}}
         value={selectedPort}
         options={portOptions}
         onChange={(e) => setPort(e.target.value)}

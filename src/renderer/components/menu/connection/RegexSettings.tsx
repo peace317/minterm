@@ -3,9 +3,8 @@ import { InputText } from 'primereact/inputtext';
 import { classNames } from 'primereact/utils';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FormatService } from 'renderer/services/FormatService';
-import { IDefaultProps } from 'renderer/types/AppInterfaces';
-import { EncodingType } from 'renderer/types/EncodingType';
+import { IDefaultProps, EncodingType } from '@minterm/types';
+import { typeToSelectList } from '@minterm/services';
 
 interface IRegexSettingsProps extends IDefaultProps {
   regex: string;
@@ -14,7 +13,7 @@ interface IRegexSettingsProps extends IDefaultProps {
   onBufferEncodingChange?: React.Dispatch<any>;
 }
 
-const encodingTypes = FormatService.typeToSelectList(EncodingType);
+const encodingTypes = typeToSelectList(EncodingType);
 
 const RegexSettings: React.FC<IRegexSettingsProps> = ({
   id,
@@ -56,16 +55,16 @@ const RegexSettings: React.FC<IRegexSettingsProps> = ({
   };
 
   return (
-    <div id={id +":container"} className={className + ' card'}>
+    <div id={`${id}:container`} className={`${className} card`}>
       <div className="grid">
         <div className="col-6">
-          <h4 className={'label-h4 '}>{t('REGEX')}</h4>
+          <h4 className="label-h4 ">{t('REGEX')}</h4>
           <InputText
             id="regex"
             name="regex"
             value={regex}
             onChange={(e) => setRegex(e.target.value)}
-            className={'' + classNames({ 'p-invalid': !isRegexValid() })}
+            className={`${classNames({ 'p-invalid': !isRegexValid() })}`}
           />
           <div className="field">{getFormErrorMessage()}</div>
         </div>

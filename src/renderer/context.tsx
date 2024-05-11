@@ -1,9 +1,7 @@
-import React, { useEffect, useRef } from 'react';
-import { themes } from './components/menu/general/ThemeSelect';
-import { DataPointType } from './types/DataPointType';
-import { IPCChannelType } from './types/IPCChannelType';
-import { StoreKey } from './types/StoreKeyType';
 import { PortInfo } from '@serialport/bindings-cpp';
+import React, { useEffect } from 'react';
+import { themes } from './components/menu/general/ThemeSelect';
+import { IPCChannelType, StoreKey, DataPointType } from '@minterm/types';
 
 export type ContextType = {
   selectedPort: { name: string; code: string } | undefined;
@@ -18,16 +16,12 @@ export type ContextType = {
   setReceivedData: React.Dispatch<React.SetStateAction<DataPointType[]>>;
   transmittedData: Array<DataPointType>;
   setTransmittedData: React.Dispatch<React.SetStateAction<DataPointType[]>>;
-  selectedTheme: { name: string; code: string; theme: string } | undefined;
-  setTheme: React.Dispatch<
-    React.SetStateAction<
-      { name: string; code: string; theme: string } | undefined
-    >
-  >;
   portList: Array<PortInfo>;
 };
 
-export const Context = React.createContext<ContextType>({} as ContextType);
+export const Context = React.createContext({} as ContextType);
+
+export const useContext = () => React.useContext(Context);
 
 /**
  * App-Context for providing global excess variables that can not be hold in local
@@ -37,15 +31,12 @@ export const Context = React.createContext<ContextType>({} as ContextType);
  * @param children underlying this context
  * @returns ContextType parameters
  */
-const ContextProvider: React.FC = ({ children }) => {
+export const ContextProvider = ({ children }: React.PropsWithChildren) => {
   const [selectedPort, setPort] = React.useState<
     { name: string; code: string } | undefined
   >();
   const [selectedBaudRate, setBaudRate] = React.useState<
     { name: string; code: string } | undefined
-  >();
-  const [selectedTheme, setTheme] = React.useState<
-    { name: string; code: string; theme: string } | undefined
   >();
   const [receivedData, setReceivedData] = React.useState<Array<DataPointType>>(
     []
@@ -75,28 +66,21 @@ const ContextProvider: React.FC = ({ children }) => {
    * can be applied with logic.
    */
   useEffect(() => {
-    window.electron.ipcRenderer.on(
-      IPCChannelType.RECEIVE_DATA,
-      function (value) {
-        var msg = value as DataPointType;
-        setNewReceivedData(msg);
-      }
-    );
+    window.electron.ipcRenderer.on(IPCChannelType.RECEIVE_DATA, (value) => {
+      const msg = value as DataPointType;
+      setNewReceivedData(msg);
+    });
     window.electron.ipcRenderer.on(IPCChannelType.SEND_DATA, (value) => {
-      var msg = value as DataPointType[];
+      const msg = value as DataPointType[];
       setNewTransmittedData(msg);
     });
     window.electron.ipcRenderer.on(
       IPCChannelType.RECEIVE_PORT_LIST,
       (value) => {
-        let ports = value as import('@serialport/bindings-cpp').PortInfo[];
+        const ports = value as import('@serialport/bindings-cpp').PortInfo[];
         setPortList([...ports]);
       }
     );
-    var theme: any = themes.filter(
-      (theme) => theme.code === window.electron.store.get(StoreKey.THEME)
-    );
-    setTheme(theme[0]);
   }, []);
 
   useEffect(() => {
@@ -124,8 +108,6 @@ const ContextProvider: React.FC = ({ children }) => {
         setReceivedData,
         transmittedData,
         setTransmittedData,
-        selectedTheme,
-        setTheme,
         portList,
       }}
     >
@@ -133,7 +115,3 @@ const ContextProvider: React.FC = ({ children }) => {
     </Context.Provider>
   );
 };
-
-export default ContextProvider;
-
-export const useContext = () => React.useContext(Context);

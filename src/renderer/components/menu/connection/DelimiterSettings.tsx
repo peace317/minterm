@@ -1,8 +1,8 @@
+import { InputSwitch } from 'primereact/inputswitch';
 import { InputText } from 'primereact/inputtext';
 import { Dispatch, SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
-import { InputSwitch } from 'primereact/inputswitch';
-import { IDefaultProps } from 'renderer/types/AppInterfaces';
+import { IDefaultProps } from '@minterm/types';
 
 interface IDelimiterSettingsProps extends IDefaultProps {
   delimiter: string;
@@ -22,7 +22,7 @@ const DelimiterSettings: React.FC<IDelimiterSettingsProps> = ({
   const { t } = useTranslation();
 
   return (
-    <div id={id +":container"} className={className}>
+    <div id={`${id}:container`} className={className}>
       <div className="field">
         <h4 className="label-h4">{t('DELIMITER')}</h4>
         <InputText
@@ -35,7 +35,7 @@ const DelimiterSettings: React.FC<IDelimiterSettingsProps> = ({
         <h4 className="label-h4">{t('INCLUDE_DELIMITER')}</h4>
         <InputSwitch
           checked={includeDelimiter}
-          onChange={(e) => setIncludeDelimiter(e.value)}
+          onChange={(e) => setIncludeDelimiter(e.value || false)}
         />
       </div>
     </div>

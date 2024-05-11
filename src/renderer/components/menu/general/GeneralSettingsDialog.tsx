@@ -3,11 +3,14 @@ import { Button } from 'primereact/button';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { Dialog } from 'primereact/dialog';
 import { Toast } from 'primereact/toast';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { IDialogProps } from 'renderer/types/AppInterfaces';
-import { StoreKey } from 'renderer/types/StoreKeyType';
+import { IDialogProps, IPCChannelType, StoreKey } from '@minterm/types';
 import LanguageSelect from './LanguageSelect';
+import ThemeSelect from './ThemeSelect';
+import { PrimeReactContext } from 'primereact/api';
+import clsx from 'clsx';
+import { DropdownChangeEvent } from 'primereact/dropdown';
 
 const GeneralSettingsDialog: React.FC<IDialogProps> = ({
   id,
@@ -22,6 +25,7 @@ const GeneralSettingsDialog: React.FC<IDialogProps> = ({
   const [selectedTheme, setSelectedTheme] = useState<any>(
     window.electron.store.get(StoreKey.THEME)
   );
+  const { changeTheme } = useContext(PrimeReactContext);
 
   useEffect(() => {
     if (isRestartNecessary) {
@@ -34,12 +38,11 @@ const GeneralSettingsDialog: React.FC<IDialogProps> = ({
     }
   }, [isRestartNecessary]);
 
-  const onThemeChange = (e: { value: any }) => {
+  const onThemeChange = (e: DropdownChangeEvent) => {
     setSelectedTheme(e.value);
-    setIsRestartNecessary(true);
   };
 
-  const onLanguageChange = (e: { value: any }) => {
+  const onLanguageChange = (e: DropdownChangeEvent) => {
     setSelectedLanguage(e.value);
     i18n.changeLanguage(e.value);
   };
@@ -61,6 +64,8 @@ const GeneralSettingsDialog: React.FC<IDialogProps> = ({
       confirmRestart();
     } else {
       window.electron.store.set(StoreKey.LANGUAGE, selectedLanguage);
+      window.electron.store.set(StoreKey.THEME, selectedTheme);
+      window.electron.ipcRenderer.sendMessage(IPCChannelType.CHANGE_THEME, selectedTheme);
       onHide();
     }
   };
@@ -68,7 +73,7 @@ const GeneralSettingsDialog: React.FC<IDialogProps> = ({
   const accept = () => {
     window.electron.store.set(StoreKey.THEME, selectedTheme);
     window.electron.store.set(StoreKey.LANGUAGE, selectedLanguage);
-    //window.electron.ipcRenderer.sendMessage('reload:app');
+    // window.electron.ipcRenderer.sendMessage('reload:app');
     window.location.reload();
   };
 
@@ -102,24 +107,15 @@ const GeneralSettingsDialog: React.FC<IDialogProps> = ({
   };
 
   /*
-          <div className="grid">
-          <div className="col-6 dropdown">
-            <h4>{t('THEME')}</h4>
-            <ThemeSelect
-              id="themeSelector"
-              selectedTheme={selectedTheme}
-              onThemeChange={onThemeChange}
-            />
-          </div>
-        </div>
+          
   */
 
   return (
-    <div id={id + ':container'} className={className}>
+    <div id={`${id}:container`} className={clsx(className)}>
       <Toast ref={toast} />
       <ConfirmDialog />
       <Dialog
-        id={'dialogWrapper:dialog:' + id}
+        id={`dialogWrapper:dialog:${id}`}
         header={t('GENERAL')}
         visible={display}
         onHide={() => onHide()}
@@ -133,6 +129,16 @@ const GeneralSettingsDialog: React.FC<IDialogProps> = ({
               id="languageSelector"
               selectedLanguage={selectedLanguage}
               onLanguageChange={onLanguageChange}
+            />
+          </div>
+        </div>
+        <div className="grid">
+          <div className="col-6 dropdown">
+            <h4>{t('THEME')}</h4>
+            <ThemeSelect
+              id="themeSelector"
+              selectedTheme={selectedTheme}
+              onThemeChange={onThemeChange}
             />
           </div>
         </div>

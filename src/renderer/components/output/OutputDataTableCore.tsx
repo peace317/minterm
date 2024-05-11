@@ -1,9 +1,8 @@
 import { Column } from 'primereact/column';
-import { DataTable } from 'primereact/datatable';
+import { DataTable, DataTableSelectionMultipleChangeEvent } from 'primereact/datatable';
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useResizeDetector } from 'react-resize-detector';
-import { DataPointType } from 'renderer/types/DataPointType';
-import { ConversionType } from '../../types/ConversionType';
+import { ConversionType, DataPointType } from '@minterm/types';
 import ActionBar, { IActionBarProps } from './ActionBar';
 
 interface IOutputDataTableCoreProps extends IActionBarProps {
@@ -72,39 +71,39 @@ const OutputDataTableCore: React.FC<IOutputDataTableCoreProps> = ({
   const [colHeight, setColHeight] = useState<number>(0);
   const [tableData, setTableData] = useState<any>([]);
   const [sticky, setSticky] = useState<boolean>(true);
-  const dataTableRef = useRef<DataTable>(null);
-  const [selectedConversions, setConversions] = useState<Array<ConversionType>>([
-    ConversionType.ASCII,
-  ]);
+  const dataTableRef = useRef<DataTable<any>>(null);
+  const [selectedConversions, setConversions] = useState<Array<ConversionType>>(
+    [ConversionType.ASCII]
+  );
   const [columns, setColumns] = useState<any>([
     <Column key="0" field="0" header="0" />,
   ]);
   const { width, ref } = useResizeDetector({
     onResize: () => {
-      buildColumns();
+      // buildColumns();
     },
   });
   const virtualScroller = dataTableRef.current?.getVirtualScroller();
 
   useLayoutEffect(() => {
     if (width === undefined) {
-      //setInitWidth(ref.current.offsetWidth);
+      // setInitWidth(ref.current.offsetWidth);
     }
-    const body = ref.current.getElementsByClassName('p-datatable-tbody')[0];
-    body.style.top = '50px';
+    // const body = ref.current.getElementsByClassName('p-datatable-tbody')[0];
+    // body.style.top = '50px';
   }, []);
 
   useEffect(() => {
-    buildTableData();
+    // buildTableData();
     setColHeight(37 + (selectedConversions.length - 1) * 21);
   }, [columns, selectedConversions]);
 
   useEffect(() => {
-    buildColumns();
+    // buildColumns();
   }, [ref]);
 
   useEffect(() => {
-    buildTableData();
+    // buildTableData();
   }, [data]);
 
   useEffect(() => {
@@ -138,7 +137,7 @@ const OutputDataTableCore: React.FC<IOutputDataTableCoreProps> = ({
 
     const tData = [];
     let rowObj = {};
-    var colIndex = 0;
+    let colIndex = 0;
     for (let index = 0; index < data.length; index++) {
       colIndex = index % columns.length;
       if (colIndex === 0) {
@@ -190,8 +189,8 @@ const OutputDataTableCore: React.FC<IOutputDataTableCoreProps> = ({
    *
    * @param e selection
    */
-  const onSelectionChange = (e: { value: Array<any> }) => {
-    var selectedSameCells =
+  const onSelectionChange = (e: DataTableSelectionMultipleChangeEvent<Array<any>>) => {
+    const selectedSameCells =
       selectedCells.length === e.value.length &&
       selectedCells.every(
         (value: any, index: any) =>
@@ -199,7 +198,9 @@ const OutputDataTableCore: React.FC<IOutputDataTableCoreProps> = ({
           value.rowIndex === e.value[index].rowIndex
       );
 
-    e.value = e.value.filter((e) => e.value !== null && e.value !== undefined);
+    e.value = e.value.filter(
+      (a: any) => a.value !== null && a.value !== undefined
+    );
     if (!selectedSameCells) {
       setSelectedCells(e.value);
     } else {
@@ -209,13 +210,13 @@ const OutputDataTableCore: React.FC<IOutputDataTableCoreProps> = ({
 
   return (
     <div
-      id={id + ':container'}
+      id={`${id}:container`}
       ref={ref}
-      className={className + ' h-full'}
+      className={`${className} h-full`}
       style={{ paddingBottom: '50px' }}
     >
       <ActionBar
-        id={id + ':outputActionBar'}
+        id={`${id}:outputActionBar`}
         data={data}
         setData={setData}
         dataCountLabel={dataCountLabel}
@@ -240,7 +241,6 @@ const OutputDataTableCore: React.FC<IOutputDataTableCoreProps> = ({
           selection={selectedCells}
           onSelectionChange={onSelectionChange}
           dataKey="id"
-          autoLayout={true}
           scrollHeight="flex"
           ref={dataTableRef}
           className={className}

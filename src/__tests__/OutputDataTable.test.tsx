@@ -1,14 +1,11 @@
 import '@testing-library/jest-dom';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
-import Enzyme, { mount, shallow } from 'enzyme';
-import { DataPointType } from 'renderer/types/DataPointType';
 import OutputDataTableCore, {
   buildCell,
 } from '../renderer/components/output/OutputDataTableCore';
-import { ConversionType } from '../renderer/types/ConversionType';
+import { ConversionType, DataPointType } from '@minterm/types';
+import {render, screen} from '@testing-library/react'
 
 const { ResizeObserver } = window;
-Enzyme.configure({ adapter: new Adapter() });
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => {
@@ -35,19 +32,19 @@ afterEach(() => {
 
 test('loads and displays DataTable', async () => {
   const TestComponent = () => renderTableWithContext(formatData([]), 0);
-  shallow(<TestComponent />);
+  render(<TestComponent />);
 });
 
 test('renders DataTable no elements', async () => {
   const TestComponent = () => renderTableWithContext([], 0);
-  const wrapper = mount(<TestComponent />);
-  expect(wrapper.find('DataTable').prop('value')).toStrictEqual([]);
+  render(<TestComponent />);
+  expect(screen.getByRole('table').getAttribute('value')).toStrictEqual([]);
 });
 
 test('renders DataTable with one elements', async () => {
   const TestComponent = () => renderTableWithContext(formatData(['1']), 0);
-  const wrapper = mount(<TestComponent />);
-  expect(wrapper.find('DataTable').prop('value')).toStrictEqual([
+  render(<TestComponent />);
+  expect(screen.getByRole('table').getAttribute('value')).toStrictEqual([
     {
       '0': buildCell(formatData(['1'])[0], [ConversionType.ASCII]),
       id: 0,
@@ -59,8 +56,8 @@ test('renders DataTable with one elements', async () => {
 test('renders DataTable with multiple elements in one column', async () => {
   const data = formatData(['1', '2', '3', '4']);
   const TestComponent = () => renderTableWithContext(data, 0);
-  const wrapper = mount(<TestComponent />);
-  expect(wrapper.find('DataTable').prop('value')).toStrictEqual([
+  render(<TestComponent />);
+  expect(screen.getByRole('table').getAttribute('value')).toStrictEqual([
     {
       '0': buildCell(data[0], [ConversionType.ASCII]),
       id: 0,
@@ -87,8 +84,8 @@ test('renders DataTable with multiple elements in one column', async () => {
 test('building columns on width (two cols)', async () => {
   const data = formatData(['1', '2', '3', '4']);
   const TestComponent = () => renderTableWithContext(data, 201);
-  const wrapper = mount(<TestComponent />);
-  expect(wrapper.find('DataTable').prop('value')).toEqual([
+  render(<TestComponent />);
+  expect(screen.getByRole('table').getAttribute('value')).toEqual([
     {
       '0': buildCell(data[0], [ConversionType.ASCII]),
       '1': buildCell(data[1], [ConversionType.ASCII]),
@@ -107,8 +104,8 @@ test('building columns on width (two cols)', async () => {
 test('building columns on width (two cols with leftover value)', async () => {
   const data = formatData(['1', '2', '3', '4', '5']);
   const TestComponent = () => renderTableWithContext(data, 201);
-  const wrapper = mount(<TestComponent />);
-  expect(wrapper.find('DataTable').prop('value')).toEqual([
+  render(<TestComponent />);
+  expect(screen.getByRole('table').getAttribute('value')).toEqual([
     {
       '0': buildCell(data[0], [ConversionType.ASCII]),
       '1': buildCell(data[1], [ConversionType.ASCII]),
@@ -132,8 +129,8 @@ test('building columns on width (two cols with leftover value)', async () => {
 test('building columns on width (five cols)', async () => {
   const data = formatData(['1', '2', '3', '4', '5']);
   const TestComponent = () => renderTableWithContext(data, 501);
-  const wrapper = mount(<TestComponent />);
-  expect(wrapper.find('DataTable').prop('value')).toEqual([
+  render(<TestComponent />);
+  expect(screen.getByRole('table').getAttribute('value')).toEqual([
     {
       '0': buildCell(data[0], [ConversionType.ASCII]),
       '1': buildCell(data[1], [ConversionType.ASCII]),

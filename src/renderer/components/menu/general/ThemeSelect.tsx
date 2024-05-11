@@ -1,22 +1,17 @@
-import React from 'react';
-import { Dropdown } from 'primereact/dropdown';
+import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
+import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { IDefaultProps } from 'renderer/types/AppInterfaces';
+import { IDefaultProps } from '@minterm/types';
 
 interface IThemeSelectProps extends IDefaultProps {
   selectedTheme: string;
-  onThemeChange: React.Dispatch<any>;
+  onThemeChange: (event: DropdownChangeEvent) => void;
 }
 
 export const themes = [
-  { name: 'Saga Blue', code: 'theme-saga-blue', theme: 'light' },
-  { name: 'Dark Purple', code: 'theme-bootstrap4-dark-purple', theme: 'dark' },
-  {
-    name: 'Light Purple',
-    code: 'theme-bootstrap4-light-purple',
-    theme: 'light',
-  },
-  { name: 'Dark Indigo', code: 'theme-md-dark-indigo', theme: 'dark' },
+  { name: 'Dark', code: 'dark'},
+  { name: 'Light', code: 'light' },
+  { name: 'System', code: 'system' }
 ];
 
 const ThemeSelect: React.FC<IThemeSelectProps> = ({
@@ -28,7 +23,7 @@ const ThemeSelect: React.FC<IThemeSelectProps> = ({
   const { t } = useTranslation();
 
   return (
-    <div id={id +":container"} className={className + ' dropdown'}>
+    <div id={`${id}:container`} className={`${className} dropdown`}>
       <Dropdown
         id={id}
         value={selectedTheme}

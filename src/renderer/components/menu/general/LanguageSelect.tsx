@@ -1,12 +1,12 @@
 import i18n from 'i18next';
-import { Dropdown } from 'primereact/dropdown';
+import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { IDefaultProps, ISelectValue } from 'renderer/types/AppInterfaces';
+import { IDefaultProps, ISelectValue } from '@minterm/types';
 
 interface ILanguageSelectProps extends IDefaultProps {
   selectedLanguage: string;
-  onLanguageChange: React.Dispatch<any>;
+  onLanguageChange: (event: DropdownChangeEvent) => void;
 }
 
 const LanguageSelect: React.FC<ILanguageSelectProps> = ({
@@ -22,7 +22,7 @@ const LanguageSelect: React.FC<ILanguageSelectProps> = ({
   }));
 
   return (
-    <div id={id +":container"} className={className + ' dropdown'}>
+    <div id={`${id}:container`} className={`${className} dropdown`}>
       <Dropdown
         id={id}
         value={selectedLanguage}

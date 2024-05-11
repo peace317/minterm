@@ -1,16 +1,8 @@
-import { Checkbox } from 'primereact/checkbox';
-import { InputNumber } from 'primereact/inputnumber';
-import { useEffect, useState } from 'react';
-import { useContext } from 'renderer/context';
-import { FormatService } from 'renderer/services/FormatService';
-import { IDefaultProps, ISelectValue } from 'renderer/types/AppInterfaces';
-import { ConversionType } from 'renderer/types/ConversionType';
-import { IPCChannelType } from 'renderer/types/IPCChannelType';
-import OutputDataTableCore from './OutputDataTableCore';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-
-const encodings: Array<ISelectValue> =
-  FormatService.typeToSelectList(ConversionType);
+import { useContext } from '@/renderer/context';
+import { IDefaultProps, IPCChannelType } from '@minterm/types';
+import OutputDataTableCore from './OutputDataTableCore';
 
 interface IOutputDataTableProps extends IDefaultProps {
   selectedCells: Array<any>;
@@ -31,7 +23,7 @@ const OutputDataTable: React.FC<IOutputDataTableProps> = ({
     window.electron.ipcRenderer.on(
       IPCChannelType.PARSER_SUPPORT_CONVERSION,
       (arg: any) => {
-        var supports = arg as boolean;
+        const supports = arg as boolean;
         setSupportConversion(supports);
       }
     );
@@ -46,14 +38,14 @@ const OutputDataTable: React.FC<IOutputDataTableProps> = ({
   }, []);
 
   return (
-    <div id={id + ':container'} className={className + ' h-full'}>
+    <div id={`${id}:container`} className={`${className} h-full`}>
       <OutputDataTableCore
-        id={id + ':outputTable'}
+        id={`${id}:outputTable`}
         data={receivedData}
         setData={setReceivedData}
         clearButtonToolTip={t('CLEAR_RECEIVED')}
         conversionsDisabled={!supportConversion}
-        dataCountLabel={'Rx'}
+        dataCountLabel="Rx"
         selectedCells={selectedCells}
         setSelectedCells={setSelectedCells}
       />

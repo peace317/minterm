@@ -1,22 +1,18 @@
 import { Button } from 'primereact/button';
+import { Checkbox } from 'primereact/checkbox';
 import { ConfirmDialog } from 'primereact/confirmdialog';
 import { Dialog } from 'primereact/dialog';
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-
-import { Checkbox } from 'primereact/checkbox';
 import { Dropdown } from 'primereact/dropdown';
 import { InputText } from 'primereact/inputtext';
 import { MultiSelect } from 'primereact/multiselect';
-import { useContext } from 'renderer/context';
-import { ExportService } from 'renderer/services/ExportService';
-import { FormatService } from 'renderer/services/FormatService';
-import { IDialogProps } from 'renderer/types/AppInterfaces';
-import { ConversionType } from 'renderer/types/ConversionType';
-import { ExportFormats } from 'renderer/types/ExportFormats';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useContext } from '@/renderer/context';
+import { ConversionType, ExportFormats, IDialogProps } from '@minterm/types';
+import { ExportService, typeToSelectList } from '@minterm/services';
 
-const encodings = FormatService.typeToSelectList(ConversionType);
-const exportFormats = FormatService.typeToSelectList(ExportFormats);
+const encodings = typeToSelectList(ConversionType);
+const exportFormats = typeToSelectList(ExportFormats);
 
 const ExportDialog: React.FC<IDialogProps> = ({
   id,
@@ -46,25 +42,43 @@ const ExportDialog: React.FC<IDialogProps> = ({
   };
 
   const onAccept = () => {
-    console.log(ExportService.buildRawContent([ConversionType.ASCII], data, ";", false, false));
-    var content = '';
-    var file;
-    let a = document.createElement('a');
+    console.log(
+      ExportService.buildRawContent(
+        [ConversionType.ASCII],
+        data,
+        ';',
+        false,
+        false
+      )
+    );
+    let content = '';
+    let file;
+    const a = document.createElement('a');
     switch (selectedFormat) {
       case ExportFormats.JSON:
-        content = ExportService.buildJSONContent(selectedEncodings, data, delimiter, false, exportWithTimestamp);
+        content = ExportService.buildJSONContent(
+          selectedEncodings,
+          data,
+          delimiter,
+          false,
+          exportWithTimestamp
+        );
         file = new Blob([content], { type: 'text/plain' });
-        a.download =
-          'output_' + new Date().toISOString().split('.')[0] + '.json';
+        a.download = `output_${new Date().toISOString().split('.')[0]}.json`;
         break;
       case ExportFormats.RAW:
-        content = ExportService.buildRawContent(selectedEncodings, data, delimiter, false, exportWithTimestamp);
+        content = ExportService.buildRawContent(
+          selectedEncodings,
+          data,
+          delimiter,
+          false,
+          exportWithTimestamp
+        );
         file = new Blob([content], { type: 'text/plain' });
-        a.download =
-          'output_' + new Date().toISOString().split('.')[0] + '.log';
+        a.download = `output_${new Date().toISOString().split('.')[0]}.log`;
         break;
       default:
-        console.error('Undefined export format: ' + selectedFormat);
+        console.error(`Undefined export format: ${selectedFormat}`);
         return;
     }
     a.href = URL.createObjectURL(file);
@@ -101,7 +115,7 @@ const ExportDialog: React.FC<IDialogProps> = ({
   };
 
   return (
-    <div id={id +":container"} className={className}>
+    <div id={`${id}:container`} className={className}>
       <ConfirmDialog />
       <Dialog
         id={id}
@@ -112,9 +126,9 @@ const ExportDialog: React.FC<IDialogProps> = ({
         footer={renderFooter()}
       >
         <div className="card">
-          <div className="grid" >
+          <div className="grid">
             <div className="col-6 multiselect">
-              <h4 className={'label-h4 '}>{t('ENCODING')}</h4>
+              <h4 className="label-h4 ">{t('ENCODING')}</h4>
               <MultiSelect
                 value={selectedEncodings}
                 options={encodings}
@@ -153,7 +167,7 @@ const ExportDialog: React.FC<IDialogProps> = ({
             <Checkbox
               inputId="timestamp"
               checked={exportWithTimestamp}
-              onChange={(e) => setExportWithTimestamp(e.checked)}
+              onChange={(e) => setExportWithTimestamp(e.checked || false)}
             />
             <label htmlFor="timestamp" className="ml-2">
               {t('ENABLE')}

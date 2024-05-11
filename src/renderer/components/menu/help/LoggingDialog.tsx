@@ -2,9 +2,8 @@ import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import OutputTextArea from 'renderer/components/output/OutputTextArea';
-import { IDialogProps } from 'renderer/types/AppInterfaces';
-import { IPCChannelType } from 'renderer/types/IPCChannelType';
+import OutputTextArea from '@/renderer/components/output/OutputTextArea';
+import { IPCChannelType, IDialogProps } from '@minterm/types';
 
 /**
  * Dialog for showing logs.
@@ -21,8 +20,8 @@ const LoggingDialog: React.FC<IDialogProps> = ({
   const [logs, setLogs] = useState<any>();
 
   useEffect(() => {
-    var logFiles = window.electron.ipcRenderer.fetch(IPCChannelType.LOG_FILE);
-    var logs = logFiles[0].lines.join('\n');
+    const logFiles = window.electron.ipcRenderer.fetch(IPCChannelType.LOG_FILE);
+    const logs = logFiles[0]?.lines.join('\n');
     setLogs(logs);
   }, [display]);
 
@@ -33,10 +32,10 @@ const LoggingDialog: React.FC<IDialogProps> = ({
   };
 
   const onOpenFileSystem = () => {
-    var logFiles = window.electron.ipcRenderer.fetch(IPCChannelType.LOG_FILE);
-    var logFilePath = logFiles[0].path;
+    const logFiles = window.electron.ipcRenderer.fetch(IPCChannelType.LOG_FILE);
+    const logFilePath = logFiles[0].path;
     // The Regex filters the filename, which will then be removed (for cross system)
-    var filePath = logFilePath.replace(
+    const filePath = logFilePath.replace(
       logFilePath.replace(/^.*[\\\/]/, ''),
       ''
     );
@@ -58,14 +57,14 @@ const LoggingDialog: React.FC<IDialogProps> = ({
   };
 
   return (
-    <div id={id +":container"} className={className}>
+    <div id={`${id}:container`} className={className}>
       <Dialog
         id={id}
         header={t('LOGS')}
         visible={display}
         onHide={() => onHide()}
         style={{ width: '40rem', height: '40rem' }}
-        resizable={true}
+        resizable
         footer={renderFooter()}
         modal={false}
       >
@@ -82,7 +81,7 @@ const LoggingDialog: React.FC<IDialogProps> = ({
               id="loggingConsole"
               className="scrollDown-logs scrollTop-logs"
               data={logs}
-              actionBarHidden={true}
+              actionBarHidden
             />
           </div>
         </div>

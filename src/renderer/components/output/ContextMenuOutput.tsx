@@ -1,7 +1,7 @@
 import { ContextMenu } from 'primereact/contextmenu';
 import React, { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { DataPointType } from 'renderer/types/DataPointType';
+import { DataPointType } from '@minterm/types';
 
 interface IContextMenuOutputProps {
   selectedCells: Array<any>;
@@ -16,6 +16,21 @@ const ContextMenuOutput: React.FC<IContextMenuOutputProps> = ({
 }) => {
   const cm = useRef<any>(null);
   const { t } = useTranslation();
+
+  /**
+   * Calculates the indices out of the selected cells and maps these indices on the
+   * data array to retrieve an array of the original data points.
+   * The selection may not be ordered and thus the data array may not be in order!
+   *
+   * @returns array of data points of the selected cells
+   */
+  const getSelectedValues = () => {
+    const dataIndices = selectedCells.map((e) => {
+      // mapping the 2d table to 1d indices
+      return e.rowIndex * e.rowData.colLength + e.cellIndex;
+    });
+    return dataIndices.map((e) => data[e]);
+  };
 
   const items = [
     {
@@ -81,22 +96,7 @@ const ContextMenuOutput: React.FC<IContextMenuOutputProps> = ({
       cm.current.show(onContextMenu);
   }, [onContextMenu]);
 
-  /**
-   * Calculates the indices out of the selected cells and maps these indices on the
-   * data array to retrieve an array of the original data points.
-   * The selection may not be ordered and thus the data array may not be in order!
-   *
-   * @returns array of data points of the selected cells
-   */
-  const getSelectedValues = () => {
-    var dataIndices = selectedCells.map((e) => {
-      // mapping the 2d table to 1d indices
-      return e.rowIndex * e.rowData.colLength + e.cellIndex;
-    });
-    return dataIndices.map((e) => data[e]);
-  };
-
-  return <ContextMenu model={items} ref={cm} autoZIndex></ContextMenu>;
+  return <ContextMenu model={items} ref={cm} autoZIndex />;
 };
 
 export default ContextMenuOutput;

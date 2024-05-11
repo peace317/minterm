@@ -1,9 +1,22 @@
-# MinTerm
+<img src=".erb/img/erb-banner.svg" width="100%" />
 
-MinTerm is a lightweight terminal-app for serialport communication using electron-react. It provides keyfeatures in structuring 
-and visualizing the data from your microcontroller.
+<br>
 
-### Installation
+<p>
+  MinTerm is a lightweight terminal-app for serialport communication using <a href="https://electron.atom.io/">Electron</a>, <a href="https://facebook.github.io/react/">React</a>, <a href="https://github.com/reactjs/react-router">React Router</a>, <a href="https://webpack.js.org/">Webpack</a>, <a href="https://www.npmjs.com/package/react-refresh">React Fast Refresh</a> and <a href="https://www.npmjs.com/package/serialport">Node SerialPort</a>.
+</p>
+
+<br>
+
+<div align="center">
+
+[![Build Status][github-actions-status]][github-actions-url]
+[![Github Tag][github-tag-image]][github-tag-url]
+
+
+</div>
+
+## Installation
 
 MinTerm is cross-functional and supports windows and linux. For Linux an AppImage can be downloaded that is directly executable, no libaries, no setup-installation.
 On Windows on the other hand an executable needs to be installed. After the setup process a desktop shortcut is created and the App is ready to go.
@@ -27,8 +40,47 @@ Features:
 
 ![Screenshot_11](https://user-images.githubusercontent.com/102929517/230526092-feaa0b63-0f6f-4840-a702-c5d87522f907.png)
 
-### Libraries
+## Development
 
-The app is based on a [electron-react-boilerplate](https://opencollective.com/electron-react-boilerplate-594) and with an [primereact](https://primereact.org/) overlay.
+Clone the repo and install dependencies:
 
-The core interface for communicating with the serialport is the [Node SerialPort](https://serialport.io/) solution.
+```bash
+git clone https://github.com/peace317/minterm.git
+cd minterm
+npm install
+```
+
+**Having issues installing? See the [debugging guide](https://github.com/electron-react-boilerplate/electron-react-boilerplate/issues/400)**
+
+## Starting Development
+
+Start the app in the `dev` environment:
+
+```bash
+npm start
+```
+
+## Packaging for Production
+
+To package apps for the local platform:
+
+```bash
+npm run package
+```
+
+## Docs
+
+See docs and guides for [electron-react-boilerplate](https://electron-react-boilerplate.js.org/docs/installation)
+
+## Maintainers
+
+- [Janik Piepenhagen](https://github.com/peace317)
+
+## License
+
+MIT © [Minterm](https://github.com/peace317/minterm)
+
+[github-actions-status]: https://github.com/electron-react-boilerplate/electron-react-boilerplate/workflows/Test/badge.svg
+[github-actions-url]: https://github.com/peace317/minterm/actions
+[github-tag-image]: https://img.shields.io/github/v/tag/peace317/minterm.svg?label=version
+[github-tag-url]: https://github.com/peace317/minterm/releases/latest

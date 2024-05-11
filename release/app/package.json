@@ -1,20 +1,20 @@
 {
   "name": "minterm",
-  "version": "1.0.0",
-  "description": "Serialport terminal",
-  "main": "./dist/main/main.js",
+  "version": "2.0.0",
+  "description": "A lightweight serial terminal with electron react",
+  "license": "MIT",
   "author": {
     "name": "Janik Piepenhagen",
-    "email": "tinf103697@stud.fh-wedel.de",
-    "url": "https://github.com/electron-react-boilerplate"
+    "email": "janik.piepenhagen@web.de",
+    "url": "https://github.com/peace317"
   },
+  "main": "./dist/main/main.js",
   "scripts": {
-    "electron-rebuild": "node -r ts-node/register ../../.erb/scripts/electron-rebuild.js",
-    "link-modules": "node -r ts-node/register ../../.erb/scripts/link-modules.ts",
-    "postinstall": "npm run electron-rebuild && npm run link-modules"
+    "rebuild": "node -r ts-node/register ../../.erb/scripts/electron-rebuild.js",
+    "postinstall": "npm run rebuild && npm run link-modules",
+    "link-modules": "node -r ts-node/register ../../.erb/scripts/link-modules.ts"
   },
   "dependencies": {
-    "serialport": "^10.4.0"
-  },
-  "license": "UNLICENSED"
+    "serialport": "^10.5.0"
+  }
 }

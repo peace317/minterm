@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { IDefaultProps } from 'renderer/types/AppInterfaces';
-import { Slider, SliderChangeParams } from 'primereact/slider';
-import { MacroVariableType } from 'renderer/types/MacroVariableType';
-import { InputText } from 'primereact/inputtext';
+//import { Tooltip } from 'chart.js';
 import { Button } from 'primereact/button';
-import { VscTrash } from 'react-icons/vsc';
+import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
 import { InputNumber } from 'primereact/inputnumber';
-import { FormatService } from 'renderer/services/FormatService';
-import { Dropdown, DropdownChangeParams } from 'primereact/dropdown';
-import { ConversionType } from 'renderer/types/ConversionType';
+import { InputText } from 'primereact/inputtext';
 import { KeyFilterType } from 'primereact/keyfilter';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { VscTrash } from 'react-icons/vsc';
+import { Slider, SliderChangeEvent } from 'primereact/slider';
 import { Tooltip } from 'primereact/tooltip';
+import { ConversionType, IDefaultProps, MacroVariableType } from '@minterm/types';
+import { decimalToBinary, decimalToHex, typeToSelectList } from '@minterm/services';
+import { IconField } from "primereact/iconfield";
+import { InputIcon } from "primereact/inputicon";
 
 interface IMacroVariableProps extends IDefaultProps {
   variable: MacroVariableType;
@@ -38,16 +39,15 @@ const MacroVariable: React.FC<IMacroVariableProps> = ({
 }) => {
   const { t } = useTranslation();
   const [textValue, setTextValue] = useState<string>(variable.value);
-  const [valueChange, setValueChange] = useState<boolean>(false);
   const [encoding, setEncoding] = useState<ConversionType>(variable.type);
-  const [sliderValue, setSliderValue] = useState<number>();
+  const [sliderValue, setSliderValue] = useState<number>(0);
   const [keyFilter, setKeyFilter] = useState<KeyFilterType>();
   const [minBoundary, setMinBoundary] = useState<number>();
   const [min, setMin] = useState<number | undefined>(variable.minValue);
   const [max, setMax] = useState<number | undefined>(variable.maxValue);
 
   useEffect(() => {
-    determineSliderValue();
+    determineSliderValue(variable.value);
     determineKeyFilter();
   }, []);
 
@@ -57,49 +57,46 @@ const MacroVariable: React.FC<IMacroVariableProps> = ({
     variable.minValue = min;
     variable.maxValue = max;
     onVariableChange(variable);
-    setValueChange(false);
-  }, [valueChange, encoding, min, max]);
+  }, [textValue, encoding, min, max]);
 
   const getEncodings = () => {
-    var selectList = FormatService.typeToSelectList(ConversionType);
+    const selectList = typeToSelectList(ConversionType);
     return selectList.filter((e) => e.name !== ConversionType.ASCII);
   };
 
-  const determineSliderValue = () => {
+  const determineSliderValue = (value: string) => {
     switch (encoding) {
       case ConversionType.DEC:
-        setSliderValue(Number(textValue));
+        setSliderValue(Number(value));
         break;
       case ConversionType.BIN:
-        setSliderValue(parseInt(textValue, 2));
+        setSliderValue(parseInt(value, 2));
         break;
       case ConversionType.HEX:
-        setSliderValue(parseInt(textValue, 16));
+        setSliderValue(parseInt(value, 16));
         break;
       default:
-        console.error('Unhandled encoding type ' + encoding);
+        console.error(`Unhandled encoding type ${encoding}`);
     }
   };
 
-  const determineTextValue = (value: string, pEncoding?: ConversionType) => {
-    var _encoding = pEncoding || encoding;
+  const determineTextValue = (value: string, pEncoding?: ConversionType): string => {
+    const _encoding = pEncoding || encoding;
     switch (_encoding) {
       case ConversionType.DEC:
-        setTextValue(value);
-        break;
+       return value;
       case ConversionType.BIN:
-        setTextValue(FormatService.decimalToBinary(Number(value)));
-        break;
+        return decimalToBinary(Number(value));
       case ConversionType.HEX:
-        setTextValue(FormatService.decimalToHex(Number(value)));
-        break;
+        return decimalToHex(Number(value));
       default:
-        console.error('Unhandled encoding type ' + _encoding);
+        console.error(`Unhandled encoding type ${_encoding}`);
     }
+    return '';
   };
 
   const determineKeyFilter = (pEncoding?: ConversionType) => {
-    var _encoding = pEncoding || encoding;
+    const _encoding = pEncoding || encoding;
     switch (_encoding) {
       case ConversionType.BIN:
         setKeyFilter(/[0-1]+/);
@@ -114,34 +111,31 @@ const MacroVariable: React.FC<IMacroVariableProps> = ({
         setMinBoundary(0);
         break;
       default:
-        console.error('Unhandled encoding type ' + _encoding);
+        console.error(`Unhandled encoding type ${_encoding}`);
     }
   };
 
   const onValueChange = (value: string) => {
     if (value === null) return;
-    determineSliderValue();
+    determineSliderValue(value);
     setTextValue(value.toString());
-    setValueChange(true);
   };
 
-  const onSliderValueChange = (e: SliderChangeParams) => {
-    determineTextValue(e.value.toString());
-    determineSliderValue();
+  const onSliderValueChange = (e: SliderChangeEvent) => {
+    const _textValue = determineTextValue(e.value.toString());
+    setTextValue(_textValue);
+    determineSliderValue(_textValue);
   };
 
-  const onEncodingChange = (e: DropdownChangeParams) => {
+  const onEncodingChange = (e: DropdownChangeEvent) => {
     setEncoding(e.target.value);
     determineKeyFilter(e.target.value);
-    determineTextValue(sliderValue?.toString() || '0', e.target.value);
-    setValueChange(true);
+    setTextValue(determineTextValue(sliderValue?.toString() || '0', e.target.value));
   };
 
   const onMinChange = (value: number | null) => {
-    console.log(value);
     if (value === null) {
       setMin(undefined);
-      return;
     } else {
       setMin(value);
     }
@@ -150,16 +144,15 @@ const MacroVariable: React.FC<IMacroVariableProps> = ({
   const onMaxChange = (value: number | null) => {
     if (value === null) {
       setMax(undefined);
-      return;
     } else {
       setMax(value);
     }
   };
 
   return (
-    <div id={id + ':container'} className={className}>
+    <div id={`${id}:container`} className={className}>
       <h4 className="label-h4">Variable {variable.name}:</h4>
-      <div id={':' + id + ':wrapper'} className="p-mention w-full">
+      <div id={`:${id}:wrapper`} className="flex w-full">
         <div className="mr-2">
           <Dropdown
             id={id}
@@ -176,53 +169,52 @@ const MacroVariable: React.FC<IMacroVariableProps> = ({
             <div>
               {t('DECIMAL')}: {sliderValue} <br />
               {t('BINARY')}:{' '}
-              {FormatService.decimalToBinary(Number(sliderValue))} <br />
-              {t('HEX')}: {FormatService.decimalToHex(Number(sliderValue))}{' '}
+              {decimalToBinary(Number(sliderValue))} <br />
+              {t('HEX')}: {decimalToHex(Number(sliderValue))}{' '}
               <br />
             </div>
           </Tooltip>
-          <span className="p-input-icon-right">
-            <i className="pi pi-info-circle inputValueField" />
+          <IconField iconPosition="right">
+            <InputIcon className="pi pi-info-circle inputValueField"></InputIcon>
             <InputText
-              id={id + ':inputtext'}
+              id={`${id}:inputtext`}
               value={textValue}
               keyfilter={keyFilter}
               onChange={(e) => onValueChange(e.target.value)}
             />
-          </span>
+          </IconField>
           <Slider
-            id={id + ':slider'}
+            id={`${id}:slider`}
             value={sliderValue}
-            min={min}
-            max={max}
+            min={min || 0}
+            max={max || 100}
             onChange={(e) => onSliderValueChange(e)}
-            onSlideEnd={(e) => onValueChange(textValue)}
           />
         </div>
         <div className="w-full">
           <span className="p-float-label">
             <InputNumber
-              id={id + ':inputMin'}
-              inputId={id + ':inputMin'}
+              id={`${id}:inputMin`}
+              inputId={`${id}:inputMin`}
               value={min}
               min={minBoundary}
               onChange={(e) => onMinChange(e.value)}
               className="inputnumber-small mr-2"
             />
-            <label htmlFor={id + ':inputMin'}>Min</label>
+            <label htmlFor={`${id}:inputMin`}>Min</label>
           </span>
         </div>
         <div className="w-full">
           <span className="p-float-label">
             <InputNumber
-              id={id + ':inputMax'}
-              inputId={id + ':inputMax'}
+              id={`${id}:inputMax`}
+              inputId={`${id}:inputMax`}
               value={max}
               max={Number.MAX_SAFE_INTEGER}
               onChange={(e) => onMaxChange(e.value)}
               className="inputnumber-small mr-2"
             />
-            <label htmlFor={id + ':inputMax'}>Max</label>
+            <label htmlFor={`${id}:inputMax`}>Max</label>
           </span>
         </div>
         <div>

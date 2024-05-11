@@ -1,8 +1,7 @@
-import { InputNumber } from 'primereact/inputnumber';
 import { InputText } from 'primereact/inputtext';
 import { Dispatch, SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
-import { IDefaultProps } from 'renderer/types/AppInterfaces';
+import { IDefaultProps } from '@minterm/types';
 
 interface IReadyParserSettingsProps extends IDefaultProps {
   delimiter: string;
@@ -18,7 +17,7 @@ const ReadyParserSettings: React.FC<IReadyParserSettingsProps> = ({
   const { t } = useTranslation();
 
   return (
-    <div id={id +":container"} className={className + ' field'}>
+    <div id={`${id}:container`} className={`${className} field`}>
       <h4 className="label-h4 ">{t('READY_DELIMITER')}</h4>
       <InputText
         id="delimiter"

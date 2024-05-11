@@ -1,21 +1,28 @@
-import { ByteLengthParser, ReadyParser, SerialPort } from 'serialport';
-import { IPCChannelType } from '../renderer/types/IPCChannelType';
-import { app, BrowserWindow, shell, ipcMain, IpcMainEvent } from 'electron';
-import { DelimiterParser } from 'serialport';
-import { RegexParser } from 'serialport';
-import log from 'electron-log';
+import { BrowserWindow, IpcMainEvent, ipcMain } from 'electron';
+import { error } from 'electron-log';
 import Store from 'electron-store';
-import { ConnectionStatusType } from '../renderer/types/ConnectionStatusType';
-import { DataPointType } from '../renderer/types/DataPointType';
-import { FormatService } from '../renderer/services/FormatService';
-import { StoreKey } from '../renderer/types/StoreKeyType';
-import { ParserType } from '../renderer/types/ParserType';
-import { isDevelopment } from './main';
+import { ConnectionStatusType } from '../renderer/types/enums/ConnectionStatusType';
+import { IPCChannelType } from '../renderer/types/enums/IPCChannelType';
+import { ParserType } from '../renderer/types/enums/ParserType';
+import { StoreKey } from '../renderer/types/enums/StoreKeyType';
+import { DataPointType } from '../renderer/types/types/DataPointType';
+import { asciiToBin, asciiToDecimal, asciiToHex } from '../renderer/services/FormatService';
+import {
+  ByteLengthParser,
+  DelimiterParser,
+  ReadyParser,
+  RegexParser,
+  SerialPort,
+} from 'serialport';
+import isDevelopment from './main';
 
 export default class SerialPortListener {
   serialPortConnection: SerialPort | undefined;
+
   mainWindow: BrowserWindow;
+
   conversionSupport: boolean;
+
   store: Store;
 
   constructor(mainWindow: BrowserWindow, store: Store<any>) {
@@ -45,10 +52,9 @@ export default class SerialPortListener {
   }
 
   public portStatusType(event: IpcMainEvent, args: any): void {
-    let showStatusMessage =
-      args !== undefined ? (args as boolean) : false;
+    const showStatusMessage = args !== undefined ? (args as boolean) : false;
 
-    let portStatus = this.checkPortStatus();
+    const portStatus = this.checkPortStatus();
 
     if (showStatusMessage) {
       this.mainWindow.webContents.send(IPCChannelType.PORT_STATUS, portStatus);
@@ -58,7 +64,7 @@ export default class SerialPortListener {
 
   /**
    * Opens a connection with the serialport. Except the baud rate and the port,
-   * every settting stored in electron will be applied. This includes all settings
+   * every setting stored in electron will be applied. This includes all settings
    * for the connection itself (dataBits, stopBits etc.) as well as the parser.
    *
    * If a connection could not be opened, an error/warning message will be send to the
@@ -69,18 +75,18 @@ export default class SerialPortListener {
    */
   public connect(event: IpcMainEvent, args: any[]): void {
     if (args.length < 2) {
-      log.error('Not enough arguments given for connection: ' + args);
+      error(`Not enough arguments given for connection: ${args}`);
     }
-    var port = args[0] as string;
-    var baudRate = args[1] as string;
-    if (port == undefined) {
+    const port = args[0] as string;
+    const baudRate = args[1] as string;
+    if (port === undefined) {
       event.reply(
         IPCChannelType.PORT_STATUS,
         ConnectionStatusType.NO_PORT_SELECTED
       );
       return;
     }
-    if (baudRate == undefined) {
+    if (baudRate === undefined) {
       event.reply(
         IPCChannelType.PORT_STATUS,
         ConnectionStatusType.NO_BAUD_RATE_SELECTED
@@ -99,17 +105,17 @@ export default class SerialPortListener {
     }
 
     try {
-      var dataBits: any = this.store.get(StoreKey.SERIALPORT_DATA_BITS);
-      var stopBits: any = this.store.get(StoreKey.SERIALPORT_STOP_BITS);
-      var parity: any = this.store.get(StoreKey.SERIALPORT_PARITY);
+      const dataBits: any = this.store.get(StoreKey.SERIALPORT_DATA_BITS);
+      const stopBits: any = this.store.get(StoreKey.SERIALPORT_STOP_BITS);
+      const parity: any = this.store.get(StoreKey.SERIALPORT_PARITY);
       // opens immediately a port
       this.serialPortConnection = new SerialPort(
         {
           path: port,
           baudRate: Number(baudRate),
-          dataBits: dataBits,
-          stopBits: stopBits,
-          parity: parity,
+          dataBits,
+          stopBits,
+          parity,
           lock: Boolean(this.store.get(StoreKey.SERIALPORT_LOCK)),
           hupcl: Boolean(this.store.get(StoreKey.SERIALPORT_HUPCL)),
           rtscts: Boolean(this.store.get(StoreKey.SERIALPORT_RTSCTS)),
@@ -117,14 +123,13 @@ export default class SerialPortListener {
           xoff: Boolean(this.store.get(StoreKey.SERIALPORT_XOFF)),
           xon: Boolean(this.store.get(StoreKey.SERIALPORT_XON)),
         },
-        function (error) {
+        (error) => {
           if (error) {
-            console.error('[New SerialPort] - ' + error);
+            console.error(`[New SerialPort] - ${error}`);
             event.reply(
               IPCChannelType.PORT_STATUS,
               ConnectionStatusType.PORT_ALREADY_OPEN
             );
-            return;
           }
         }
       );
@@ -132,12 +137,12 @@ export default class SerialPortListener {
       // setting up 'open' event with a flushed port
       this.serialPortConnection.on('open', (error) => {
         if (error) {
-          console.error('[Open SerialPort] - ' + error);
+          console.error(`[Open SerialPort] - ${error}`);
           return;
         }
         this.serialPortConnection?.flush((error) => {
           if (error) {
-            console.error('[Flush SerialPort] - ' + error);
+            console.error(`[Flush SerialPort] - ${error}`);
             return;
           }
           const parser = this.getParser();
@@ -151,7 +156,7 @@ export default class SerialPortListener {
       });
     } catch (error) {
       // catch and log any unexpected errors
-      console.error('[SerialPort unexpected error] - ' + error);
+      console.error(`[SerialPort unexpected error] - ${error}`);
     }
   }
 
@@ -168,7 +173,7 @@ export default class SerialPortListener {
       this.serialPortConnection?.flush();
       this.serialPortConnection?.close(function (err: any) {
         if (err != null) {
-          console.error('[Close SerialPort] - ' + err);
+          console.error(`[Close SerialPort] - ${err}`);
         }
       });
     }
@@ -184,7 +189,7 @@ export default class SerialPortListener {
    * @returns
    */
   public sendData(event: IpcMainEvent, args: any[]): void {
-    var message: string = args[0];
+    const message: string = args[0];
     if (
       this.serialPortConnection === undefined ||
       !this.serialPortConnection.isOpen
@@ -194,7 +199,8 @@ export default class SerialPortListener {
         ConnectionStatusType.DISCONNECTED
       );
       return;
-    } else if (!this.serialPortConnection.writable) {
+    }
+    if (!this.serialPortConnection.writable) {
       this.mainWindow.webContents.send(
         IPCChannelType.PORT_STATUS,
         ConnectionStatusType.PORT_NOT_WRITABLE
@@ -204,18 +210,18 @@ export default class SerialPortListener {
     // sends message
     this.serialPortConnection.write(message, 'ascii', (err) => {
       if (err) {
-        return console.error('[Write on SerialPort] - ' + err);
+        return console.error(`[Write on SerialPort] - ${err}`);
       }
     });
     const timestamp = new Date();
-    var points = message.split('').map(
+    const points = message.split('').map(
       (e) =>
         <DataPointType>{
-          timestamp: timestamp,
+          timestamp,
           value: e,
-          valueAsBin: FormatService.asciiToBin(e),
-          valueAsDec: FormatService.asciiToDecimal(e),
-          valueAsHex: FormatService.asciiToHex(e),
+          valueAsBin: asciiToBin(e),
+          valueAsDec: asciiToDecimal(e),
+          valueAsHex: asciiToHex(e),
         }
     );
     if (isDevelopment) {
@@ -272,7 +278,7 @@ export default class SerialPortListener {
    * @returns parser for serialport
    */
   private getParser() {
-    var parser = this.store.get(StoreKey.SELECTED_PARSER);
+    const parser = this.store.get(StoreKey.SELECTED_PARSER);
     switch (parser) {
       case ParserType.BYTE_LENGTH_PARSER:
         return new ByteLengthParser({
@@ -288,7 +294,7 @@ export default class SerialPortListener {
           ),
         });
       case ParserType.REGEX_PARSER:
-        var bufferEncoding: any = this.store.get(
+        const bufferEncoding: any = this.store.get(
           StoreKey.PARSER_REGEX_ENCODING
         );
         return new RegexParser({
@@ -302,10 +308,10 @@ export default class SerialPortListener {
           delimiter: this.store.get(StoreKey.READY_PARSER_DELIMITER) as string,
         });
       default:
-        console.error('[Unknown parser] - ' + parser);
+        console.error(`[Unknown parser] - ${parser}`);
         break;
     }
-    return;
+    return undefined;
   }
 
   /**
@@ -321,12 +327,12 @@ export default class SerialPortListener {
         .toString('binary')
         .split('')
         .forEach((e) => {
-          var point = this.buildDataPoint(e);
+          const point = this.buildDataPoint(e);
           this.mainWindow.webContents.send(IPCChannelType.RECEIVE_DATA, point);
         });
     } else {
-      var buf = Buffer.from(buffer).toString('binary');
-      var point = this.buildDataPoint(buf);
+      const buf = Buffer.from(buffer).toString('binary');
+      const point = this.buildDataPoint(buf);
       if (isDevelopment) {
         console.log(point);
       }
@@ -338,9 +344,9 @@ export default class SerialPortListener {
     return {
       timestamp: new Date(),
       value: stringBuffer,
-      valueAsBin: FormatService.asciiToBin(stringBuffer),
-      valueAsDec: FormatService.asciiToDecimal(stringBuffer),
-      valueAsHex: FormatService.asciiToHex(stringBuffer),
+      valueAsBin: asciiToBin(stringBuffer),
+      valueAsDec: asciiToDecimal(stringBuffer),
+      valueAsHex: asciiToHex(stringBuffer),
     };
   }
 
@@ -348,7 +354,7 @@ export default class SerialPortListener {
    * Sends the port list every 5 seconds to the renderer process.
    */
   private async sendPortList() {
-    var ports = await this.getPortList();
+    const ports = await this.getPortList();
     this.mainWindow.webContents.send(IPCChannelType.RECEIVE_PORT_LIST, ports);
     setTimeout(this.sendPortList.bind(this), 5000);
   }
@@ -359,7 +365,7 @@ export default class SerialPortListener {
    * @returns port list
    */
   private async getPortList() {
-    var portList = await SerialPort.list().then((ports) => {
+    const portList = await SerialPort.list().then((ports) => {
       if (ports.length === 0) {
         console.log('No ports discovered');
       }

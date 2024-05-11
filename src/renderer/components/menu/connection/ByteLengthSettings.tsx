@@ -1,7 +1,7 @@
 import { InputNumber } from 'primereact/inputnumber';
 import { Dispatch, SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
-import { IDefaultProps } from 'renderer/types/AppInterfaces';
+import { IDefaultProps } from '@minterm/types';
 
 interface IByteLengthSettingsProps extends IDefaultProps {
   length: number;
@@ -17,7 +17,7 @@ const ByteLengthSettings: React.FC<IByteLengthSettingsProps> = ({
   const { t } = useTranslation();
 
   return (
-    <div id={id +":container"} className={className + ' field'}>
+    <div id={`${id}:container`} className={`${className} field`}>
       <h4 className="label-h4 ">{t('BYTE_LENGTH')}</h4>
       <InputNumber
         id={id}

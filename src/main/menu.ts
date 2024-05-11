@@ -18,24 +18,23 @@ export default class MenuBuilder {
     this.mainWindow = mainWindow;
   }
 
-  buildMenu(): Menu | undefined {
+  buildMenu(): Menu {
     if (
       process.env.NODE_ENV === 'development' ||
       process.env.DEBUG_PROD === 'true'
     ) {
       this.setupDevelopmentEnvironment();
-      this.mainWindow.webContents.openDevTools();
     }
 
     const template =
       process.platform === 'darwin'
         ? this.buildDarwinTemplate()
         : this.buildDefaultTemplate();
-    const menu = Menu.buildFromTemplate(template);
 
+    const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
 
-    return undefined;
+    return menu;
   }
 
   setupDevelopmentEnvironment(): void {
@@ -207,32 +206,6 @@ export default class MenuBuilder {
             accelerator: 'Ctrl+W',
             click: () => {
               this.mainWindow.close();
-            },
-          },
-        ],
-      },
-      {
-        label: 'View',
-        submenu: [
-          {
-            label: 'Reload',
-            accelerator: 'Command+R',
-            click: () => {
-              this.mainWindow.webContents.reload();
-            },
-          },
-          {
-            label: 'Toggle Full Screen',
-            accelerator: 'Ctrl+Command+F',
-            click: () => {
-              this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen());
-            },
-          },
-          {
-            label: 'Toggle Developer Tools',
-            accelerator: 'Alt+Command+I',
-            click: () => {
-              this.mainWindow.webContents.toggleDevTools();
             },
           },
         ],

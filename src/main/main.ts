@@ -8,33 +8,16 @@
  * When running `npm run build` or `npm run build:main`, this file is compiled to
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
-import path from 'path';
-import { app, BrowserWindow, shell, ipcMain } from 'electron';
-import { autoUpdater } from 'electron-updater';
+import { BrowserWindow, app, ipcMain, shell, nativeTheme } from 'electron';
 import log from 'electron-log';
-import MenuBuilder from './menu';
-import defaults from './defaultSettings';
-import { resolveHtmlPath } from './util';
 import Store from 'electron-store';
-import { IPCChannelType } from '../renderer/types/IPCChannelType';
-import SerialPortListener from './serialportListener';
-import ElectronLogger from './logger';
-
-export default class AppUpdater {
-  constructor() {
-    log.transports.file.level = isDevelopment ? 'debug' : 'info';
-    log.transports.file.fileName = app.getName() + '.log';
-    log.transports.remote.level = 'debug';
-    autoUpdater.logger = log;
-    /*autoUpdater.setFeedURL({
-      provider: 'github',
-      repo: 'repo',
-      owner: 'peace317',
-      private: false,
-    });
-    autoUpdater.checkForUpdatesAndNotify();*/
-  }
-}
+import { autoUpdater } from 'electron-updater';
+import path from 'path';
+import { IPCChannelType } from '../renderer/types/enums/IPCChannelType';
+import defaults from './defaultSettings';
+import MenuBuilder from './menu';
+import { resolveHtmlPath } from './util';
+import { StoreKey } from '../renderer/types/enums/StoreKeyType';
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -48,16 +31,29 @@ if (process.env.NODE_ENV === 'production') {
   sourceMapSupport.install();
 }
 
-export const isDevelopment =
+const isDevelopment =
   process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
 
-if (isDevelopment) {
-  // accessing application debugging (https://www.electronjs.org/docs/latest/tutorial/application-debugging)
-  require('electron-debug')();
+export default isDevelopment;
+
+class AppUpdater {
+  constructor() {
+    log.transports.file.level = isDevelopment ? 'debug' : 'info';
+    log.transports.file.fileName = `${app.getName()}.log`;
+    log.transports.remote.level = 'debug';
+    log.transports.console.format =
+      '[{y}-{m}-{d} {h}:{i}:{s}.{ms}] [{level}] {text}';
+    autoUpdater.logger = log;
+    autoUpdater.checkForUpdatesAndNotify();
+  }
 }
 
-// overriding console log functions
 Object.assign(console, log.functions);
+log.initialize({ spyRendererConsole: true });
+
+if (isDevelopment) {
+  require('electron-debug')();
+}
 
 const installExtensions = async () => {
   const installer = require('electron-devtools-installer');
@@ -77,29 +73,25 @@ const createWindow = async () => {
     await installExtensions();
   }
 
-  const logger = new ElectronLogger();
-  logger.init();
-  console.info('versions: ' + JSON.stringify(process.versions));
-  console.info('userData: ' + app.getPath('userData'));
-  console.info('logs: ' + app.getPath('logs'));
+  const RESOURCES_PATH = app.isPackaged
+    ? path.join(process.resourcesPath, 'assets')
+    : path.join(__dirname, '../../assets');
+
+  const getAssetPath = (...paths: string[]): string => {
+    return path.join(RESOURCES_PATH, ...paths);
+  };
 
   mainWindow = new BrowserWindow({
     show: false,
     width: 1024,
     height: 728,
-    autoHideMenuBar: true,
-    frame: false,
-    titleBarStyle: 'hidden',
+    icon: getAssetPath('icon.png'),
     webPreferences: {
       preload: app.isPackaged
         ? path.join(__dirname, 'preload.js')
         : path.join(__dirname, '../../.erb/dll/preload.js'),
-      nodeIntegration: true,
     },
   });
-
-  const serialPortConnector = new SerialPortListener(mainWindow, store);
-  serialPortConnector.init();
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
@@ -118,14 +110,6 @@ const createWindow = async () => {
     mainWindow = null;
   });
 
-  mainWindow.on('maximize', () => {
-    mainWindow?.webContents.send(IPCChannelType.APP_MAXIMIZE);
-  });
-
-  mainWindow.on('unmaximize', () => {
-    mainWindow?.webContents.send(IPCChannelType.APP_UNMAXIMIZE);
-  });
-
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
 
@@ -135,7 +119,9 @@ const createWindow = async () => {
     return { action: 'deny' };
   });
 
-  // Remove this if app does not use auto updates
+  nativeTheme.themeSource = store.get(StoreKey.THEME) as unknown as ('system' | 'light' | 'dark');
+
+  // Remove this if your app does not use auto updates
   // eslint-disable-next-line
   new AppUpdater();
 };
@@ -143,18 +129,13 @@ const createWindow = async () => {
 /**
  * Add event listeners...
  */
+
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
   if (process.platform !== 'darwin') {
     app.quit();
   }
-});
-
-app.on('render-process-gone', (event, webContents, details) => {
-  // Emitted when the renderer process unexpectedly disappears.
-  // This is normally because it was crashed or killed.
-  log.error(details.reason);
 });
 
 app
@@ -169,27 +150,27 @@ app
   })
   .catch(console.log);
 
-ipcMain.on(IPCChannelType.APP_CLOSE, async (event, arg) => {
+ipcMain.on(IPCChannelType.APP_CLOSE, async () => {
   mainWindow?.close();
 });
 
-ipcMain.on(IPCChannelType.APP_RELOAD, async (event, arg) => {
+ipcMain.on(IPCChannelType.APP_RELOAD, async () => {
   mainWindow?.reload();
 });
 
-ipcMain.on(IPCChannelType.APP_MINIMIZE, async (event, arg) => {
+ipcMain.on(IPCChannelType.APP_MINIMIZE, async () => {
   mainWindow?.minimize();
 });
 
-ipcMain.on(IPCChannelType.APP_MAXIMIZE, async (event, arg) => {
+ipcMain.on(IPCChannelType.APP_MAXIMIZE, async () => {
   mainWindow?.maximize();
 });
 
-ipcMain.on(IPCChannelType.APP_RESTORE, async (event, arg) => {
+ipcMain.on(IPCChannelType.APP_RESTORE, async () => {
   mainWindow?.restore();
 });
 
-ipcMain.on(IPCChannelType.APP_VERSIONS, async (event, arg) => {
+ipcMain.on(IPCChannelType.APP_VERSIONS, async (event) => {
   event.returnValue = process.versions;
 });
 
@@ -209,8 +190,8 @@ ipcMain.on(IPCChannelType.LOG_FILE, async (event, arg) => {
   event.returnValue = log.transports.file.readAllLogs();
 });
 
-ipcMain.on(IPCChannelType.OPEN_FILE, async (event, arg) => {
-  shell.openPath(arg[0]);
+ipcMain.on(IPCChannelType.OPEN_FILE, async (event, args) => {
+  shell.openPath(args[0]);
 });
 
 ipcMain.on(IPCChannelType.IS_DEVELOPMENT, async (event, arg) => {
@@ -219,4 +200,8 @@ ipcMain.on(IPCChannelType.IS_DEVELOPMENT, async (event, arg) => {
 
 ipcMain.on(IPCChannelType.GET_ENV, async (event, arg) => {
   event.returnValue = process.env[arg];
+});
+
+ipcMain.on(IPCChannelType.CHANGE_THEME, async (event, args) => {
+  nativeTheme.themeSource = args[0];
 });

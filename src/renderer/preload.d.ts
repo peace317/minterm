@@ -1,10 +1,8 @@
-import { IPCChannelType } from "./types/IPCChannelType";
-import { StoreKey } from "./types/StoreKeyType";
+import IPCChannelType from '@minterm/typesIPCChannelType';
+import StoreKey from '@minterm/typesStoreKeyType';
 
-/**
- * Declared context bridge functions.
- */
 declare global {
+  // eslint-disable-next-line no-unused-vars
   interface Window {
     electron: {
       /**
@@ -30,8 +28,8 @@ declare global {
          * the listener. Accessing states should only be used in rare cases. In
          * addition to that, it's a bad idea to add a new listener on state changes,
          * either wanted or a state is used in the function parameter. This will result
-         * in memory leaks. So the old listener must either be removed (@see {@link once}) or
-         * be created only ones.
+         * in memory leaks. So the old listener must either be removed (@see {@link removeListener}) or
+         * be created only once.
          *
          * @param channel channel for caller in main
          * @param func function parameter executed on receiving message
@@ -66,7 +64,10 @@ declare global {
          * @param channel channel
          * @param listener listener
          */
-        removeListener(channel: IPCChannelType, listener: (...args: any[]) => void): unknown;
+        removeListener(
+          channel: IPCChannelType,
+          listener: (...args: any[]) => void
+        ): unknown;
         /**
          * Removes all listeners of the associated channel.
          *
