@@ -1,6 +1,6 @@
 import { ipcMain } from 'electron';
 import log from 'electron-log';
-import { LogMessage } from '../renderer/services/Logger';
+import { LogMessage } from '../services/Logger';
 import { IPCChannelType } from '../renderer/types/enums/IPCChannelType';
 import { format } from 'util';
 

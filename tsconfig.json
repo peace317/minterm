@@ -1,25 +1,23 @@
 {
   "compilerOptions": {
-    "incremental": true,
-    "target": "es2021",
+    "target": "ES6",
+    "allowJs": true,
     "module": "commonjs",
-    "lib": ["dom", "es2021"],
-    "jsx": "react-jsx",
-    "strict": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "noImplicitAny": true,
     "sourceMap": true,
     "baseUrl": ".",
+    "outDir": "dist",
     "moduleResolution": "node",
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
+    "jsx": "react-jsx",
     "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "allowJs": true,
-    "outDir": ".erb/dll",
     "paths": {
+      "*": ["node_modules/*"],
       "@/*": ["src/*"],
       "@minterm/types": ["./src/renderer/types/index.ts"],
-      "@minterm/services": ["./src/renderer/services/index.ts"],
+      "@minterm/services": ["./src/services/index.ts"],
     }
   },
-  "exclude": ["test", "release/build", "release/app/dist", ".erb/dll"]
+  "include": ["src/**/*"]
 }

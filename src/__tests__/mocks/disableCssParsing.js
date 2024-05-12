@@ -1,0 +1,3 @@
+global.CSS = {
+    parseError: function() {}
+  };

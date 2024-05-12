@@ -1,4 +1,4 @@
-<img src=".erb/img/erb-banner.svg" width="100%" />
+<img src="./src/renderer/resources/images/erb-banner.svg" width="100%" />
 
 <br>
 
@@ -50,7 +50,7 @@ cd minterm
 npm install
 ```
 
-**Having issues installing? See the [debugging guide](https://github.com/electron-react-boilerplate/electron-react-boilerplate/issues/400)**
+**Having issues installing? See the [debugging guide](https://www.electronforge.io/advanced/debugging)**
 
 ## Starting Development
 
@@ -70,7 +70,7 @@ npm run package
 
 ## Docs
 
-See docs and guides for [electron-react-boilerplate](https://electron-react-boilerplate.js.org/docs/installation)
+See docs and guides for [electron-forge](https://js.electronforge.io/)
 
 ## Maintainers
 
@@ -80,7 +80,7 @@ See docs and guides for [electron-react-boilerplate](https://electron-react-boil
 
 MIT © [Minterm](https://github.com/peace317/minterm)
 
-[github-actions-status]: https://github.com/electron-react-boilerplate/electron-react-boilerplate/workflows/Test/badge.svg
+[github-actions-status]: https://github.com/peace317/minterm/workflows/Test/badge.svg
 [github-actions-url]: https://github.com/peace317/minterm/actions
 [github-tag-image]: https://img.shields.io/github/v/tag/peace317/minterm.svg?label=version
 [github-tag-url]: https://github.com/peace317/minterm/releases/latest

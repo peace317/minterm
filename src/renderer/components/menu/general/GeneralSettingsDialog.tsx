@@ -8,7 +8,6 @@ import { useTranslation } from 'react-i18next';
 import { IDialogProps, IPCChannelType, StoreKey } from '@minterm/types';
 import LanguageSelect from './LanguageSelect';
 import ThemeSelect from './ThemeSelect';
-import { PrimeReactContext } from 'primereact/api';
 import clsx from 'clsx';
 import { DropdownChangeEvent } from 'primereact/dropdown';
 
@@ -25,7 +24,6 @@ const GeneralSettingsDialog: React.FC<IDialogProps> = ({
   const [selectedTheme, setSelectedTheme] = useState<any>(
     window.electron.store.get(StoreKey.THEME)
   );
-  const { changeTheme } = useContext(PrimeReactContext);
 
   useEffect(() => {
     if (isRestartNecessary) {

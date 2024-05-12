@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import { ConversionType, DataPointType } from '@minterm/types';
-import { ExportService, asciiToBin, asciiToDecimal, asciiToHex } from '@minterm/services';
+import { ExportService, asciiToBin, asciiToDecimal, asciiToHex, decimalToAscii } from '@minterm/services';
 
 const defaultTime: Date = new Date('2000-01-01');
 

@@ -1,5 +1,3 @@
-import { decimalToAscii } from '@minterm/services';
-
 export enum AppendSequences {
   NONE = 'None',
   CR = 'CR',
@@ -32,6 +30,6 @@ export const appendCommands: AppendSequenceType[] = [
   },
   {
     label: AppendSequences.NULL,
-    command: decimalToAscii(0),
+    command: '',
   },
 ];

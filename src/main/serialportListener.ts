@@ -1,12 +1,8 @@
 import { BrowserWindow, IpcMainEvent, ipcMain } from 'electron';
 import { error } from 'electron-log';
 import Store from 'electron-store';
-import { ConnectionStatusType } from '../renderer/types/enums/ConnectionStatusType';
-import { IPCChannelType } from '../renderer/types/enums/IPCChannelType';
-import { ParserType } from '../renderer/types/enums/ParserType';
-import { StoreKey } from '../renderer/types/enums/StoreKeyType';
-import { DataPointType } from '../renderer/types/types/DataPointType';
-import { asciiToBin, asciiToDecimal, asciiToHex } from '../renderer/services/FormatService';
+import { DataPointType, StoreKey, ParserType, IPCChannelType, ConnectionStatusType } from '@minterm/types';
+import { asciiToBin, asciiToDecimal, asciiToHex } from '@minterm/services';
 import {
   ByteLengthParser,
   DelimiterParser,
@@ -14,7 +10,7 @@ import {
   RegexParser,
   SerialPort,
 } from 'serialport';
-import isDevelopment from './main';
+import { isDevelopment } from './index';
 
 export default class SerialPortListener {
   serialPortConnection: SerialPort | undefined;

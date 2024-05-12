@@ -4,7 +4,7 @@ import { ConversionType, IPCChannelType } from '@minterm/types';
 import { ipcRenderer, ipcMain } from 'electron';
 
 // init global window.electron.ipcRenderer
-global.window = Object.assign(global.window || {}, {
+global.window = Object.assign(global.window, {
   electron: {
     ipcRenderer: ipcRenderer,
   },
