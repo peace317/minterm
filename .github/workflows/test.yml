@@ -1,4 +1,4 @@
-name: Test
+name: Build and Test
 
 on: [push, pull_request]
 
@@ -11,7 +11,7 @@ jobs:
         os: [macos-latest, windows-latest, ubuntu-latest]
 
     steps:
-      - name: Check out Git repository
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Install Node.js and NPM
@@ -20,13 +20,14 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: npm install
-        run: |
-          npm install
+      - name: Install dependencies
+        run: npm install
 
-      - name: npm test
-        run: |
-          npm run package
-          npm run lint
-          npm exec tsc
-          npm test
+      - name: Eslint
+        run: npm run lint
+      
+      - name: Package
+        run: npm run package
+
+      - name: Test
+        run: npm test
