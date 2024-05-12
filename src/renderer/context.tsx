@@ -1,6 +1,6 @@
 import { PortInfo } from '@serialport/bindings-cpp';
 import React, { useEffect } from 'react';
-import { IPCChannelType, StoreKey, DataPointType } from '@minterm/types';
+import { IPCChannelType, DataPointType } from '@minterm/types';
 
 export type ContextType = {
   selectedPort: { name: string; code: string } | undefined;

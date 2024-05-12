@@ -4,7 +4,7 @@ import { InputNumber } from 'primereact/inputnumber';
 import { Tooltip } from 'primereact/tooltip';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { ConversionType, DataPointType, IDefaultProps, ISelectValue } from '@minterm/types';
+import { ConversionType, DataPointType, IDefaultProps } from '@minterm/types';
 import ButtonClear from '../tools/ButtonClear';
 import { typeToSelectList } from '@minterm/services';
 
@@ -36,17 +36,17 @@ const ActionBar: React.FC<IActionBarProps> = ({
   id,
   className,
   data = [],
-  setData = () => {},
+  setData = () => {return;},
   dataCounterHidden = true,
   selectedConversions = [],
-  setSelectedConversions = () => {},
+  setSelectedConversions = () => {return;},
   conversionsDisabled = true,
   conversionsHidden = true,
   dataCountLabel = '',
   clearButtonHidden = true,
   clearButtonToolTip = '',
   saveButtonHidden = true,
-  onSave = () => {},
+  onSave = () => {return;},
 }) => {
   const { t } = useTranslation();
 

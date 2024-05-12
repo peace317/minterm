@@ -28,7 +28,7 @@ export class ExportService {
         point.timestamp = element.timestamp;
       }
 
-      if (encodings.find((e: any) => e === ConversionType.ASCII)) {
+      if (encodings.find((e) => e === ConversionType.ASCII)) {
         point.value = ExportService.convertValue(
           element.value,
           '',
@@ -38,7 +38,7 @@ export class ExportService {
           false
         );
       }
-      if (encodings.find((e: any) => e === ConversionType.BIN)) {
+      if (encodings.find((e) => e === ConversionType.BIN)) {
         point.valueAsBin = ExportService.convertValue(
           element.valueAsBin,
           '',
@@ -48,7 +48,7 @@ export class ExportService {
           leadingZeros
         );
       }
-      if (encodings.find((e: any) => e === ConversionType.DEC)) {
+      if (encodings.find((e) => e === ConversionType.DEC)) {
         point.valueAsDec = ExportService.convertValue(
           element.valueAsDec,
           '',
@@ -58,7 +58,7 @@ export class ExportService {
           leadingZeros
         );
       }
-      if (encodings.find((e: any) => e === ConversionType.HEX)) {
+      if (encodings.find((e) => e === ConversionType.HEX)) {
         point.valueAsHex = ExportService.convertValue(
           element.valueAsHex,
           '',
@@ -89,7 +89,7 @@ export class ExportService {
         _delimiter = '';
       }
 
-      if (encodings.find((e: any) => e === ConversionType.ASCII)) {
+      if (encodings.find((e) => e === ConversionType.ASCII)) {
         res += ExportService.convertValue(
           d.value,
           _delimiter,
@@ -99,7 +99,7 @@ export class ExportService {
           false
         );
       }
-      if (encodings.find((e: any) => e === ConversionType.BIN)) {
+      if (encodings.find((e) => e === ConversionType.BIN)) {
         res += ExportService.convertValue(
           d.valueAsBin,
           _delimiter,
@@ -109,7 +109,7 @@ export class ExportService {
           leadingZeros
         );
       }
-      if (encodings.find((e: any) => e === ConversionType.DEC)) {
+      if (encodings.find((e) => e === ConversionType.DEC)) {
         res += ExportService.convertValue(
           d.valueAsDec,
           _delimiter,
@@ -119,7 +119,7 @@ export class ExportService {
           leadingZeros
         );
       }
-      if (encodings.find((e: any) => e === ConversionType.HEX)) {
+      if (encodings.find((e) => e === ConversionType.HEX)) {
         res += ExportService.convertValue(
           d.valueAsHex,
           _delimiter,

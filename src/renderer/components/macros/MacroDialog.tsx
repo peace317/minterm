@@ -33,7 +33,7 @@ const MacroDialog: React.FC<IMacroDialogProps> = ({
   onAddMacro,
   onEditMacro,
   editMacro,
-  setEditMacro = () => {},
+  setEditMacro = () => {return;},
 }) => {
   const { t } = useTranslation();
   const [sequenceName, setSequenceName] = useState<string>(t('NEW_SEQUENCE'));

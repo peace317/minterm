@@ -1,12 +1,18 @@
-import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { Chart } from 'primereact/chart';
-import { useContext } from '../../context';
-import { useResizeDetector } from 'react-resize-detector';
-import { Button } from 'primereact/button';
-import { useTranslation } from 'react-i18next';
-import { AiOutlineDownload } from 'react-icons/ai';
-import ActionBar from './ActionBar';
-import { StoreKey } from '@/renderer/types';
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { Chart } from "primereact/chart";
+import { useContext } from "../../context";
+import { useResizeDetector } from "react-resize-detector";
+import { useTranslation } from "react-i18next";
+import ActionBar from "./ActionBar";
+import { StoreKey } from "@/renderer/types";
+import { TooltipItem } from "chart.js";
 
 /**
  * Functional component for the live data representation in a line chart,
@@ -15,20 +21,24 @@ import { StoreKey } from '@/renderer/types';
  *
  * @param IDefaultProps
  */
-const OutputLineChart: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ id, className }) => {
-  const getThemes = () => {
-    let plugins = {
+const OutputLineChart: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
+  id,
+  className,
+}) => {
+  const { t } = useTranslation();
+  const getThemes = useCallback(() => {
+    const plugins = {
       legend: {
         labels: {
-          color: '#495057',
+          color: "#495057",
         },
       },
       tooltip: {
         callbacks: {
-          afterLabel: function (context: any) {
+          afterLabel: function (context: TooltipItem<any>) {
             return (
-              t('TIMESTAMP') +
-              ': ' +
+              t("TIMESTAMP") +
+              ": " +
               context.dataset.timestamp[context.dataIndex].toLocaleString()
             );
           },
@@ -36,25 +46,25 @@ const OutputLineChart: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ id, c
       },
     };
 
-    let lightOptions = {
+    const lightOptions = {
       responsive: true,
       maintainAspectRatio: false,
       plugins: plugins,
       scales: {
         x: {
           ticks: {
-            color: '#495057',
+            color: "#495057",
           },
           grid: {
-            color: '#ebedef',
+            color: "#ebedef",
           },
         },
         y: {
           ticks: {
-            color: '#495057',
+            color: "#495057",
           },
           grid: {
-            color: '#ebedef',
+            color: "#ebedef",
           },
         },
       },
@@ -67,7 +77,7 @@ const OutputLineChart: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ id, c
       responsiveAnimationDuration: 0,
     };
 
-    let darkOptions = {
+    const darkOptions = {
       responsive: true,
       maintainAspectRatio: false,
       aspectRatio: 0,
@@ -75,18 +85,18 @@ const OutputLineChart: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ id, c
       scales: {
         x: {
           ticks: {
-            color: '#ebedef',
+            color: "#ebedef",
           },
           grid: {
-            color: '#ebedef',
+            color: "#ebedef",
           },
         },
         y: {
           ticks: {
-            color: '#ebedef',
+            color: "#ebedef",
           },
           grid: {
-            color: '#ebedef',
+            color: "#ebedef",
           },
         },
       },
@@ -103,29 +113,28 @@ const OutputLineChart: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ id, c
       lightOptions,
       darkOptions,
     };
-  };
+  }, []);
 
   const WIDTH_PER_DATA_POINT = 20;
   const { receivedData, setReceivedData } = useContext();
   const { lightOptions, darkOptions } = getThemes();
   const chartRef = useRef<Chart>(null);
   const [initWidth, setInitWidth] = useState<number>(0);
-  const { t } = useTranslation();
   const { width, ref } = useResizeDetector({
     onResize: () => {
       buildLineChart();
     },
   });
   const [isDataNumeric, setIsDataNumeric] = useState<boolean>(true);
-  const [basicData] = useState<any>({
+  const [basicData] = useState({
     labels: [],
     datasets: [
       {
-        label: t('VALUE'),
+        label: t("VALUE"),
         data: [],
         timestamp: [],
         fill: false,
-        borderColor: '#42A5F5',
+        borderColor: "#42A5F5",
         tension: 0.0,
       },
     ],
@@ -152,21 +161,21 @@ const OutputLineChart: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ id, c
     const chartData = [];
     const labels = [];
     const timestamps = [];
-    let leftWidth: number = width || initWidth;
-    let colCount = Math.round(leftWidth / WIDTH_PER_DATA_POINT);
-    let startIndex =
+    const leftWidth: number = width || initWidth;
+    const colCount = Math.round(leftWidth / WIDTH_PER_DATA_POINT);
+    const startIndex =
       receivedData.length - colCount > 0 ? receivedData.length - colCount : 0;
     for (let index = startIndex; index < receivedData.length; index++) {
-      var value = getValue(receivedData[index].value);
+      const value = getValue(receivedData[index].value);
       if (value.length === 0) {
         continue;
       }
       if (isNumeric(value)) {
-          labels.push(index);
-          chartData.push(receivedData[index].value);
-          timestamps.push(receivedData[index].timestamp);
+        labels.push(index);
+        chartData.push(receivedData[index].value);
+        timestamps.push(receivedData[index].timestamp);
       } else {
-        console.log('Is not numeric for', receivedData[index]);
+        console.log("Is not numeric for", receivedData[index]);
         setIsDataNumeric(false);
         break;
       }
@@ -178,14 +187,14 @@ const OutputLineChart: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ id, c
     }
   }
 
-  const isNumeric = (str: any) => {
-    if (typeof str != 'string') return false;
+  const isNumeric = (str: string) => {
+    if (typeof str != "string") return false;
     return !isNaN(parseFloat(str));
   };
 
-  const getValue = (str: any) => {
-    var replaceChars = ['\r', '\n', '\t', ',', ';'];
-    replaceChars.forEach((e) => (str = str.replaceAll(e, '')));
+  const getValue = (str: string) => {
+    const replaceChars = ["\r", "\n", "\t", ",", ";"];
+    replaceChars.forEach((e) => (str = str.replaceAll(e, "")));
     return str;
   };
 
@@ -198,13 +207,13 @@ const OutputLineChart: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ id, c
    * as a normal download process is initiated.
    */
   const onSaveImage = () => {
-    const ctx: any = chartRef.current?.getCanvas().getContext('2d');
+    const ctx: CanvasRenderingContext2D = chartRef.current?.getCanvas().getContext("2d");
     // fillstyle need be set in the back
-    ctx.globalCompositeOperation = 'destination-over';
-    if (theme === 'dark') {
-      ctx.fillStyle = '#2a323d';
+    ctx.globalCompositeOperation = "destination-over";
+    if (theme === "dark") {
+      ctx.fillStyle = "#2a323d";
     } else {
-      ctx.fillStyle = 'white';
+      ctx.fillStyle = "white";
     }
     ctx.fillRect(
       0,
@@ -217,25 +226,25 @@ const OutputLineChart: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ id, c
     fetch(b64Data)
       .then((res) => res.blob())
       .then((blob) => {
-        let url = URL.createObjectURL(blob);
-        let a = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
         a.href = url;
         a.download =
-          'diagram_' + new Date().toISOString().split('.')[0] + '.png';
+          "diagram_" + new Date().toISOString().split(".")[0] + ".png";
         a.click();
       });
   };
 
   const getChart = () => {
-    var options = theme === 'dark' ? darkOptions : lightOptions;
-    var opacity = isDataNumeric ? '1' : '0.5';
+    const options = theme === "dark" ? darkOptions : lightOptions;
+    const opacity = isDataNumeric ? "1" : "0.5";
     return (
       <Chart
         id={id}
         ref={chartRef}
         type="line"
         className="w-full"
-        style={{ height: '70%', minHeight: '26vh', opacity: opacity }}
+        style={{ height: "70%", minHeight: "26vh", opacity: opacity }}
         data={basicData}
         options={options}
       />
@@ -243,21 +252,21 @@ const OutputLineChart: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ id, c
   };
 
   return (
-    <div id={id + ':container'} className={className + ' h-full w-full'}>
+    <div id={id + ":container"} className={className + " h-full w-full"}>
       <ActionBar
-        id={id + ':outputActionBar'}
+        id={id + ":outputActionBar"}
         data={receivedData}
         setData={setReceivedData}
-        dataCountLabel={'Rx'}
+        dataCountLabel={"Rx"}
         dataCounterHidden={false}
         clearButtonHidden={false}
-        clearButtonToolTip={t('CLEAR_RECEIVED')}
+        clearButtonToolTip={t("CLEAR_RECEIVED")}
         saveButtonHidden={false}
         onSave={onSaveImage}
       />
-      <div className={'grid h-full w-full pt-1 ' + className} ref={ref}>
+      <div className={"grid h-full w-full pt-1 " + className} ref={ref}>
         <label className="ml-8 mt-8 absolute" hidden={isDataNumeric}>
-          {t('NO_VALID_FORMAT_FOR_LINE_CHART')}
+          {t("NO_VALID_FORMAT_FOR_LINE_CHART")}
         </label>
         {getChart()}
       </div>

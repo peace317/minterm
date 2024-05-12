@@ -1,10 +1,10 @@
 import { Button } from 'primereact/button';
-import { Dropdown } from 'primereact/dropdown';
+import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
 import { InputText } from 'primereact/inputtext';
 import { KeyFilterType } from 'primereact/keyfilter';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AppendSequenceType, ConversionType, IDefaultProps, appendCommands } from '@minterm/types';
+import { AppendSequenceType, ConversionType, appendCommands } from '@minterm/types';
 import { SerialPortService, typeToSelectList } from '@minterm/services';
 
 const encodings = typeToSelectList(ConversionType);
@@ -28,11 +28,11 @@ const SequenceInput: React.FC<ISequenceInputProps> = ({
   id,
   className,
   sequence,
-  onSequenceChange = () => {},
+  onSequenceChange = () => {return;},
   encoding,
-  onEncodingChange = () => {},
+  onEncodingChange = () => {return;},
   appendCommand,
-  onAppendCommandChange = () => {},
+  onAppendCommandChange = () => {return;},
   sendButtonHidden = false,
   ...props
 }) => {
@@ -62,7 +62,7 @@ const SequenceInput: React.FC<ISequenceInputProps> = ({
     onSequenceChange(userInput);
   }, [userInput]);
 
-  const encodingChange = (e: any) => {
+  const encodingChange = (e: DropdownChangeEvent) => {
     const _selectedEncoding = e.target.value as ConversionType;
     setEncoding(_selectedEncoding);
     onEncodingChange(_selectedEncoding);
@@ -82,7 +82,7 @@ const SequenceInput: React.FC<ISequenceInputProps> = ({
     }
   };
 
-  const appendSequenceChange = (e: any) => {
+  const appendSequenceChange = (e: DropdownChangeEvent) => {
     setAppendingSequence(e.target.value);
     const command = appendCommands.find((i) => i.label === e.target.value);
     if (command !== undefined) onAppendCommandChange(command);
@@ -147,7 +147,7 @@ const SequenceInput: React.FC<ISequenceInputProps> = ({
           />
         </div>
         <div hidden={sendButtonHidden}>
-          <Button label={t('SEND')} onClick={(e) => onSend()} />
+          <Button label={t('SEND')} onClick={() => onSend()} />
         </div>
       </div>
     </div>

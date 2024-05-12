@@ -1,4 +1,4 @@
-import { IPCChannelType } from '@minterm/types';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { LogFunctions } from 'electron-log';
 
 /** Signature of a logging function */
@@ -15,7 +15,7 @@ export type LogMessage = {
   optionalParams?: any;
 };
 
-const NO_OP: LogFn = (message?: any, ...optionalParams: any[]) => {};
+const NO_OP: LogFn = () => {return;};
 
 /** Logger which outputs to the browser console */
 export class ConsoleLogger implements LogFunctions {

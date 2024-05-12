@@ -1,22 +1,34 @@
-import { t } from 'i18next';
-import { Button } from 'primereact/button';
-import { ContextMenu } from 'primereact/contextmenu';
-import { Menubar } from 'primereact/menubar';
-import { MenuItem } from 'primereact/menuitem';
+import { t } from "i18next";
+import { Button } from "primereact/button";
+import { ContextMenu } from "primereact/contextmenu";
+import { Menubar } from "primereact/menubar";
+import { MenuItem } from "primereact/menuitem";
 import {
   Tree,
   TreeDragDropEvent,
   TreeExpandedKeysType,
   TreeNodeTemplateOptions,
-} from 'primereact/tree';
-import { TreeNode } from 'primereact/treenode';
-import React, { useEffect, useRef, useState } from 'react';
-import { VscAdd, VscCollapseAll, VscGroupByRefType } from 'react-icons/vsc';
-import MacroDialog from './MacroDialog';
-import MacroTreeItem from './MacroTreeItem';
-import { ConnectionStatusType, ConversionType, IDefaultProps, IPCChannelType, ITreeNode, MacroDataType, StoreKey } from '@minterm/types';
-import { MacroService, SerialPortService, TreeNodeService } from '@minterm/services';
-import clsx from 'clsx';
+} from "primereact/tree";
+import { TreeNode } from "primereact/treenode";
+import React, { useEffect, useRef, useState } from "react";
+import { VscAdd, VscCollapseAll, VscGroupByRefType } from "react-icons/vsc";
+import MacroDialog from "./MacroDialog";
+import MacroTreeItem from "./MacroTreeItem";
+import {
+  ConnectionStatusType,
+  ConversionType,
+  IDefaultProps,
+  IPCChannelType,
+  ITreeNode,
+  MacroDataType,
+  StoreKey,
+} from "@minterm/types";
+import {
+  MacroService,
+  SerialPortService,
+  TreeNodeService,
+} from "@minterm/services";
+import clsx from "clsx";
 
 /**
  * Component for a macro tree. A macro tree is a dynamic listing of
@@ -36,21 +48,21 @@ const MacroTree: React.FC<IDefaultProps> = ({ id, className }) => {
   const [lastSelectedNode, setLastSelectedNode] = useState<ITreeNode>();
   const [macroDialog, setMacroDialog] = useState(false);
   const [showHeaderIcons, setShowHeaderIcons] = useState(false);
-  const cmMacro = useRef<any>(null);
-  const cmMacroGroup = useRef<any>(null);
+  const cmMacro = useRef<ContextMenu>(null);
+  const cmMacroGroup = useRef<ContextMenu>(null);
   const getContextMenu = (isMacroGroup: boolean) => {
     const menuMacro: Array<MenuItem> = [];
     if (!isMacroGroup) {
       menuMacro.push(
         {
-          label: t('SEND'),
+          label: t("SEND"),
           command: () => {
             if (selectedContextNode !== undefined)
               executeMacro(selectedContextNode);
           },
         },
         {
-          label: t('EDIT'),
+          label: t("EDIT"),
           command: () => {
             setLastSelectedNode(
               selectedContextNode !== undefined
@@ -63,7 +75,7 @@ const MacroTree: React.FC<IDefaultProps> = ({ id, className }) => {
       );
     } else {
       menuMacro.push({
-        label: t('SEND_ALL'),
+        label: t("SEND_ALL"),
         command: () => {
           if (selectedContextNode !== undefined)
             executeMacroGroup(selectedContextNode);
@@ -75,7 +87,7 @@ const MacroTree: React.FC<IDefaultProps> = ({ id, className }) => {
         separator: true,
       },
       {
-        label: t('RENAME'),
+        label: t("RENAME"),
         command: () => {
           const node = TreeNodeService.searchNode(
             selectedContextNode?.key?.toString(),
@@ -91,7 +103,7 @@ const MacroTree: React.FC<IDefaultProps> = ({ id, className }) => {
         },
       },
       {
-        label: t('DELETE'),
+        label: t("DELETE"),
         command: () => {
           if (selectedContextNode !== undefined) {
             setNodes(
@@ -166,7 +178,7 @@ const MacroTree: React.FC<IDefaultProps> = ({ id, className }) => {
   const createNewMacroGroup = () => {
     const newNode: ITreeNode = {
       key: crypto.randomUUID(),
-      label: '',
+      label: "",
       leaf: false,
       isMacroGroup: true,
       isEditName: true,
@@ -179,11 +191,11 @@ const MacroTree: React.FC<IDefaultProps> = ({ id, className }) => {
     }
   };
 
-  const removeNode = (node: any) => {
+  const removeNode = (node: ITreeNode) => {
     setNodes(TreeNodeService.deleteNode(node.key, nodes));
   };
 
-  const updateNode = (node: any) => {
+  const updateNode = (node: ITreeNode) => {
     setNodes(TreeNodeService.replaceNode(node.key, node, nodes));
   };
 
@@ -259,13 +271,12 @@ const MacroTree: React.FC<IDefaultProps> = ({ id, className }) => {
     );
   };
 
-  const nodeTemplate = (node: TreeNode, options: TreeNodeTemplateOptions) => {
+  const nodeTemplate = (node: TreeNode) => {
     const _node = node as ITreeNode;
     return (
       <MacroTreeItem
         id={`${node.key}`}
         node={_node}
-        options={options}
         removeNode={removeNode}
         updateNode={updateNode}
         onExecute={executeMacro}
@@ -279,21 +290,21 @@ const MacroTree: React.FC<IDefaultProps> = ({ id, className }) => {
       <Button
         icon={<VscGroupByRefType className="pi" />}
         className="p-button-text"
-        tooltip={t('NEW_MACRO_GROUP')}
+        tooltip={t("NEW_MACRO_GROUP")}
         tooltipOptions={{ showDelay: 500 }}
-        onClick={(e) => createNewMacroGroup()}
+        onClick={() => createNewMacroGroup()}
       />
       <Button
         icon={<VscAdd className="pi" />}
         className="p-button-text"
-        tooltip={t('NEW_SEQUENCE')}
+        tooltip={t("NEW_SEQUENCE")}
         tooltipOptions={{ showDelay: 500 }}
-        onClick={(e) => setMacroDialog(true)}
+        onClick={() => setMacroDialog(true)}
       />
       <Button
         icon={<VscCollapseAll className="pi" />}
         className="p-button-text"
-        tooltip={t('COLLAPSE_MACRO_GROUPS')}
+        tooltip={t("COLLAPSE_MACRO_GROUPS")}
         tooltipOptions={{ showDelay: 500 }}
         onClick={() => collapseAll()}
       />
@@ -302,7 +313,7 @@ const MacroTree: React.FC<IDefaultProps> = ({ id, className }) => {
 
   const macroLabel = (
     <div>
-      <label>{t('MACROS')}</label>
+      <label>{t("MACROS")}</label>
     </div>
   );
 
@@ -333,8 +344,8 @@ const MacroTree: React.FC<IDefaultProps> = ({ id, className }) => {
       />
       <div
         className="macro-tree h-full overflow-y-auto"
-        onMouseOver={(e) => setShowHeaderIcons(true)}
-        onMouseLeave={(e) => setShowHeaderIcons(false)}
+        onMouseOver={() => setShowHeaderIcons(true)}
+        onMouseLeave={() => setShowHeaderIcons(false)}
       >
         <Tree
           value={nodes}
@@ -351,10 +362,12 @@ const MacroTree: React.FC<IDefaultProps> = ({ id, className }) => {
           onContextMenu={(event) => {
             const node = event.node as ITreeNode;
             if (node.isMacroGroup) {
-              cmMacro.current?.hide(selectedContextNode !== undefined);
+              if (selectedContextNode !== undefined)
+                cmMacro.current?.hide(event.originalEvent);
               cmMacroGroup.current?.show(event.originalEvent);
             } else {
-              cmMacroGroup.current?.hide(selectedContextNode !== undefined);
+              if (selectedContextNode !== undefined)
+                cmMacroGroup.current?.hide(event.originalEvent);
               cmMacro.current?.show(event.originalEvent);
             }
           }}

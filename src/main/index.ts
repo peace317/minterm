@@ -145,7 +145,7 @@ ipcMain.on(IPCChannelType.STORE_SET, async (event, key, val) => {
   }
 });
 
-ipcMain.on(IPCChannelType.LOG_FILE, async (event, arg) => {
+ipcMain.on(IPCChannelType.LOG_FILE, async (event) => {
   event.returnValue = log.transports.file.readAllLogs();
 });
 
@@ -153,7 +153,7 @@ ipcMain.on(IPCChannelType.OPEN_FILE, async (event, args) => {
   shell.openPath(args[0]);
 });
 
-ipcMain.on(IPCChannelType.IS_DEVELOPMENT, async (event, arg) => {
+ipcMain.on(IPCChannelType.IS_DEVELOPMENT, async (event) => {
   event.returnValue = isDevelopment;
 });
 

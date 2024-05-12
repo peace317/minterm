@@ -17,7 +17,7 @@ const LoggingDialog: React.FC<IDialogProps> = ({
   setDisplay,
 }) => {
   const { t } = useTranslation();
-  const [logs, setLogs] = useState<any>();
+  const [logs, setLogs] = useState<string>();
 
   useEffect(() => {
     const logFiles = window.electron.ipcRenderer.fetch(IPCChannelType.LOG_FILE);
@@ -36,7 +36,7 @@ const LoggingDialog: React.FC<IDialogProps> = ({
     const logFilePath = logFiles[0].path;
     // The Regex filters the filename, which will then be removed (for cross system)
     const filePath = logFilePath.replace(
-      logFilePath.replace(/^.*[\\\/]/, ''),
+      logFilePath.replace(/^.*[\\/]/, ''),
       ''
     );
     console.log(filePath);

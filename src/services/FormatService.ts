@@ -13,7 +13,7 @@ import { ISelectValue } from '@minterm/types';
 export const asciiToBin = (ascii: string) =>
   ascii
     .split('')
-    .map((i: any) => i.charCodeAt().toString(2))
+    .map((i: string) => i.charCodeAt(0).toString(2))
     .toString();
 
 /**
@@ -29,7 +29,7 @@ export const asciiToBin = (ascii: string) =>
 export const asciiToDecimal = (ascii: string) =>
   ascii
     .split('')
-    .map((i: any) => i.charCodeAt().toString(10))
+    .map((i: string) => i.charCodeAt(0).toString(10))
     .toString();
 
 /**
@@ -45,7 +45,7 @@ export const asciiToDecimal = (ascii: string) =>
 export const asciiToHex = (ascii: string) =>
   ascii
     .split('')
-    .map((i: any) => i.charCodeAt().toString(16))
+    .map((i: string) => i.charCodeAt(0).toString(16))
     .toString()
     .toUpperCase();
 
@@ -141,7 +141,9 @@ export const binArrayToAscii = (binaries: number[]): string => {
  * @param type
  * @returns list
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const typeToSelectList = (type: any) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return Object.keys(type).map((e: any) => {
     const select: ISelectValue = {
       name: type[e as keyof typeof type],

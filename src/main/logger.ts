@@ -5,7 +5,6 @@ import { IPCChannelType } from '../renderer/types/enums/IPCChannelType';
 import { format } from 'util';
 
 export default class ElectronLogger {
-  constructor() {}
 
   init(): void {
     ipcMain.on(IPCChannelType.DEBUG, (event, arg) => {
@@ -30,8 +29,8 @@ export default class ElectronLogger {
   }
 
   public buildLogString(data: any): any {
-    var res = '';
-    var msgData = data[0] as LogMessage;
+    let res = '';
+    const msgData = data[0] as LogMessage;
     if (msgData !== undefined) {
       if (msgData.classSource !== undefined && msgData.classSource.length > 0) {
         res = '[' + msgData.classSource + '] - ';

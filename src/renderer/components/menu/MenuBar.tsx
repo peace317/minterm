@@ -64,7 +64,7 @@ const MenuBar: React.FC<IDefaultProps> = ({ id, className }) => {
     </div>
   );
 
-  document.onreadystatechange = (event) => {
+  document.onreadystatechange = () => {
     window.electron.ipcRenderer.on(IPCChannelType.APP_MAXIMIZE, () => {
       document.getElementById('max-button')?.classList.add('hidden');
       document.getElementById('restore-button')?.classList.remove('hidden');

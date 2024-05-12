@@ -1,6 +1,5 @@
 import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
-import React, { useContext } from 'react';
-import { useTranslation } from 'react-i18next';
+import React from 'react';
 import { IDefaultProps } from '@minterm/types';
 
 interface IThemeSelectProps extends IDefaultProps {
@@ -20,7 +19,6 @@ const ThemeSelect: React.FC<IThemeSelectProps> = ({
   selectedTheme,
   onThemeChange,
 }) => {
-  const { t } = useTranslation();
 
   return (
     <div id={`${id}:container`} className={`${className} dropdown`}>

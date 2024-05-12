@@ -4,7 +4,7 @@ import { ConfirmDialog } from 'primereact/confirmdialog';
 import { Dialog } from 'primereact/dialog';
 import { Dropdown } from 'primereact/dropdown';
 import { InputText } from 'primereact/inputtext';
-import { MultiSelect } from 'primereact/multiselect';
+import { MultiSelect, MultiSelectAllEvent, MultiSelectChangeEvent } from 'primereact/multiselect';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useContext } from '@/renderer/context';
@@ -85,12 +85,12 @@ const ExportDialog: React.FC<IDialogProps> = ({
     a.click();
   };
 
-  const onEncodingChange = (e: { value: any }) => {
+  const onEncodingChange = (e: MultiSelectChangeEvent) => {
     if (e.value.length > 0) setEncodings(e.value);
     setSelectAll(e.value.length === encodings.length);
   };
 
-  const onEncodingAll = (e: any) => {
+  const onEncodingAll = (e: MultiSelectAllEvent) => {
     if (e.checked) {
       setEncodings([ConversionType.ASCII]);
       setSelectAll(false);

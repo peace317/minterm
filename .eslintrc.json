@@ -12,7 +12,7 @@
       }
     }
   },
-  "ignorePatterns": ["webpack*.ts"],
+  "ignorePatterns": ["node_modules", "webpack*.ts", "*config.ts","**/__tests__/*"],
   "env": {
     "browser": true,
     "es6": true,

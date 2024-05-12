@@ -23,7 +23,7 @@ const OutputTextArea: React.FC<IOutputTextAreaProps> = ({
   id,
   className,
   data,
-  setData = () => {},
+  setData = () => {return;},
   actionBarHidden = false,
   dataCounterHidden = false,
   clearButtonHidden = false,

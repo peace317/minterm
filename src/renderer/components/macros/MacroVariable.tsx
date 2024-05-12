@@ -34,8 +34,8 @@ const MacroVariable: React.FC<IMacroVariableProps> = ({
   variable,
   deletable = true,
   typeChangeable = true,
-  onVariableChange = () => {},
-  onVariableDelete = () => {},
+  onVariableChange = () => {return;},
+  onVariableDelete = () => {return;},
 }) => {
   const { t } = useTranslation();
   const [textValue, setTextValue] = useState<string>(variable.value);
@@ -222,7 +222,7 @@ const MacroVariable: React.FC<IMacroVariableProps> = ({
             className="p-button-danger"
             visible={deletable}
             icon={<VscTrash className="p-button-icon-left" />}
-            onClick={(e) => onVariableDelete()}
+            onClick={onVariableDelete}
           />
         </div>
       </div>

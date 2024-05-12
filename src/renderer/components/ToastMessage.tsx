@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Toast } from 'primereact/toast';
 import { useTranslation } from 'react-i18next';
-import { IDefaultProps, ConnectionStatusType, IPCChannelType } from '@minterm/types';
+import { ConnectionStatusType, IPCChannelType } from '@minterm/types';
 
 const ToastMessage = () => {
   const toast = useRef<Toast>(null);

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { IPCChannelType, StoreKey } from '@minterm/types';
 
 declare global {

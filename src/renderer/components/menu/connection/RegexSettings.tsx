@@ -1,4 +1,4 @@
-import { Dropdown } from 'primereact/dropdown';
+import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
 import { InputText } from 'primereact/inputtext';
 import { classNames } from 'primereact/utils';
 import { Dispatch, SetStateAction, useState } from 'react';
@@ -10,7 +10,7 @@ interface IRegexSettingsProps extends IDefaultProps {
   regex: string;
   setRegex: Dispatch<SetStateAction<string>>;
   bufferEncoding?: EncodingType;
-  onBufferEncodingChange?: React.Dispatch<any>;
+  onBufferEncodingChange?: React.Dispatch<DropdownChangeEvent>;
 }
 
 const encodingTypes = typeToSelectList(EncodingType);

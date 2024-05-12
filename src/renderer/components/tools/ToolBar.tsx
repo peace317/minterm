@@ -1,6 +1,5 @@
 import { Toolbar } from 'primereact/toolbar';
 import React from 'react';
-import { IDefaultProps } from '@minterm/types';
 import BaudRateSelect from './BaudRateSelect';
 import ButtonConnect from './ButtonConnect';
 import PortSelect from './PortSelect';

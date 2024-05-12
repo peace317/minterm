@@ -20,8 +20,8 @@ const MacroVariableList: React.FC<IMacroVariableProps> = ({
   variables,
   deletable = true,
   typeChangeable,
-  onVariableChange = () => {},
-  onVariableDelete = () => {},
+  onVariableChange = () => {return;},
+  onVariableDelete = () => {return;},
 }) => {
   return (
     <div id={`${id}:container`} className={className}>

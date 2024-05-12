@@ -1,7 +1,6 @@
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
-import { TreeNodeTemplateOptions } from 'primereact/tree';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { VscDebugStart, VscEdit, VscRunAll } from 'react-icons/vsc';
@@ -10,7 +9,6 @@ import MacroVariableList from './MacroVariableList';
 
 interface IMacroTreeItemProps extends IDefaultProps {
   node: ITreeNode;
-  options?: TreeNodeTemplateOptions;
   removeNode?(node: ITreeNode): void;
   updateNode?(node: ITreeNode): void;
   onExecute?(node: ITreeNode): void;
@@ -29,11 +27,10 @@ const MacroTreeItem: React.FC<IMacroTreeItemProps> = ({
   id,
   className,
   node,
-  options,
-  removeNode = () => {},
-  updateNode = () => {},
-  onExecute = () => {},
-  onExecuteGroup = () => {},
+  removeNode = () => {return;},
+  updateNode = () => {return;},
+  onExecute = () => {return;},
+  onExecuteGroup = () => {return;},
 }) => {
   const { t } = useTranslation();
   const [mouseOver, setMouseOver] = useState(false);
@@ -94,11 +91,11 @@ const MacroTreeItem: React.FC<IMacroTreeItemProps> = ({
     updateNode(node);
   };
 
-  const onMouseDownWindow = useCallback((e: any) => {
+  const onMouseDownWindow = useCallback(() => {
     setClickForCommit(true);
   }, []);
 
-  const onMouseInTextField = useCallback((e: any) => {
+  const onMouseInTextField = useCallback(() => {
     setClickInTextField(true);
   }, []);
 
@@ -146,7 +143,7 @@ const MacroTreeItem: React.FC<IMacroTreeItemProps> = ({
             className="p-button-text"
             tooltip={t('SEND_ALL')}
             tooltipOptions={{ showDelay: 500 }}
-            onClick={(e) => onExecuteGroup(node)}
+            onClick={() => onExecuteGroup(node)}
           />
         </div>
       );
@@ -160,7 +157,7 @@ const MacroTreeItem: React.FC<IMacroTreeItemProps> = ({
           className="p-button-text"
           tooltip={t('SEND')}
           tooltipOptions={{ showDelay: 500 }}
-          onClick={(e) => onExecute(node)}
+          onClick={() => onExecute(node)}
         />
       </div>
     );
@@ -180,7 +177,7 @@ const MacroTreeItem: React.FC<IMacroTreeItemProps> = ({
           className="p-button-text"
           tooltip={t('CHANGE_VARIABLES')}
           tooltipOptions={{ showDelay: 500 }}
-          onClick={(e) => setDisplayVariableDialog(true)}
+          onClick={() => setDisplayVariableDialog(true)}
         />
       </div>
     );
@@ -211,8 +208,8 @@ const MacroTreeItem: React.FC<IMacroTreeItemProps> = ({
     <div id="container" className={`${className} w-full`}>
       <div
         className=" macro-tree-item w-full"
-        onMouseOver={(e) => setMouseOver(true)}
-        onMouseLeave={(e) => setMouseOver(false)}
+        onMouseOver={() => setMouseOver(true)}
+        onMouseLeave={() => setMouseOver(false)}
       >
         <div id={`:${id}:treeitem`} className="inline-flex">
           {labelName()}

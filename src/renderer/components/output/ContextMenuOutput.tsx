@@ -14,7 +14,7 @@ const ContextMenuOutput: React.FC<IContextMenuOutputProps> = ({
   selectedCells,
   onContextMenu,
 }) => {
-  const cm = useRef<any>(null);
+  const cm = useRef<ContextMenu>(null);
   const { t } = useTranslation();
 
   /**

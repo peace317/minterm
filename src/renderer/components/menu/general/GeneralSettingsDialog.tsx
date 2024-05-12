@@ -3,7 +3,7 @@ import { Button } from 'primereact/button';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { Dialog } from 'primereact/dialog';
 import { Toast } from 'primereact/toast';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IDialogProps, IPCChannelType, StoreKey } from '@minterm/types';
 import LanguageSelect from './LanguageSelect';
@@ -19,8 +19,8 @@ const GeneralSettingsDialog: React.FC<IDialogProps> = ({
 }) => {
   const { t } = useTranslation();
   const [isRestartNecessary, setIsRestartNecessary] = useState<boolean>(false);
-  const toast = useRef<any>(null);
-  const [selectedLanguage, setSelectedLanguage] = useState<any>(i18n.language);
+  const toast = useRef<Toast>(null);
+  const [selectedLanguage, setSelectedLanguage] = useState<string>(i18n.language);
   const [selectedTheme, setSelectedTheme] = useState<any>(
     window.electron.store.get(StoreKey.THEME)
   );

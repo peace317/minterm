@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button } from 'primereact/button';
 import { VscTrash } from 'react-icons/vsc';
-import { IDefaultProps } from '@/renderer/types/AppInterfaces';
 
 interface IButtonClearProps extends React.HTMLAttributes<HTMLDivElement> {
   toolTip?: string;
@@ -17,7 +16,7 @@ const ButtonClear: React.FC<IButtonClearProps> = ({
   id,
   className,
   toolTip = '',
-  clearObject = () => {},
+  clearObject = () => {return;},
   ...props
 }) => {
 

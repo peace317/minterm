@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Column } from 'primereact/column';
 import { DataTable, DataTableSelectionMultipleChangeEvent } from 'primereact/datatable';
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
@@ -58,14 +59,14 @@ const OutputDataTableCore: React.FC<IOutputDataTableCoreProps> = ({
   id,
   className,
   data,
-  setData = () => {},
+  setData = () => {return;},
   width: initialWidth,
   conversionsDisabled = false,
   conversionsHidden = false,
   dataCountLabel = '',
   clearButtonToolTip = '',
   selectedCells = [],
-  setSelectedCells = () => {},
+  setSelectedCells = () => {return;},
 }) => {
   const WIDTH_PER_COLUMN = 100;
   const [colHeight, setColHeight] = useState<number>(0);

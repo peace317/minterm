@@ -23,7 +23,7 @@ const ByteLengthSettings: React.FC<IByteLengthSettingsProps> = ({
         id={id}
         inputId="integeronly"
         value={length}
-        onValueChange={(e: any) => setLength(e.value)}
+        onValueChange={(e) => setLength(e.value)}
       />
     </div>
   );

@@ -41,7 +41,7 @@ export class TreeNodeService {
    * @returns node tree without the node
    */
   static deleteNode = (
-    key: string | undefined,
+    key: string | number | undefined,
     nodes: Array<ITreeNode> | undefined
   ): Array<ITreeNode> | undefined => {
     if (nodes === undefined || key === undefined) {
@@ -77,7 +77,7 @@ export class TreeNodeService {
    * @returns node tree with replaced node
    */
   static replaceNode = (
-    key: string | undefined,
+    key: string | number | undefined,
     newNode: ITreeNode,
     nodes: Array<ITreeNode> | undefined
   ): Array<ITreeNode> | undefined => {

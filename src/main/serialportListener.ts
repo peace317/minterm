@@ -1,16 +1,22 @@
-import { BrowserWindow, IpcMainEvent, ipcMain } from 'electron';
-import { error } from 'electron-log';
-import Store from 'electron-store';
-import { DataPointType, StoreKey, ParserType, IPCChannelType, ConnectionStatusType } from '@minterm/types';
-import { asciiToBin, asciiToDecimal, asciiToHex } from '@minterm/services';
+import { BrowserWindow, IpcMainEvent, ipcMain } from "electron";
+import { error } from "electron-log";
+import Store from "electron-store";
+import {
+  DataPointType,
+  StoreKey,
+  ParserType,
+  IPCChannelType,
+  ConnectionStatusType,
+} from "@minterm/types";
+import { asciiToBin, asciiToDecimal, asciiToHex } from "@minterm/services";
 import {
   ByteLengthParser,
   DelimiterParser,
   ReadyParser,
   RegexParser,
   SerialPort,
-} from 'serialport';
-import { isDevelopment } from './index';
+} from "serialport";
+import { isDevelopment } from "./index";
 
 export default class SerialPortListener {
   serialPortConnection: SerialPort | undefined;
@@ -131,7 +137,7 @@ export default class SerialPortListener {
       );
 
       // setting up 'open' event with a flushed port
-      this.serialPortConnection.on('open', (error) => {
+      this.serialPortConnection.on("open", (error) => {
         if (error) {
           console.error(`[Open SerialPort] - ${error}`);
           return;
@@ -144,7 +150,7 @@ export default class SerialPortListener {
           const parser = this.getParser();
           if (parser !== undefined) {
             const consumer = this.serialPortConnection?.pipe(parser);
-            consumer?.on('data', (buf) =>
+            consumer?.on("data", (buf) =>
               this.buildSequenceWithConversion(buf)
             );
           }
@@ -204,13 +210,13 @@ export default class SerialPortListener {
       return;
     }
     // sends message
-    this.serialPortConnection.write(message, 'ascii', (err) => {
+    this.serialPortConnection.write(message, "ascii", (err) => {
       if (err) {
         return console.error(`[Write on SerialPort] - ${err}`);
       }
     });
     const timestamp = new Date();
-    const points = message.split('').map(
+    const points = message.split("").map(
       (e) =>
         <DataPointType>{
           timestamp,
@@ -221,7 +227,7 @@ export default class SerialPortListener {
         }
     );
     if (isDevelopment) {
-      console.log('Send message point ${points}', points);
+      console.log("Send message point ${points}", points);
     }
     // Send back for displaying send data
     this.mainWindow.webContents.send(IPCChannelType.SEND_DATA, points);
@@ -290,14 +296,13 @@ export default class SerialPortListener {
           ),
         });
       case ParserType.REGEX_PARSER:
-        const bufferEncoding: any = this.store.get(
-          StoreKey.PARSER_REGEX_ENCODING
-        );
         return new RegexParser({
           regex: new RegExp(
             this.store.get(StoreKey.PARSER_BYTE_LENGTH) as string
           ),
-          encoding: bufferEncoding,
+          encoding: this.store.get(
+            StoreKey.PARSER_REGEX_ENCODING
+          ) as BufferEncoding,
         });
       case ParserType.READY_PARSER:
         return new ReadyParser({
@@ -320,14 +325,14 @@ export default class SerialPortListener {
   private buildSequenceWithConversion(buffer: Buffer) {
     if (this.store.get(StoreKey.FORCE_BYTE_DELIMITER)) {
       Buffer.from(buffer)
-        .toString('binary')
-        .split('')
+        .toString("binary")
+        .split("")
         .forEach((e) => {
           const point = this.buildDataPoint(e);
           this.mainWindow.webContents.send(IPCChannelType.RECEIVE_DATA, point);
         });
     } else {
-      const buf = Buffer.from(buffer).toString('binary');
+      const buf = Buffer.from(buffer).toString("binary");
       const point = this.buildDataPoint(buf);
       if (isDevelopment) {
         console.log(point);
@@ -363,7 +368,7 @@ export default class SerialPortListener {
   private async getPortList() {
     const portList = await SerialPort.list().then((ports) => {
       if (ports.length === 0) {
-        console.log('No ports discovered');
+        console.log("No ports discovered");
       }
       return ports;
     });
@@ -387,11 +392,11 @@ export default class SerialPortListener {
 
   private unescapeSpecialCharacter(str: string) {
     return str
-      .replace('\\n', '\n')
-      .replace('\\t', '\t')
-      .replace('\\r', '\r')
-      .replace('\\b', '\b')
-      .replace('\\f', '\f')
+      .replace("\\n", "\n")
+      .replace("\\t", "\t")
+      .replace("\\r", "\r")
+      .replace("\\b", "\b")
+      .replace("\\f", "\f")
       .replace("\\'", "'")
       .replace('\\"', '"');
   }

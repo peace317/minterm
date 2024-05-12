@@ -16,7 +16,7 @@ const LanguageSelect: React.FC<ILanguageSelectProps> = ({
   onLanguageChange,
 }) => {
   const { t } = useTranslation();
-  const languages: Array<ISelectValue> = i18n.languages.map((e, _) => ({
+  const languages: Array<ISelectValue> = i18n.languages.map((e) => ({
     name: t(e.toUpperCase()),
     key: e,
   }));

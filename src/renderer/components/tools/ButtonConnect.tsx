@@ -1,9 +1,8 @@
-import { ToggleButton } from 'primereact/togglebutton';
+import { ToggleButton, ToggleButtonChangeEvent } from 'primereact/togglebutton';
 import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Context } from '@/renderer/context';
-import { IDefaultProps, ConnectionStatusType, IPCChannelType } from '@minterm/types';
-import { ColorPicker } from 'primereact/colorpicker';
+import { ConnectionStatusType, IPCChannelType } from '@minterm/types';
 
 /**
  * Component for a taggable button that opens a connection to a serialport. If
@@ -16,7 +15,7 @@ const ButtonConnect: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ id, cla
   const context = useContext(Context);
   const { t } = useTranslation();
 
-  const onConnect = (e: { value: any }) => {
+  const onConnect = (e: ToggleButtonChangeEvent) => {
     setChecked(e.value);
     if (checked) {
       window.electron.ipcRenderer.sendMessage(IPCChannelType.PORT_DISCONNECT);

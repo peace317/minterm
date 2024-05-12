@@ -18,6 +18,7 @@ import ByteLengthSettings from './ByteLengthSettings';
 import DelimiterSettings from './DelimiterSettings';
 import ReadyParserSettings from './ReadyParserSettings';
 import RegexSettings from './RegexSettings';
+import { DropdownChangeEvent } from 'primereact/dropdown';
 
 const ParserSettingsDialog: React.FC<IDialogProps> = ({
   id,
@@ -55,7 +56,7 @@ const ParserSettingsDialog: React.FC<IDialogProps> = ({
     setDisplay(false);
   };
 
-  const onBufferEncodingChange = (e: { value: any }) => {
+  const onBufferEncodingChange = (e: DropdownChangeEvent) => {
     setBufferEncoding(e.value);
   };
 
