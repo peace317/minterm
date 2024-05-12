@@ -26,7 +26,7 @@
  * ```
  */
 import { createRoot } from 'react-dom/client';
-import App from './app';
+import App from '@/renderer/app';
 
 const container = document.getElementById('root');
 const root = createRoot(container);
