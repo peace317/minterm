@@ -31,8 +31,5 @@
   "parserOptions": {
     "project": "./tsconfig.json"
   },
-  "plugins": ["@typescript-eslint", "react", "import"],
-  "rules": {
-    "import/no-unresolved": "off"
-  }
+  "plugins": ["@typescript-eslint", "react", "import"]
 }

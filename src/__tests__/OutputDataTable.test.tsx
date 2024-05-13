@@ -1,7 +1,5 @@
 import '@testing-library/jest-dom';
-import OutputDataTableCore, {
-  buildCell,
-} from '../renderer/components/output/OutputDataTableCore';
+import OutputDataTableCore from '@/renderer/components/output/OutputDataTableCore';
 import { ConversionType, DataPointType } from '@minterm/types';
 import {render, screen} from '@testing-library/react'
 
@@ -15,12 +13,12 @@ jest.mock('react-i18next', () => ({
   },
 }));
 
-jest.mock('../renderer/resources/styles/app.scss', () => {
+/*jest.mock('../renderer/resources/styles/app.scss', () => {
   return {
     __esModule: true,
-    default: '/* Mock CSS styles */'
+    default: 'identity-obj-proxy'
   };
-});
+});*/
 
 beforeEach(() => {
   //@ts-ignore
