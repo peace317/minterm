@@ -2,10 +2,10 @@ import { Dropdown } from 'primereact/dropdown';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useContext } from '@/renderer/context';
-import { ISelectValue } from '@minterm/types';
+import { SelectValue } from '@minterm/types';
 import clsx from 'clsx';
 
-const baudOptions: Array<ISelectValue> = [
+const baudOptions: Array<SelectValue> = [
   { name: '110', key: '110' },
   { name: '300', key: '300' },
   { name: '1200', key: '1200' },

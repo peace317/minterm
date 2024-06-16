@@ -7,7 +7,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import BaudRateSelect from '@/renderer/components/tools/BaudRateSelect';
 import PortSelect from '@/renderer/components/tools/PortSelect';
-import { IDialogProps, ISelectValue, StoreKey } from '@minterm/types';
+import { IDialogProps, SelectValue, StoreKey } from '@minterm/types';
 
 const ConnectionSettingsDialog: React.FC<IDialogProps> = ({
   id,
@@ -15,20 +15,20 @@ const ConnectionSettingsDialog: React.FC<IDialogProps> = ({
   display,
   setDisplay,
 }) => {
-  const dataBitsOptions: Array<ISelectValue> = [
+  const dataBitsOptions: Array<SelectValue> = [
     { name: '5', key: 5 },
     { name: '6', key: 6 },
     { name: '7', key: 7 },
     { name: '8', key: 8 },
   ];
 
-  const stopBitsOptions: Array<ISelectValue> = [
+  const stopBitsOptions: Array<SelectValue> = [
     { name: '1', key: 1 },
     { name: '1.5', key: 1.5 },
     { name: '2', key: 2 },
   ];
 
-  const parityOptions: Array<ISelectValue> = [
+  const parityOptions: Array<SelectValue> = [
     { name: 'None', key: 'None' },
     { name: 'Odd', key: 'Odd' },
     { name: 'Even', key: 'Even' },
@@ -36,16 +36,16 @@ const ConnectionSettingsDialog: React.FC<IDialogProps> = ({
     { name: 'Space', key: 'Space' },
   ];
 
-  const [dataBits, setDataBits] = useState<any>(
+  const [dataBits, setDataBits] = useState<number>(
     window.electron.store.get(StoreKey.SERIALPORT_DATA_BITS)
   );
-  const [stopBits, setStopBits] = useState<any>(
+  const [stopBits, setStopBits] = useState<number>(
     window.electron.store.get(StoreKey.SERIALPORT_STOP_BITS)
   );
   const [lock, setLock] = useState<boolean>(
     window.electron.store.get(StoreKey.SERIALPORT_LOCK)
   );
-  const [parity, setParity] = useState<any>(
+  const [parity, setParity] = useState<string>(
     window.electron.store.get(StoreKey.SERIALPORT_PARITY)
   );
   const [rtscts, setRtscts] = useState<boolean>(

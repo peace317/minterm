@@ -2,7 +2,7 @@ import i18n from 'i18next';
 import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { IDefaultProps, ISelectValue } from '@minterm/types';
+import { IDefaultProps, SelectValue } from '@minterm/types';
 
 interface ILanguageSelectProps extends IDefaultProps {
   selectedLanguage: string;
@@ -16,7 +16,7 @@ const LanguageSelect: React.FC<ILanguageSelectProps> = ({
   onLanguageChange,
 }) => {
   const { t } = useTranslation();
-  const languages: Array<ISelectValue> = i18n.languages.map((e) => ({
+  const languages: Array<SelectValue> = i18n.languages.map((e) => ({
     name: t(e.toUpperCase()),
     key: e,
   }));

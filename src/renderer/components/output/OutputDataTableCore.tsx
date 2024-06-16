@@ -4,14 +4,14 @@ import { DataTable, DataTableSelectionMultipleChangeEvent } from 'primereact/dat
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useResizeDetector } from 'react-resize-detector';
 import { ConversionType, DataPointType } from '@minterm/types';
-import ActionBar, { IActionBarProps } from './ActionBar';
+import ActionBar, { ActionBarProps } from './ActionBar';
 
-interface IOutputDataTableCoreProps extends IActionBarProps {
+interface IOutputDataTableCoreProps extends ActionBarProps {
   data: Array<DataPointType>;
-  setData?: React.Dispatch<React.SetStateAction<any[]>>;
+  setData?: React.Dispatch<React.SetStateAction<unknown[]>>;
   width?: number;
-  selectedCells?: Array<any>;
-  setSelectedCells?: React.Dispatch<React.SetStateAction<any[]>>;
+  selectedCells?: Array<unknown>;
+  setSelectedCells?: React.Dispatch<React.SetStateAction<unknown[]>>;
 }
 
 /**

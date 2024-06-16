@@ -4,7 +4,7 @@ import TransmitDataTable from "@/renderer//components/output/TransmitDataTable";
 import MacroTree from "@/renderer/components/macros/MacroTree";
 import MenuBar from "@/renderer/components/menu/MenuBar";
 import clsx from "clsx";
-import i18n from "i18next";
+import { use } from "i18next";
 import "primeflex/primeflex.scss";
 import "primeicons/primeicons.css";
 import "primereact/resources/primereact.min.css";
@@ -31,7 +31,7 @@ declare global {
   }
 }
 
-i18n.use(initReactI18next).init({
+use(initReactI18next).init({
   resources: {
     en: { translation: messageTextEn },
     de: { translation: messageTextDe },

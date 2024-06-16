@@ -1,17 +1,17 @@
 import { Dropdown } from 'primereact/dropdown';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { IDefaultProps, ISelectValue } from '@minterm/types';
+import { IDefaultProps, SelectValue } from '@minterm/types';
 import { useContext } from '@/renderer/context';
 
 
 const PortSelect: React.FC<IDefaultProps> = ({ id, className }) => {
   const { selectedPort, setPort, portList } = useContext();
   const { t } = useTranslation();
-  const [portOptions, setPorts] = useState<Array<ISelectValue>>([]);
+  const [portOptions, setPorts] = useState<Array<SelectValue>>([]);
 
   useEffect(() => {
-    const selectablePorts: Array<ISelectValue> = [];
+    const selectablePorts: Array<SelectValue> = [];
     if (portList !== undefined) {
       for (let i = 0; i < portList.length; i++) {
         if (portList[i].pnpId != undefined) {

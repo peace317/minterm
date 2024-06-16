@@ -3,13 +3,13 @@ import React, { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DataPointType } from '@minterm/types';
 
-interface IContextMenuOutputProps {
+interface ContextMenuOutputProps {
   selectedCells: Array<any>;
   onContextMenu: React.MouseEvent<HTMLDivElement, MouseEvent>;
   data: Array<DataPointType>;
 }
 
-const ContextMenuOutput: React.FC<IContextMenuOutputProps> = ({
+const ContextMenuOutput: React.FC<ContextMenuOutputProps> = ({
   data,
   selectedCells,
   onContextMenu,

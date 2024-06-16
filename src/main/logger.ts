@@ -7,28 +7,28 @@ import { format } from 'util';
 export default class ElectronLogger {
 
   init(): void {
-    ipcMain.on(IPCChannelType.DEBUG, (event, arg) => {
-      log.debug(this.buildLogString(arg));
+    ipcMain.on(IPCChannelType.DEBUG, (event, args) => {
+      log.debug(this.buildLogString(args));
     });
 
-    ipcMain.on(IPCChannelType.INFO, async (event, arg) => {
-      log.info(this.buildLogString(arg));
+    ipcMain.on(IPCChannelType.INFO, async (event, args) => {
+      log.info(this.buildLogString(args));
     });
 
-    ipcMain.on(IPCChannelType.LOG, async (event, arg) => {
-      log.log(this.buildLogString(arg));
+    ipcMain.on(IPCChannelType.LOG, async (event, args) => {
+      log.log(this.buildLogString(args));
     });
 
-    ipcMain.on(IPCChannelType.WARN, async (event, arg) => {
-      log.warn(this.buildLogString(arg));
+    ipcMain.on(IPCChannelType.WARN, async (event, args) => {
+      log.warn(this.buildLogString(args));
     });
 
-    ipcMain.on(IPCChannelType.ERROR, async (event, arg) => {
-      log.error(this.buildLogString(arg));
+    ipcMain.on(IPCChannelType.ERROR, async (event, args) => {
+      log.error(this.buildLogString(args));
     });
   }
 
-  public buildLogString(data: any): any {
+  public buildLogString(data: unknown[]): string {
     let res = '';
     const msgData = data[0] as LogMessage;
     if (msgData !== undefined) {

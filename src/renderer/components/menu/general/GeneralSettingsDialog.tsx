@@ -1,4 +1,4 @@
-import i18n from 'i18next';
+import i18n, { changeLanguage } from 'i18next';
 import { Button } from 'primereact/button';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { Dialog } from 'primereact/dialog';
@@ -21,7 +21,7 @@ const GeneralSettingsDialog: React.FC<IDialogProps> = ({
   const [isRestartNecessary, setIsRestartNecessary] = useState<boolean>(false);
   const toast = useRef<Toast>(null);
   const [selectedLanguage, setSelectedLanguage] = useState<string>(i18n.language);
-  const [selectedTheme, setSelectedTheme] = useState<any>(
+  const [selectedTheme, setSelectedTheme] = useState<string>(
     window.electron.store.get(StoreKey.THEME)
   );
 
@@ -42,7 +42,7 @@ const GeneralSettingsDialog: React.FC<IDialogProps> = ({
 
   const onLanguageChange = (e: DropdownChangeEvent) => {
     setSelectedLanguage(e.value);
-    i18n.changeLanguage(e.value);
+    changeLanguage(e.value);
   };
 
   const onHide = () => {
@@ -52,7 +52,7 @@ const GeneralSettingsDialog: React.FC<IDialogProps> = ({
   const onCancel = () => {
     onHide();
     setSelectedTheme(window.electron.store.get(StoreKey.THEME));
-    i18n.changeLanguage(window.electron.store.get(StoreKey.LANGUAGE));
+    changeLanguage(window.electron.store.get(StoreKey.LANGUAGE));
     setSelectedLanguage(window.electron.store.get(StoreKey.LANGUAGE));
     setIsRestartNecessary(false);
   };

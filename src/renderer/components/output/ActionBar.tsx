@@ -4,13 +4,13 @@ import { InputNumber } from 'primereact/inputnumber';
 import { Tooltip } from 'primereact/tooltip';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { ConversionType, DataPointType, IDefaultProps } from '@minterm/types';
+import { ConversionType, DataPointType } from '@minterm/types';
 import ButtonClear from '../tools/ButtonClear';
 import { typeToSelectList } from '@minterm/services';
 
-export interface IActionBarProps extends IDefaultProps {
+export interface ActionBarProps extends React.HTMLAttributes<HTMLDivElement> {
   data?: Array<DataPointType>;
-  setData?: React.Dispatch<React.SetStateAction<any[]>>;
+  setData?: React.Dispatch<React.SetStateAction<unknown[]>>;
   dataCounterHidden?: boolean;
   dataCountLabel?: string;
   selectedConversions?: ConversionType[];
@@ -30,11 +30,10 @@ export interface IActionBarProps extends IDefaultProps {
  * outputting components. Therefore certain settings/actions will be displayed
  * equally when reusing this component.
  *
- * @param IActionBarProps
+ * @param ActionBarProps
  */
-const ActionBar: React.FC<IActionBarProps> = ({
+const ActionBar: React.FC<ActionBarProps> = ({
   id,
-  className,
   data = [],
   setData = () => {return;},
   dataCounterHidden = true,
@@ -47,6 +46,7 @@ const ActionBar: React.FC<IActionBarProps> = ({
   clearButtonToolTip = '',
   saveButtonHidden = true,
   onSave = () => {return;},
+  ...props
 }) => {
   const { t } = useTranslation();
 
@@ -69,7 +69,7 @@ const ActionBar: React.FC<IActionBarProps> = ({
   };
 
   return (
-    <div id={`${id}:container`} className={className}>
+    <div id={`${id}:container`} {...props}>
       <div className="p-checkbox h-2rem w-full" style={{ cursor: 'unset' }}>
         <div className="p-checkbox h-2rem">
           {!conversionsHidden &&
@@ -77,14 +77,14 @@ const ActionBar: React.FC<IActionBarProps> = ({
               return (
                 <div key={encoding.key} className="field-checkbox mr-2 mt-2">
                   <Checkbox
-                    inputId={encoding.key}
+                    inputId={encoding.key as string}
                     name="category"
                     value={encoding}
                     onChange={onEncodingChange}
                     disabled={conversionsDisabled}
-                    checked={selectedConversions.includes(encoding.key)}
+                    checked={selectedConversions.includes(encoding.key as ConversionType)}
                   />
-                  <label htmlFor={encoding.key}>{encoding.name}</label>
+                  <label htmlFor={encoding.key as string}>{encoding.name}</label>
                 </div>
               );
             })}

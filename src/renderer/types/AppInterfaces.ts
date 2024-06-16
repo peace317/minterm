@@ -16,7 +16,7 @@ export interface IDialogProps extends IDefaultProps {
 /**
  * Interface for a select-value that is to be used in dropdowns etc.
  */
-export interface ISelectValue {
+export interface SelectValue {
   name: string;
-  key: any;
+  key: string | number;
 }

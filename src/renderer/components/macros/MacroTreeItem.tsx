@@ -69,7 +69,7 @@ const MacroTreeItem: React.FC<IMacroTreeItemProps> = ({
     if (clickInTextField) setClickInTextField(false);
   }, [clickForCommit]);
 
-  const onKeyPressed = (e: any) => {
+  const onKeyPressed = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       renameNode();
       removeListener();

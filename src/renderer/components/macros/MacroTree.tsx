@@ -6,8 +6,7 @@ import { MenuItem } from "primereact/menuitem";
 import {
   Tree,
   TreeDragDropEvent,
-  TreeExpandedKeysType,
-  TreeNodeTemplateOptions,
+  TreeExpandedKeysType
 } from "primereact/tree";
 import { TreeNode } from "primereact/treenode";
 import React, { useEffect, useRef, useState } from "react";

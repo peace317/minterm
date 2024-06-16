@@ -1,4 +1,4 @@
-import { ISelectValue } from '@minterm/types';
+import { SelectValue } from '@minterm/types';
 
 /**
  * Converts an ASCII string to a binary string. The binaries will be
@@ -145,7 +145,7 @@ export const binArrayToAscii = (binaries: number[]): string => {
 export const typeToSelectList = (type: any) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return Object.keys(type).map((e: any) => {
-    const select: ISelectValue = {
+    const select: SelectValue = {
       name: type[e as keyof typeof type],
       key: type[e as keyof typeof type],
     };

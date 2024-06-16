@@ -2,17 +2,17 @@ import React from 'react';
 import { Button } from 'primereact/button';
 import { VscTrash } from 'react-icons/vsc';
 
-interface IButtonClearProps extends React.HTMLAttributes<HTMLDivElement> {
+interface ButtonClearProps extends React.HTMLAttributes<HTMLDivElement> {
   toolTip?: string;
-  clearObject?: React.Dispatch<React.SetStateAction<any[]>>;
+  clearObject?: React.Dispatch<React.SetStateAction<unknown[]>>;
 }
 
 /**
  * Component for a Button that clears the received data buffer.
  *
- * @param IDefaultProps
+ * @param ButtonClearProps
  */
-const ButtonClear: React.FC<IButtonClearProps> = ({
+const ButtonClear: React.FC<ButtonClearProps> = ({
   id,
   className,
   toolTip = '',

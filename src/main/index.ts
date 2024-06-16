@@ -83,6 +83,8 @@ const createWindow = (): void => {
     | "system"
     | "light"
     | "dark";
+
+  new AppUpdater();
 };
 
 // This method will be called when Electron has finished

@@ -10,7 +10,7 @@ import OutputDataTableCore from './OutputDataTableCore';
 const TransmitDataTable: React.FC<IDefaultProps> = ({ id, className }) => {
   const { t } = useTranslation();
   const { transmittedData, setTransmittedData } = useContext();
-  const [contextEvent, setContextEvent] = useState<any>();
+  const [contextEvent, setContextEvent] = useState<React.MouseEvent<HTMLDivElement, MouseEvent>>();
   const [selectedCells, setSelectedCells] = useState<Array<any>>([]);
 
   const isContextEnabled = () => {

@@ -31,7 +31,7 @@ const OutputTextArea: React.FC<IOutputTextAreaProps> = ({
   const { t } = useTranslation();
   const [topScrollable, setTopScrollable] = useState<boolean>(false);
   const [downScrollable, setDownScrollable] = useState<boolean>(false);
-  const { width, ref } = useResizeDetector({
+  const { ref } = useResizeDetector({
     onResize: () => {
       setScrollable();
     },

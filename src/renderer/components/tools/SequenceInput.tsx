@@ -98,7 +98,7 @@ const SequenceInput: React.FC<ISequenceInputProps> = ({
     SerialPortService.sendMessage(message, selectedEncoding);
   };
 
-  const handleKeyDown = (event: any) => {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter' && !sendButtonHidden) {
       onSend();
     }

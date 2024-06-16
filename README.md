@@ -80,7 +80,7 @@ See docs and guides for [electron-forge](https://js.electronforge.io/)
 
 MIT © [Minterm](https://github.com/peace317/minterm)
 
-[github-actions-status]: https://github.com/peace317/minterm/workflows/Test/badge.svg
+[github-actions-status]: https://github.com/peace317/minterm/workflows/Build%20and%20Test/badge.svg
 [github-actions-url]: https://github.com/peace317/minterm/actions
 [github-tag-image]: https://img.shields.io/github/v/tag/peace317/minterm.svg?label=version
 [github-tag-url]: https://github.com/peace317/minterm/releases/latest

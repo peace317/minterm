@@ -25,7 +25,7 @@ const electronHandler = {
     },
     removeListener(
       channel: IPCChannelType,
-      listener: (...args: any[]) => void
+      listener: (...args: unknown[]) => void
     ) {
       const cnt = ipcRenderer.listenerCount(channel);
       ipcRenderer.removeListener(channel, listener);
@@ -41,24 +41,24 @@ const electronHandler = {
     get(key: StoreKey) {
       return ipcRenderer.sendSync(IPCChannelType.STORE_GET, key);
     },
-    set(key: StoreKey, val: any) {
+    set(key: StoreKey, val: unknown) {
       ipcRenderer.send(IPCChannelType.STORE_SET, key, val);
     },
   },
   logger: {
-    log(...params: any[]) {
+    log(...params: unknown[]) {
       ipcRenderer.send(IPCChannelType.LOG, params);
     },
-    info(...params: any[]) {
+    info(...params: unknown[]) {
       ipcRenderer.send(IPCChannelType.INFO, params);
     },
-    debug(...params: any[]) {
+    debug(...params: unknown[]) {
       ipcRenderer.send(IPCChannelType.DEBUG, params);
     },
-    error(...params: any[]) {
+    error(...params: unknown[]) {
       ipcRenderer.send(IPCChannelType.ERROR, params);
     },
-    warn(...params: any[]) {
+    warn(...params: unknown[]) {
       ipcRenderer.send(IPCChannelType.WARN, params);
     },
   },

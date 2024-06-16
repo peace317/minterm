@@ -11,7 +11,7 @@ import OutputLineChart from './OutputLineChart';
 
 const OutputTabView: React.FC<IDefaultProps> = ({ id, className }) => {
   const { t } = useTranslation();
-  const [contextEvent, setContextEvent] = useState<any>();
+  const [contextEvent, setContextEvent] = useState<React.MouseEvent<HTMLDivElement, MouseEvent>>();
   const { receivedData, setReceivedData } = useContext();
   const [selectedCellsInTable, setSelectedCellsInTable] = useState<Array<any>>(
     []
