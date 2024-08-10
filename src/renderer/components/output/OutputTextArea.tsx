@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useResizeDetector } from 'react-resize-detector';
 import { IDefaultProps } from '@minterm/types';
 import ActionBar from './ActionBar';
+import clsx from 'clsx';
 
 interface IOutputTextAreaProps extends IDefaultProps {
   data: any;
@@ -71,7 +72,7 @@ const OutputTextArea: React.FC<IOutputTextAreaProps> = ({
 
 
   return (
-    <div id={`${id}:container`} className={`${className} card h-full`}>
+    <div id={`${id}:container`} className={clsx(className, "card h-full")}>
       <div hidden={actionBarHidden}>
         <ActionBar
           id={`${id}:outputActionBar`}

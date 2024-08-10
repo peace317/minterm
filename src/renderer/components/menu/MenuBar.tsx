@@ -6,6 +6,7 @@ import {
   VscChromeMaximize,
   VscChromeMinimize,
   VscChromeRestore,
+  VscCode,
   VscQuestion,
 } from 'react-icons/vsc';
 import { IDefaultProps, IPCChannelType } from '@minterm/types';
@@ -15,6 +16,7 @@ import ConnectionSettingsDialog from './connection/ConnectionSettingsDialog';
 import ExportDialog from './file/ExportDialog';
 import AboutDialog from './help/AboutDialog';
 import LoggingDialog from './help/LoggingDialog';
+import { TbPlug } from "react-icons/tb";
 
 const MenuBar: React.FC<IDefaultProps> = ({ id, className }) => {
   const { t } = useTranslation();
@@ -102,28 +104,6 @@ const MenuBar: React.FC<IDefaultProps> = ({ id, className }) => {
         },
       ],
     },
-    {
-      label: t('CONNECTION'),
-      items: [
-        {
-          label: t('CONNECTION_OPTIONS'),
-          className: 'menu-item-no-icon',
-          command: () => {
-            setConnectionSettings(true);
-          },
-        },
-        {
-          separator: true,
-        },
-        {
-          label: t('PARSER_OPTIONS'),
-          className: 'menu-item-no-icon',
-          command: () => {
-            setParserSettings(true);
-          },
-        },
-      ],
-    },
     /* {
       label: t('MACROS'),
       items: [
@@ -141,6 +121,23 @@ const MenuBar: React.FC<IDefaultProps> = ({ id, className }) => {
           icon: 'pi pi-fw pi-cog',
           command: () => {
             setDisplaySettings(true);
+          },
+        },
+        {
+          separator: true,
+        },
+        {
+          label: t('CONNECTION_OPTIONS'),
+          icon: <TbPlug className="pi pi-fw mr-2" size={18} />,
+          command: () => {
+            setConnectionSettings(true);
+          },
+        },
+        {
+          label: t('PARSER_OPTIONS'),
+          icon: <VscCode className="pi pi-fw mr-2" size={18} />,
+          command: () => {
+            setParserSettings(true);
           },
         },
       ],

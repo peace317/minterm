@@ -72,7 +72,7 @@ const LoggingDialog: React.FC<IDialogProps> = ({
           <div className="button-small mr-5 absolute right-0">
             <Button
               id="BtnOpenFileSystem"
-              label="..."
+              icon="pi pi-folder"
               onClick={onOpenFileSystem}
             />
           </div>
