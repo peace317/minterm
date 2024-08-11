@@ -22,4 +22,5 @@ export const mainConfig: Configuration = {
       "@minterm/services": [path.resolve(__dirname, './src/services/index.ts')],
     }
   },
+  externals: ['serialport']
 };

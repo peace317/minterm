@@ -352,12 +352,13 @@ export default class SerialPortListener {
   }
 
   /**
-   * Sends the port list every 5 seconds to the renderer process.
+   * Sends the port list every X seconds to the renderer process.
    */
   private async sendPortList() {
     const ports = await this.getPortList();
     this.mainWindow.webContents.send(IPCChannelType.RECEIVE_PORT_LIST, ports);
-    setTimeout(this.sendPortList.bind(this), 5000);
+    setTimeout(this.sendPortList.bind(this), process.env.UPDATE_PORT_LIST_INTERVAL);
+    
   }
 
   /**
