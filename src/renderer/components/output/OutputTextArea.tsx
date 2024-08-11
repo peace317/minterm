@@ -84,8 +84,8 @@ const OutputTextArea: React.FC<IOutputTextAreaProps> = ({
           clearButtonToolTip={t('CLEAR_RECEIVED')}
         />
       </div>
-      <div className="h-full pt-1">
-        <Button
+      <div className="h-full">
+      <Button
           onClick={goDown}
           visible={downScrollable}
           className="scrollDown p-button-text"
