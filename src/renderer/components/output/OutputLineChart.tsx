@@ -13,6 +13,7 @@ import { useTranslation } from "react-i18next";
 import ActionBar from "./ActionBar";
 import { StoreKey } from "@/renderer/types";
 import { TooltipItem } from "chart.js";
+import clsx from "clsx";
 
 /**
  * Functional component for the live data representation in a line chart,
@@ -47,8 +48,7 @@ const OutputLineChart: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
     };
 
     const lightOptions = {
-      responsive: true,
-      maintainAspectRatio: false,
+      aspectRatio: 0,
       plugins: plugins,
       scales: {
         x: {
@@ -78,8 +78,6 @@ const OutputLineChart: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
     };
 
     const darkOptions = {
-      responsive: true,
-      maintainAspectRatio: false,
       aspectRatio: 0,
       plugins: plugins,
       scales: {
@@ -120,11 +118,7 @@ const OutputLineChart: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   const { lightOptions, darkOptions } = getThemes();
   const chartRef = useRef<Chart>(null);
   const [initWidth, setInitWidth] = useState<number>(0);
-  const { width, ref } = useResizeDetector({
-    onResize: () => {
-      buildLineChart();
-    },
-  });
+  const { width, ref } = useResizeDetector();
   const [isDataNumeric, setIsDataNumeric] = useState<boolean>(true);
   const [basicData] = useState({
     labels: [],
@@ -244,7 +238,7 @@ const OutputLineChart: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
         ref={chartRef}
         type="line"
         className="w-full"
-        style={{ height: "70%", minHeight: "26vh", opacity: opacity }}
+        style={{ height: "calc(100% - 25px)", opacity: opacity }}
         data={basicData}
         options={options}
       />
@@ -252,7 +246,7 @@ const OutputLineChart: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   };
 
   return (
-    <div id={id + ":container"} className={className + " h-full w-full"}>
+    <div id={id + ":container"} className={clsx(className, " h-full w-full")}>
       <ActionBar
         id={id + ":outputActionBar"}
         data={receivedData}
@@ -264,7 +258,7 @@ const OutputLineChart: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
         saveButtonHidden={false}
         onSave={onSaveImage}
       />
-      <div className={"grid h-full w-full pt-1 " + className} ref={ref}>
+      <div className={"grid h-full w-full pt-1"} ref={ref}>
         <label className="ml-8 mt-8 absolute" hidden={isDataNumeric}>
           {t("NO_VALID_FORMAT_FOR_LINE_CHART")}
         </label>

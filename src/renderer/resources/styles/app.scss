@@ -54,6 +54,9 @@ body {
   border-left: none;
   border-right: none;
 }
+.menubar .p-menubar .p-submenu-list {
+  width: 12.8rem /* make menubar a little bigger for long text */
+}
 .menubar .p-menubar .menubar-root {
   font-weight: bold;
   padding: 0 1rem;
@@ -194,31 +197,14 @@ body {
   margin-block-end: 1em;
 }
 
-.tabview .tabview-header-icon i, .tabview .tabview-header-icon span {
-  vertical-align: middle;
-}
-
-.tabview .tabview-header-icon span {
-  margin: 0 .5rem;
-}
-
-.tabview .p-tabview p {
-  line-height: 1.5;
-  margin: 0;
-}
-
 .tabview .p-tabview .p-tabview-panels {
-  height: 100%;
-  padding-bottom: 50px;
+  height: calc(100% - 50px);
+  padding-bottom: 15px;
+  // must be excatly this minimum height or the plott starts to jitter
+  min-height: 215px;
 }
-
-.tabview .p-tabview .p-tabview-nav {
-  height: 2.5rem;
-}
-
-.tabview .p-tabview .p-tabview-nav li .p-tabview-nav-link {
-  padding: 0.5rem;
-  height: 2.5rem;
+.tabview .tabview-header-icon span {
+  margin: 0 .5rem 0 0;
 }
 
 .p-divider-solid.p-divider-horizontal:before {
