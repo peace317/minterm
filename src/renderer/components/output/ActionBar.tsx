@@ -1,12 +1,13 @@
-import { Button } from 'primereact/button';
-import { Checkbox, CheckboxChangeEvent } from 'primereact/checkbox';
-import { InputNumber } from 'primereact/inputnumber';
-import { Tooltip } from 'primereact/tooltip';
-import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { ConversionType, DataPointType } from '@minterm/types';
-import ButtonClear from '../tools/ButtonClear';
-import { typeToSelectList } from '@minterm/services';
+import { Button } from "primereact/button";
+import { Checkbox, CheckboxChangeEvent } from "primereact/checkbox";
+import { InputNumber } from "primereact/inputnumber";
+import { Tooltip } from "primereact/tooltip";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { ConversionType, DataPointType } from "@minterm/types";
+import ButtonClear from "../tools/ButtonClear";
+import { typeToSelectList } from "@minterm/services";
+import clsx from "clsx";
 
 export interface ActionBarProps extends React.HTMLAttributes<HTMLDivElement> {
   data?: Array<DataPointType>;
@@ -35,17 +36,23 @@ export interface ActionBarProps extends React.HTMLAttributes<HTMLDivElement> {
 const ActionBar: React.FC<ActionBarProps> = ({
   id,
   data = [],
-  setData = () => {return;},
+  setData = () => {
+    return;
+  },
   dataCounterHidden = true,
   selectedConversions = [],
-  setSelectedConversions = () => {return;},
+  setSelectedConversions = () => {
+    return;
+  },
   conversionsDisabled = true,
   conversionsHidden = true,
-  dataCountLabel = '',
+  dataCountLabel = "",
   clearButtonHidden = true,
-  clearButtonToolTip = '',
+  clearButtonToolTip = "",
   saveButtonHidden = true,
-  onSave = () => {return;},
+  onSave = () => {
+    return;
+  },
   ...props
 }) => {
   const { t } = useTranslation();
@@ -69,66 +76,70 @@ const ActionBar: React.FC<ActionBarProps> = ({
   };
 
   return (
-    <div id={`${id}:container`} {...props}>
-      <div className="p-checkbox h-2rem w-full" style={{ cursor: 'unset' }}>
-        <div className="p-checkbox h-2rem">
-          {!conversionsHidden &&
-            encodings.map((encoding) => {
-              return (
-                <div key={encoding.key} className="field-checkbox mr-2 mt-2">
-                  <Checkbox
-                    inputId={encoding.key as string}
-                    name="category"
-                    value={encoding}
-                    onChange={onEncodingChange}
-                    disabled={conversionsDisabled}
-                    checked={selectedConversions.includes(encoding.key as ConversionType)}
-                  />
-                  <label htmlFor={encoding.key as string}>{encoding.name}</label>
-                </div>
-              );
-            })}
-          <Tooltip
-            target=".noConversionTooltip"
-            position="bottom"
-            showDelay={500}
-          >
-            <div>{t('NO_CONVERSION_POSSIBLE')}</div>
-          </Tooltip>
-          <span
-            className="pl-1"
-            hidden={!conversionsDisabled || conversionsHidden}
-          >
-            <i className="pi pi-info-circle noConversionTooltip" />
-          </span>
-        </div>
-        <div className="action-button h-2rem" hidden={saveButtonHidden}>
-          <Button
-            type="button"
-            icon="pi pi-image"
-            label={t('SAVE')}
-            onClick={onSave}
+    <div
+      id={`${id}:container`}
+      className={clsx("flex mb-2", props.className)}
+      {...props}
+    >
+      <div id={`${id}:checkboxContainer`} className="flex align-items-center">
+        {!conversionsHidden &&
+          encodings.map((encoding) => {
+            return (
+              <div key={encoding.key} className="field-checkbox m-0 mr-2">
+                <Checkbox
+                  inputId={encoding.key as string}
+                  name="category"
+                  value={encoding}
+                  onChange={onEncodingChange}
+                  disabled={conversionsDisabled}
+                  checked={selectedConversions.includes(
+                    encoding.key as ConversionType
+                  )}
+                />
+                <label htmlFor={encoding.key as string}>{encoding.name}</label>
+              </div>
+            );
+          })}
+        <Tooltip
+          target=".noConversionTooltip"
+          position="bottom"
+          showDelay={500}
+        >
+          <div>{t("NO_CONVERSION_POSSIBLE")}</div>
+        </Tooltip>
+        <span
+          className="pl-1"
+          hidden={!conversionsDisabled || conversionsHidden}
+        >
+          <i className="pi pi-info-circle noConversionTooltip" />
+        </span>
+      </div>
+      <div className="action-button h-2rem" hidden={saveButtonHidden}>
+        <Button
+          type="button"
+          icon="pi pi-image"
+          label={t("SAVE")}
+          onClick={onSave}
+        />
+      </div>
+      <div className="outputnumber-small w-full flex justify-content-end">
+        <div hidden={dataCounterHidden}>
+          <label htmlFor="receiveCount">{dataCountLabel}</label>
+          <InputNumber
+            id={`${id}:inputNumber`}
+            inputId="receiveCount"
+            readOnly
+            size={10}
+            value={data.length}
           />
         </div>
-        <div className="outputnumber-small absolute right-0">
-          <div hidden={dataCounterHidden}>
-            <label htmlFor="receiveCount">{dataCountLabel}</label>
-            <InputNumber
-              id={`${id}:inputNumber`}
-              inputId="receiveCount"
-              readOnly
-              size={10}
-              value={data.length}
-            />
-          </div>
-          <div hidden={clearButtonHidden}>
-            <ButtonClear
-              id="btnClear"
-              className="ml-2 button-icon-only"
-              clearObject={setData}
-              toolTip={clearButtonToolTip}
-            />
-          </div>
+        <div hidden={clearButtonHidden}>
+          <ButtonClear
+            id="btnClear"
+            className="ml-2 button-icon-only"
+            clearObject={setData}
+            toolTip={clearButtonToolTip}
+          />
         </div>
       </div>
     </div>

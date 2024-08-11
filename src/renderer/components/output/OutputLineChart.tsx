@@ -258,7 +258,7 @@ const OutputLineChart: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
         saveButtonHidden={false}
         onSave={onSaveImage}
       />
-      <div className={"grid h-full w-full pt-1"} ref={ref}>
+      <div className={"grid h-full w-full"} ref={ref}>
         <label className="ml-8 mt-8 absolute" hidden={isDataNumeric}>
           {t("NO_VALID_FORMAT_FOR_LINE_CHART")}
         </label>
