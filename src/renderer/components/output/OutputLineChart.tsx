@@ -238,7 +238,7 @@ const OutputLineChart: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
         ref={chartRef}
         type="line"
         className="w-full"
-        style={{ height: "calc(100% - 25px)", opacity: opacity }}
+        style={{ opacity: opacity }}
         data={basicData}
         options={options}
       />
@@ -246,7 +246,7 @@ const OutputLineChart: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   };
 
   return (
-    <div id={id + ":container"} className={clsx(className, " h-full w-full")}>
+    <div id={id + ":container"} className={clsx(className, " h-full flex flex-column")}>
       <ActionBar
         id={id + ":outputActionBar"}
         data={receivedData}

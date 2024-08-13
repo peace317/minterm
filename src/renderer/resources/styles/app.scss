@@ -182,10 +182,13 @@ body {
 }
 
 .tabview .p-tabview .p-tabview-panels {
-  height: calc(100% - 50px);
-  padding-bottom: 15px;
-  // must be excatly this minimum height or the plott starts to jitter
-  min-height: 215px;
+  height: calc(100% - 42px);
+  min-height: 200px;
+}
+@media (prefers-color-scheme: light) {
+  .tabview .p-tabview .p-tabview-panels {
+    height: calc(100% - 50px);
+  }
 }
 .tabview .tabview-header-icon span {
   margin: 0 .5rem 0 0;
