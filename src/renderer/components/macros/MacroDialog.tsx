@@ -235,7 +235,7 @@ const MacroDialog: React.FC<IMacroDialogProps> = ({
           </div>
           <div>
             <MacroVariableList
-              id={`:${id}:variableList`}
+              id={`${id}:variableList`}
               variables={variables}
               typeChangeable={selectedEncoding === ConversionType.ASCII}
               onVariableChange={onVariableChange}

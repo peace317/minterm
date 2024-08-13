@@ -55,6 +55,7 @@ const config: ForgeConfig = {
     }),
   ],
   hooks: {
+    // Used to include native deps in package: https://github.com/serialport/node-serialport/issues/2464#issuecomment-1516887882
     packageAfterPrune: async (_, buildPath, __, platform) => {
       const commands = [
         "install",

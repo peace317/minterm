@@ -152,7 +152,7 @@ const MacroVariable: React.FC<IMacroVariableProps> = ({
   return (
     <div id={`${id}:container`} className={className}>
       <h4 className="label-h4">Variable {variable.name}:</h4>
-      <div id={`:${id}:wrapper`} className="flex w-full">
+      <div id={`${id}:wrapper`} className="flex w-full">
         <div className="mr-2">
           <Dropdown
             id={id}
@@ -165,7 +165,7 @@ const MacroVariable: React.FC<IMacroVariableProps> = ({
           />
         </div>
         <div className="mr-2 slider">
-          <Tooltip target=".inputValueField" showDelay={500}>
+          <Tooltip target={`[id='${id}:inputTooltipIcon']`} showDelay={500}>
             <div>
               {t('DECIMAL')}: {sliderValue} <br />
               {t('BINARY')}:{' '}
@@ -175,7 +175,7 @@ const MacroVariable: React.FC<IMacroVariableProps> = ({
             </div>
           </Tooltip>
           <IconField iconPosition="right">
-            <InputIcon className="pi pi-info-circle inputValueField"></InputIcon>
+            <InputIcon  id={`${id}:inputTooltipIcon`} className="pi pi-info-circle inputValueField"></InputIcon>
             <InputText
               id={`${id}:inputtext`}
               value={textValue}

@@ -29,7 +29,7 @@ const MacroVariableList: React.FC<IMacroVariableProps> = ({
         return (
           <div key={variable.name}>
             <MacroVariable
-              id={`:${id}:${variable.name}`}
+              id={`${id}:${variable.name}`}
               variable={variable}
               deletable={deletable}
               typeChangeable={typeChangeable}
