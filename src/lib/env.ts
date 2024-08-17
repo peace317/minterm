@@ -3,6 +3,7 @@ import z from "zod";
 const environmentVariables = z.object({
   REACT_APP_ALLOW_CONTEXT_MENU: z.string().default("true"),
   UPDATE_PORT_LIST_INTERVAL: z.coerce.number().default(5000),
+  DEBUG_PROD: z.string().optional()
 });
 
 const parsedResults = environmentVariables.safeParse(process.env);

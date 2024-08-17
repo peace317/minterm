@@ -2,7 +2,7 @@ import { TabPanel, TabView } from 'primereact/tabview';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useContext } from '@/renderer/context';
-import { IDefaultProps, IPCChannelType } from '@minterm/types';
+import { IDefaultProps } from '@minterm/types';
 import ContextMenuOutput from './ContextMenuOutput';
 import OutputDataTable from './OutputDataTable';
 import OutputTextArea from './OutputTextArea';
@@ -18,11 +18,7 @@ const OutputTabView: React.FC<IDefaultProps> = ({ id, className }) => {
   );
 
   const isContextEnabled = () => {
-    const env = window.electron?.ipcRenderer.fetch(
-      IPCChannelType.GET_ENV,
-      'REACT_APP_ALLOW_CONTEXT_MENU'
-    );
-    return env !== 'false';
+    return process.env.REACT_APP_ALLOW_CONTEXT_MENU !== 'false';
   };
 
   return (
@@ -45,7 +41,7 @@ const OutputTabView: React.FC<IDefaultProps> = ({ id, className }) => {
           className="h-full"
         >
           <OutputDataTable
-            id="outDataTable"
+            id="outputDataTable"
             selectedCells={selectedCellsInTable}
             setSelectedCells={setSelectedCellsInTable}
           />
@@ -56,8 +52,7 @@ const OutputTabView: React.FC<IDefaultProps> = ({ id, className }) => {
           className="h-full"
         >
           <OutputTextArea
-            id="lineChart"
-            className="pb-5"
+            id={`${id}:outputTextArea`}
             data={receivedData.map((i) => i.value).join('')}
             setData={setReceivedData}
           />

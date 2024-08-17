@@ -234,7 +234,7 @@ const OutputLineChart: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
     const opacity = isDataNumeric ? "1" : "0.5";
     return (
       <Chart
-        id={id}
+        id={id + ":chart"}
         ref={chartRef}
         type="line"
         className="w-full"
@@ -246,7 +246,7 @@ const OutputLineChart: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   };
 
   return (
-    <div id={id + ":container"} className={clsx(className, " h-full flex flex-column")}>
+    <div id={id + ":container"} className={clsx(className, "flex-column")}>
       <ActionBar
         id={id + ":outputActionBar"}
         data={receivedData}

@@ -72,8 +72,8 @@ const OutputTextArea: React.FC<IOutputTextAreaProps> = ({
 
 
   return (
-    <div id={`${id}:container`} className={clsx(className, "card h-full")}>
-      <div hidden={actionBarHidden}>
+    <div id={`${id}:container`} className={clsx(className, "flex-column")}>
+      <div id={`${id}:outputActionBarWrapper`} hidden={actionBarHidden}>
         <ActionBar
           id={`${id}:outputActionBar`}
           data={data}
@@ -84,7 +84,7 @@ const OutputTextArea: React.FC<IOutputTextAreaProps> = ({
           clearButtonToolTip={t('CLEAR_RECEIVED')}
         />
       </div>
-      <div className="h-full">
+      <div id={`${id}:outputTextWrapper`} className="h-full">
       <Button
           onClick={goDown}
           visible={downScrollable}
@@ -92,7 +92,7 @@ const OutputTextArea: React.FC<IOutputTextAreaProps> = ({
           icon="pi pi-angle-down"
         />
         <InputTextarea
-          id={id}
+          id={`${id}:outputText`}
           value={data}
           readOnly
           ref={ref}

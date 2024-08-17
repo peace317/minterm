@@ -14,15 +14,11 @@ const TransmitDataTable: React.FC<IDefaultProps> = ({ id, className }) => {
   const [selectedCells, setSelectedCells] = useState<Array<any>>([]);
 
   const isContextEnabled = () => {
-    const env = window.electron?.ipcRenderer.fetch(
-      IPCChannelType.GET_ENV,
-      'REACT_APP_ALLOW_CONTEXT_MENU'
-    );
-    return env !== 'false';
+    return process.env.REACT_APP_ALLOW_CONTEXT_MENU !== 'false';
   };
 
   return (
-    <div id={`${id}:container`} className={clsx(className, 'w-full h-full')}>
+    <div id={`${id}:container`} className={clsx(className, 'flex-column w-full pt-2')} style={{padding: "1.25rem"}}>
       {isContextEnabled() && (
         <ContextMenuOutput
           data={transmittedData}
@@ -30,18 +26,16 @@ const TransmitDataTable: React.FC<IDefaultProps> = ({ id, className }) => {
           onContextMenu={contextEvent}
         />
       )}
-      <SequenceInput id="sequenceInput" className="w-full mt-2 pr-3" />
+      <SequenceInput id={`${id}:sequenceInput`} className='mb-2' />
       <div
         className="h-full"
-        style={{ padding: '0.5rem 1rem 3rem' }}
         onContextMenu={setContextEvent}
       >
         <OutputDataTableCore
-          id="outputTable"
+          id={`${id}:outputDataTableCore`}
           data={transmittedData}
           setData={setTransmittedData}
           clearButtonToolTip={t('CLEAR_TRANSMITTED')}
-          className="pb-3"
           dataCountLabel="Tx"
           selectedCells={selectedCells}
           setSelectedCells={setSelectedCells}

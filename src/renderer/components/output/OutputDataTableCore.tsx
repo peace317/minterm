@@ -5,6 +5,7 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useResizeDetector } from 'react-resize-detector';
 import { ConversionType, DataPointType } from '@minterm/types';
 import ActionBar, { ActionBarProps } from './ActionBar';
+import clsx from 'clsx';
 
 interface IOutputDataTableCoreProps extends ActionBarProps {
   data: Array<DataPointType>;
@@ -213,8 +214,7 @@ const OutputDataTableCore: React.FC<IOutputDataTableCoreProps> = ({
     <div
       id={`${id}:container`}
       ref={ref}
-      className={`${className} h-full`}
-      style={{ paddingBottom: '50px' }}
+      className={clsx(className, "flex-column")}
     >
       <ActionBar
         id={`${id}:outputActionBar`}
@@ -231,7 +231,7 @@ const OutputDataTableCore: React.FC<IOutputDataTableCoreProps> = ({
       />
       <div className="h-full datatable">
         <DataTable
-          id={id}
+          id={`${id}:dataTable`}
           value={tableData}
           responsiveLayout="scroll"
           scrollable

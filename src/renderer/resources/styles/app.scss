@@ -31,6 +31,12 @@ body {
   margin: 0;
 }
 
+.flex-column {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Optional: Kann verwendet werden, um den Container auf die volle Höhe zu strecken */
+}
+
 .pi {
   font-size: 1rem !important;
 }

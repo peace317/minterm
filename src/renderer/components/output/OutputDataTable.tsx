@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useContext } from '@/renderer/context';
 import { IDefaultProps, IPCChannelType } from '@minterm/types';
 import OutputDataTableCore from './OutputDataTableCore';
+import clsx from 'clsx';
 
 interface IOutputDataTableProps extends IDefaultProps {
   selectedCells: Array<any>;
@@ -39,9 +40,9 @@ const OutputDataTable: React.FC<IOutputDataTableProps> = ({
   }, []);
 
   return (
-    <div id={`${id}:container`} className={`${className} h-full`}>
+    <div id={`${id}:container`} className={clsx(className, "h-full")}>
       <OutputDataTableCore
-        id={`${id}:outputTable`}
+        id={`${id}:outputTableCore`}
         data={receivedData}
         setData={setReceivedData}
         clearButtonToolTip={t('CLEAR_RECEIVED')}
